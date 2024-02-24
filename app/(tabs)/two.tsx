@@ -1,29 +1,30 @@
-import { StyleSheet } from "react-native";
-
+import { StyleSheet, FlatList } from "react-native";
+import axios from "axios";
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
-const {
-  initializeApp,
-  applicationDefault,
-  cert,
-} = require("firebase-admin/app");
-const {
-  getFirestore,
-  Timestamp,
-  FieldValue,
-  Filter,
-} = require("firebase-admin/firestore");
-initializeApp();
-
-const db = getFirestore();
-
-// const standings2023 = db.collection("standings");
-// const snapshot = standings2023.get();
-// snapshot.forEach((doc: any) => {
-//   console.log(doc.id, "=>", doc.data());
-// });
+import React, { useEffect, useState } from "react";
 
 export default function TabTwoScreen() {
+  const [teamData, setTeamData] = useState([]);
+  const [isTeamDataLoaded, setIsTeamDataLoaded] = useState(false);
+
+  const teamDataFromDB = async () => {
+    let teamData: any = [];
+
+    await axios.get("https://getteams-5yzqky2riq-uc.a.run.app").then((res) => {
+      res.data.map((team: any) => {
+        teamData.push(team.team);
+      });
+    });
+
+    setTeamData(teamData);
+    setIsTeamDataLoaded(true);
+  };
+
+  useEffect(() => {
+    teamDataFromDB();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab Two</Text>
@@ -32,6 +33,14 @@ export default function TabTwoScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
+      {!isTeamDataLoaded ? (
+        <Text>Loading...</Text>
+      ) : (
+        <FlatList
+          data={teamData}
+          renderItem={({ item }) => <Text>{item}</Text>}
+        />
+      )}
       <EditScreenInfo path="app/(tabs)/two.tsx" />
     </View>
   );

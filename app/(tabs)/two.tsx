@@ -4,7 +4,11 @@ import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import React, { useEffect, useState } from "react";
 
-export default function TabTwoScreen() {
+type ITabTwoProps = {
+  userEmail: string;
+};
+
+export default function TabTwoScreen({ userEmail }: ITabTwoProps) {
   const [teamData, setTeamData] = useState([]);
   const [isTeamDataLoaded, setIsTeamDataLoaded] = useState(false);
 
@@ -27,7 +31,7 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
+      <Text style={styles.title}>{userEmail}</Text>
       <View
         style={styles.separator}
         lightColor="#eee"

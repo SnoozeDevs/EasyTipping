@@ -5,9 +5,14 @@ import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
 
-export default function Login() {
+type ITabTwoProps = {
+  userEmail: string;
+};
+
+export default function Login({ userEmail }: ITabTwoProps) {
   return (
     <View style={styles.container}>
+      <Text>{userEmail}</Text>
       <Link href={"/(tabs)/two"} asChild>
         <Pressable>
           <Text>Login</Text>

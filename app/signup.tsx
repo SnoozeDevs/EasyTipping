@@ -21,7 +21,7 @@ export default function Signup() {
 
   const signUpUser = () => {
     auth()
-      .createUserWithEmailAndPassword(email, password)
+      .createUserWithEmailAndPassword("john@doe.com", "password")
       .then(() => {
         console.log("User account created & signed in!");
       })
@@ -29,11 +29,9 @@ export default function Signup() {
         if (error.code === "auth/email-already-in-use") {
           console.log("That email address is already in use!");
         }
-
         if (error.code === "auth/invalid-email") {
           console.log("That email address is invalid!");
         }
-
         console.error(error);
       });
   };
@@ -43,20 +41,20 @@ export default function Signup() {
       <TextInput
         onChangeText={(event: any) => {
           console.log(event);
-          setEmail(event.target.value);
+          // setEmail(event.target.value);
         }}
-        value={email}
+        value={email ?? ""}
         placeholder="Enter email address"
       />
       <TextInput
         onChangeText={(event: any) => {
           console.log(event);
-          setPassword(event.target.value);
+          // setPassword(event.target.value);
         }}
-        value={password}
+        value={password ?? ""}
         placeholder="Enter password plz"
       />
-      <Pressable onPress={signUpUser} disabled={!hasEnteredDetails}>
+      <Pressable onPress={signUpUser}>
         <Text>Sign Up</Text>
       </Pressable>
     </View>

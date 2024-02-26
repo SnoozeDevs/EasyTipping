@@ -55,7 +55,7 @@ export default function Signup() {
         placeholder="Enter password plz"
       />
       <Pressable onPress={signUpUser}>
-        <Text>Sign Up</Text>
+        <Text>Sign Up TEST</Text>
       </Pressable>
     </View>
   );

@@ -3,10 +3,11 @@ import { Platform, StyleSheet, Pressable, TextInput } from "react-native";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
-import { Link } from "expo-router";
+import { Link, Redirect } from "expo-router";
 
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
+import { router } from "expo-router";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -24,7 +25,7 @@ export default function Signup() {
       .createUserWithEmailAndPassword(email, password)
       .then((res) => {
         console.log("User account created & signed in!", res);
-        //todo db post to users collection
+        router.navigate("/two");
       })
       .catch((error) => {
         if (error.code === "auth/email-already-in-use") {
@@ -42,7 +43,6 @@ export default function Signup() {
     <View style={styles.container}>
       <TextInput
         onChangeText={(event: any) => {
-          //console.log(event);
           setEmail(event);
         }}
         value={email ?? ""}

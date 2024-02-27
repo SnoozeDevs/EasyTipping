@@ -10,9 +10,6 @@ import auth from "@react-native-firebase/auth";
 import Login from "./login";
 
 export default function Index() {
-  // return <Redirect href="/login" />;
-  //return <Redirect href="/signup" />;
-
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<any>();
@@ -34,11 +31,5 @@ export default function Index() {
     return <Redirect href="/signup" />;
   }
 
-  return (
-    // <View>
-    //   <Text>Welcome {user.email}</Text>
-    //   {/* <Login userEmail={user.email} /> */}
-    // </View>
-    <Login userEmail={user.email} />
-  );
+  return <Redirect href="/two" />;
 }

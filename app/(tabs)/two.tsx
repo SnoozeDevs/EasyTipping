@@ -1,8 +1,10 @@
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, Button } from "react-native";
 import axios from "axios";
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import React, { useEffect, useState } from "react";
+import auth from "@react-native-firebase/auth";
+import { router } from "expo-router";
 
 type ITabTwoProps = {
   userEmail: string;
@@ -25,6 +27,15 @@ export default function TabTwoScreen({ userEmail }: ITabTwoProps) {
     setIsTeamDataLoaded(true);
   };
 
+  const signOutUser = () => {
+    auth()
+      .signOut()
+      .then(() => {
+        router.navigate("signup");
+        console.log("user signed out");
+      });
+  };
+
   useEffect(() => {
     teamDataFromDB();
   }, []);
@@ -32,6 +43,8 @@ export default function TabTwoScreen({ userEmail }: ITabTwoProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{userEmail}</Text>
+      <Text>Current user: {auth().currentUser?.email}</Text>
+      <Button title="Signout" onPress={signOutUser} />
       <View
         style={styles.separator}
         lightColor="#eee"

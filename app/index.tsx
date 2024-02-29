@@ -31,5 +31,5 @@ export default function Index() {
     return <Redirect href="/signup" />;
   }
 
-  return <Redirect href="/two" />;
+  return <Redirect href="/dashboard" />;
 }

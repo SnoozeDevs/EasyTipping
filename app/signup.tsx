@@ -13,6 +13,7 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hasEnteredDetails, setHasEnteredDetails] = useState(false);
+  const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
     if (email && password) {
@@ -23,12 +24,19 @@ export default function Signup() {
   const signUpUser = () => {
     auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((res) => {
+      .then(async (res) => {
+        const update = {
+          displayName: displayName,
+          photoUrl: "https://cataas.com/cat",
+        };
+
+        await auth().currentUser?.updateProfile(update);
         console.log("User account created & signed in!", res);
-        router.navigate("/two");
+        router.navigate("/dashboard");
       })
       .catch((error) => {
         if (error.code === "auth/email-already-in-use") {
+          router.navigate("/login");
           console.log("That email address is already in use!");
         }
         if (error.code === "auth/invalid-email") {
@@ -36,7 +44,6 @@ export default function Signup() {
         }
         console.error(error);
       });
-    console.log("test");
   };
 
   return (
@@ -55,9 +62,17 @@ export default function Signup() {
         value={password ?? ""}
         placeholder="Enter password plz"
       />
+      <TextInput
+        onChangeText={(event: any) => {
+          setDisplayName(event);
+        }}
+        value={displayName ?? ""}
+        placeholder="Enter display name"
+      />
       <Pressable onPress={signUpUser}>
         <Text>Sign Up</Text>
       </Pressable>
+      <Link href="/login">Have an account? Login</Link>
     </View>
   );
 }

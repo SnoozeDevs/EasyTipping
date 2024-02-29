@@ -6,11 +6,7 @@ import React, { useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import { router } from "expo-router";
 
-type ITabTwoProps = {
-  userEmail: string;
-};
-
-export default function TabTwoScreen({ userEmail }: ITabTwoProps) {
+export default function Dashboard() {
   const [teamData, setTeamData] = useState([]);
   const [isTeamDataLoaded, setIsTeamDataLoaded] = useState(false);
 
@@ -42,8 +38,8 @@ export default function TabTwoScreen({ userEmail }: ITabTwoProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{userEmail}</Text>
-      <Text>Current user: {auth().currentUser?.email}</Text>
+      <Text style={styles.title}>Dashboard</Text>
+      <Text>Current user: {auth().currentUser?.displayName}</Text>
       <Button title="Signout" onPress={signOutUser} />
       <View
         style={styles.separator}

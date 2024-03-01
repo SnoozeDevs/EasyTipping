@@ -23,8 +23,6 @@ export default function Login() {
   const [emailHasError, setEmailHasError] = useState(false);
   const [passwordHasError, setPasswordHasError] = useState(false);
 
-  const validateInput = () => {};
-
   useEffect(() => {
     if (searchParams.email) {
       setEmail(searchParams?.email as string);

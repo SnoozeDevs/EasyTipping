@@ -87,7 +87,7 @@ export default function Signup() {
         value={displayName ?? ""}
         placeholder="Enter display name"
       />
-      <PaperButton icon="" mode="contained" onPress={signUpUser}>
+      <PaperButton mode="contained" onPress={signUpUser}>
         Sign Up
       </PaperButton>
       <Link href="/login">

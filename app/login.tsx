@@ -8,11 +8,17 @@ import { Link, Redirect } from "expo-router";
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
+import {
+  TextInput as PaperTextInput,
+  Button as PaperButton,
+} from "react-native-paper";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hasEnteredDetails, setHasEnteredDetails] = useState(false);
+  // const [isEnabled, setIsEnabled] = useState(false); //todo toggle secureTextEntry prop on password entry
+  // const toggleSwitch = () => setIsEnabled(previousState => !previousState); //todo toggle secureTextEntry prop on password entry
 
   useEffect(() => {
     if (email && password) {
@@ -40,23 +46,33 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <TextInput
+      <PaperTextInput
+        mode="outlined"
+        label="Email"
         onChangeText={(event: any) => {
           setEmail(event);
         }}
         value={email ?? ""}
         placeholder="Enter email address"
       />
-      <TextInput
+      <PaperTextInput
+        mode="outlined"
+        secureTextEntry //todo toggle prop (boolean)
+        right={<PaperTextInput.Icon icon="eye" />} //todo create onPress to toggle secureTextEntry prop
+        label="Password"
         onChangeText={(event: any) => {
           setPassword(event);
         }}
         value={password ?? ""}
-        placeholder="Enter password plz"
+        placeholder="Enter password"
       />
-      <Pressable onPress={loginUser}>
-        <Text>Login</Text>
-      </Pressable>
+      <PaperButton icon="" mode="contained" onPress={loginUser}>
+        Login
+      </PaperButton>
+
+      <Link href="/signup">
+        <PaperButton>go to sign up</PaperButton>
+      </Link>
     </View>
   );
 }
@@ -64,8 +80,11 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: "stretch",
     justifyContent: "center",
+    alignContent: "center",
+    gap: 10,
+    padding: 60,
   },
   title: {
     fontSize: 20,

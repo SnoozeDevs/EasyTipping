@@ -28,7 +28,7 @@ export default function Index() {
   if (initializing) return null;
 
   if (!user) {
-    return <Redirect href="/signup" />;
+    return <Redirect href="/login/" />;
   }
 
   return <Redirect href="/dashboard" />;

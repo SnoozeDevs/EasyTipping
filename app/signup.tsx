@@ -8,12 +8,18 @@ import { Link, Redirect } from "expo-router";
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
+import {
+  TextInput as PaperTextInput,
+  Button as PaperButton,
+} from "react-native-paper";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hasEnteredDetails, setHasEnteredDetails] = useState(false);
   const [displayName, setDisplayName] = useState("");
+  // const [isEnabled, setIsEnabled] = useState(false); //todo toggle secureTextEntry prop on password entry
+  // const toggleSwitch = () => setIsEnabled(previousState => !previousState); //todo toggle secureTextEntry prop on password entry
 
   useEffect(() => {
     if (email && password) {
@@ -48,31 +54,45 @@ export default function Signup() {
 
   return (
     <View style={styles.container}>
-      <TextInput
+      <PaperTextInput
+        autoCapitalize="none"
+        mode="outlined"
+        label="Email"
         onChangeText={(event: any) => {
           setEmail(event);
         }}
         value={email ?? ""}
         placeholder="Enter email address"
       />
-      <TextInput
+      <PaperTextInput
+        autoCapitalize="none"
+        mode="outlined"
+        secureTextEntry //todo toggle prop (boolean)
+        right={<PaperTextInput.Icon icon="eye" />} //todo create onPress to toggle secureTextEntry prop
+        //todo maybe use IconButton? https://tinyurl.com/2m2k5bd6
+        label="Password"
         onChangeText={(event: any) => {
           setPassword(event);
         }}
         value={password ?? ""}
-        placeholder="Enter password plz"
+        placeholder="Enter password"
       />
-      <TextInput
+      <PaperTextInput
+        autoCapitalize="none"
+        mode="outlined"
+        label="Display Name"
         onChangeText={(event: any) => {
           setDisplayName(event);
         }}
         value={displayName ?? ""}
         placeholder="Enter display name"
       />
-      <Pressable onPress={signUpUser}>
-        <Text>Sign Up</Text>
-      </Pressable>
-      <Link href="/login">Have an account? Login</Link>
+      <PaperButton icon="" mode="contained" onPress={signUpUser}>
+        Sign Up
+      </PaperButton>
+      <Link href="/login">
+        <PaperButton>go to login</PaperButton>
+      </Link>
     </View>
   );
 }
@@ -80,8 +100,11 @@ export default function Signup() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: "stretch",
     justifyContent: "center",
+    alignContent: "center",
+    gap: 10,
+    padding: 60,
   },
   title: {
     fontSize: 20,

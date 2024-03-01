@@ -47,6 +47,7 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <PaperTextInput
+        autoCapitalize="none"
         mode="outlined"
         label="Email"
         onChangeText={(event: any) => {
@@ -56,6 +57,7 @@ export default function Login() {
         placeholder="Enter email address"
       />
       <PaperTextInput
+        autoCapitalize="none"
         mode="outlined"
         secureTextEntry //todo toggle prop (boolean)
         right={<PaperTextInput.Icon icon="eye" />} //todo create onPress to toggle secureTextEntry prop

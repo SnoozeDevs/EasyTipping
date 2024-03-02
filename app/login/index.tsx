@@ -1,10 +1,19 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, Pressable, TextInput } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Pressable,
+  TextInput,
+  useColorScheme,
+} from "react-native";
 import * as S from "./login.styles";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import { Link, Redirect } from "expo-router";
+
+import { stdTheme } from "@/themes/stdTheme";
+import { drkTheme } from "@/themes/drkTheme";
 
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
@@ -34,6 +43,7 @@ export default function Login() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [passwordSecured, setPasswordSecured] = useState(true);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const colors = useColorScheme();
 
   useEffect(() => {
     if (searchParams.email) {
@@ -112,6 +122,7 @@ export default function Login() {
     <S.Login>
       <S.InputContainer>
         <PaperTextInput
+          theme={colors === "light" ? stdTheme : drkTheme}
           style={{ width: "100%" }}
           autoCapitalize="none"
           mode="outlined"
@@ -127,6 +138,7 @@ export default function Login() {
       </S.InputContainer>
       <S.InputContainer>
         <PaperTextInput
+          theme={colors === "light" ? stdTheme : drkTheme}
           style={{ width: "100%" }}
           autoCapitalize="none"
           mode="outlined"
@@ -153,6 +165,7 @@ export default function Login() {
         {passwordHasError && <S.Error>{passwordErrorMessage}</S.Error>}
       </S.InputContainer>
       <PaperButton
+        theme={colors === "light" ? stdTheme : drkTheme}
         style={{ width: "100%" }}
         icon=""
         mode="contained"

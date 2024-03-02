@@ -31,5 +31,4 @@ width: 100%;
     flex-direction: column;
     gap: 4px;
 
-
 `

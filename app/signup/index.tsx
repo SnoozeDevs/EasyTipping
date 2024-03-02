@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, Pressable, TextInput } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Pressable,
+  TextInput,
+  Appearance,
+  useColorScheme,
+} from "react-native";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
@@ -13,14 +20,15 @@ import {
   Button as PaperButton,
 } from "react-native-paper";
 import * as S from "./signup.styles";
+import { stdTheme } from "@/themes/stdTheme";
+import { drkTheme } from "@/themes/drkTheme";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
+  const colors = useColorScheme();
   const [password, setPassword] = useState("");
   const [hasEnteredDetails, setHasEnteredDetails] = useState(false);
   const [displayName, setDisplayName] = useState("");
-  // const [isEnabled, setIsEnabled] = useState(false); //todo toggle secureTextEntry prop on password entry
-  // const toggleSwitch = () => setIsEnabled(previousState => !previousState); //todo toggle secureTextEntry prop on password entry
 
   useEffect(() => {
     if (email && password) {
@@ -56,6 +64,7 @@ export default function Signup() {
   return (
     <S.Signup>
       <PaperTextInput
+        theme={colors === "light" ? stdTheme : drkTheme}
         autoCapitalize="none"
         mode="outlined"
         label="Email"
@@ -66,11 +75,11 @@ export default function Signup() {
         placeholder="Enter email address"
       />
       <PaperTextInput
+        theme={colors === "light" ? stdTheme : drkTheme}
         autoCapitalize="none"
         mode="outlined"
-        secureTextEntry //todo toggle prop (boolean)
-        right={<PaperTextInput.Icon icon="eye" />} //todo create onPress to toggle secureTextEntry prop
-        //todo maybe use IconButton? https://tinyurl.com/2m2k5bd6
+        secureTextEntry
+        right={<PaperTextInput.Icon icon="eye" />}
         label="Password"
         onChangeText={(event: any) => {
           setPassword(event);
@@ -79,6 +88,7 @@ export default function Signup() {
         placeholder="Enter password"
       />
       <PaperTextInput
+        theme={colors === "light" ? stdTheme : drkTheme}
         autoCapitalize="none"
         mode="outlined"
         label="Display Name"
@@ -88,7 +98,10 @@ export default function Signup() {
         value={displayName ?? ""}
         placeholder="Enter display name"
       />
-      <PaperButton mode="contained" onPress={signUpUser}>
+      <PaperButton
+        mode="contained"
+        onPress={signUpUser}
+        theme={colors === "light" ? stdTheme : drkTheme}>
         Sign Up
       </PaperButton>
       <Link href="/login/" asChild>

@@ -1,20 +1,8 @@
-import { StatusBar } from "expo-status-bar";
-import {
-  Platform,
-  StyleSheet,
-  Pressable,
-  TextInput,
-  useColorScheme,
-} from "react-native";
+import { Pressable, useColorScheme } from "react-native";
 import * as S from "./login.styles";
-
-import EditScreenInfo from "@/components/EditScreenInfo";
-import { Text, View } from "@/components/Themed";
-import { Link, Redirect } from "expo-router";
-
+import { Link } from "expo-router";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
-
 import auth from "@react-native-firebase/auth";
 import { useCallback, useEffect, useState } from "react";
 import { useLocalSearchParams, useGlobalSearchParams } from "expo-router";

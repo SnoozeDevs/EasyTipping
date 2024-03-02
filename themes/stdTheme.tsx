@@ -1,5 +1,3 @@
-import { DefaultTheme } from "react-native-paper";
-
 export const stdTheme = {
   colors: {
     primary: "#39A0ED",

@@ -13,7 +13,7 @@ import { Text, View } from "@/components/Themed";
 import { Link, Redirect } from "expo-router";
 
 import auth from "@react-native-firebase/auth";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { router } from "expo-router";
 import {
   TextInput as PaperTextInput,
@@ -31,6 +31,7 @@ import {
   INCORRECT_PASSWORD,
   NO_DISPLAY_NAME,
 } from "../utils/constants";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -45,6 +46,14 @@ export default function Signup() {
   const [isSignupLoading, setIsSignupLoading] = useState(false);
   const [displayNameHasError, setDisplayNameHasError] = useState(false);
   const [displaNameErrorMessage, setDisplayNameErrorMessage] = useState("");
+
+  useFocusEffect(
+    useCallback(() => {
+      setEmailHasError(false);
+      setPasswordHasError(false);
+      setDisplayNameHasError(false);
+    }, [])
+  );
 
   const signUpUser = () => {
     let hasError = false;
@@ -129,6 +138,7 @@ export default function Signup() {
           label="Email"
           onChangeText={(event: any) => {
             setEmail(event);
+            setEmailHasError(false);
           }}
           error={emailHasError}
           value={email ?? ""}
@@ -158,6 +168,7 @@ export default function Signup() {
           label="Password"
           onChangeText={(event: any) => {
             setPassword(event);
+            setPasswordHasError(false);
           }}
           value={password ?? ""}
           placeholder="Enter password"
@@ -173,6 +184,7 @@ export default function Signup() {
           label="Display Name"
           onChangeText={(event: any) => {
             setDisplayName(event);
+            setDisplayNameHasError(false);
           }}
           value={displayName ?? ""}
           placeholder="Enter display name"

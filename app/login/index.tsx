@@ -16,7 +16,7 @@ import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
 
 import auth from "@react-native-firebase/auth";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocalSearchParams, useGlobalSearchParams } from "expo-router";
 import { router } from "expo-router";
 import {
@@ -31,6 +31,7 @@ import {
   NO_PASSWORD_ENTERED,
   isEmailValid,
 } from "../utils/constants";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Login() {
   const searchParams = useLocalSearchParams();
@@ -44,6 +45,13 @@ export default function Login() {
   const [passwordSecured, setPasswordSecured] = useState(true);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const colors = useColorScheme();
+
+  useFocusEffect(
+    useCallback(() => {
+      setEmailHasError(false);
+      setPasswordHasError(false);
+    }, [])
+  );
 
   useEffect(() => {
     if (searchParams.email) {
@@ -129,6 +137,7 @@ export default function Login() {
           label="Email"
           onChangeText={(event: any) => {
             setEmail(event);
+            setEmailHasError(false);
           }}
           error={emailHasError}
           value={email ?? ""}
@@ -158,6 +167,7 @@ export default function Login() {
           error={passwordHasError}
           onChangeText={(event: any) => {
             setPassword(event);
+            setPasswordHasError(false);
           }}
           value={password ?? ""}
           placeholder="Enter password"

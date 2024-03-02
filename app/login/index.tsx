@@ -25,7 +25,6 @@ export default function Login() {
   const searchParams = useLocalSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [hasEnteredDetails, setHasEnteredDetails] = useState(false);
   const [emailHasError, setEmailHasError] = useState(false);
   const [passwordHasError, setPasswordHasError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -46,12 +45,6 @@ export default function Login() {
       setEmail(searchParams?.email as string);
     }
   }, [searchParams]);
-
-  useEffect(() => {
-    if (email && password) {
-      setHasEnteredDetails(true);
-    }
-  }, [email, password]);
 
   const loginUser = () => {
     let hasError = false;

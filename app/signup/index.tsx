@@ -10,16 +10,16 @@ import {
 import * as S from "./signup.styles";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
+import { useFocusEffect } from "@react-navigation/native";
+import { isEmailValid } from "@/utils/utils";
 import {
   NO_EMAIL_ENTERED,
-  isEmailValid,
   EMAIL_INVALID,
   NO_PASSWORD_ENTERED,
+  NO_DISPLAY_NAME,
   EMAIL_ALREADY_IN_USE,
   INCORRECT_PASSWORD,
-  NO_DISPLAY_NAME,
-} from "../utils/constants";
-import { useFocusEffect } from "@react-navigation/native";
+} from "@/utils/constants";
 
 export default function Signup() {
   const [email, setEmail] = useState("");

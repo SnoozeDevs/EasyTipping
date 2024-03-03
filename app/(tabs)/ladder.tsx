@@ -4,23 +4,16 @@ import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import React, { useCallback, useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
-import { router } from "expo-router";
+
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
+import { getLadder, signOutUser } from "@/utils/utils";
 
 export default function Dashboard() {
-  const [teamData, setTeamData] = useState([]);
-  const [isTeamDataLoaded, setIsTeamDataLoaded] = useState(false);
+  const [teamData, setTeamData] = useState<Array<string>>([]);
+  const [isTeamDataLoaded, setIsTeamDataLoaded] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState(auth().currentUser);
   const isFocused = useIsFocused();
-  const requestController = new AbortController();
-
-  const getTeams = async () => {
-    const teams = await firestore().collection("standings").get();
-    return teams;
-  };
-
-  console.log(getTeams());
 
   //TODO ||| Create boolean to return loader when user data is not ready to be displayed,
   //TODO ||| this can be broken up to loading states for different parts of the page, and will provide load states for when data is not
@@ -29,48 +22,18 @@ export default function Dashboard() {
     setCurrentUser(auth().currentUser);
   }, [isFocused]);
 
-  const teamDataFromDB = async () => {
-    let teamData: any = [];
-
-    await axios
-      .get("https://getteams-5yzqky2riq-uc.a.run.app", {
-        signal: requestController.signal,
-      })
-      .then((res) => {
-        res.data.map((team: any) => {
-          teamData.push(team.team);
-        });
-
-        setTeamData(teamData);
-        setIsTeamDataLoaded(true);
-      })
-      .catch((res) => {
-        console.log(res);
-      });
-  };
-
-  //* Cancel DB calls if page goes out of focus.
+  //* Only calls ladder data from DB if it is not loaded
   useFocusEffect(
     useCallback(() => {
       if (!isTeamDataLoaded) {
-        teamDataFromDB();
+        getLadder(setTeamData, setIsTeamDataLoaded);
       }
 
       return () => {
-        requestController.abort();
+        //* Actions that happen when page is taken out of focus (cleanup or cancel processes)
       };
-    }, [teamDataFromDB])
+    }, [getLadder])
   );
-
-  const signOutUser = () => {
-    auth()
-      .signOut()
-      .then(() => {
-        setCurrentUser(null);
-        router.navigate("login");
-        console.log("user signed out");
-      });
-  };
 
   return (
     <View style={styles.container}>

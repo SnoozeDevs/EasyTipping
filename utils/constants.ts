@@ -7,7 +7,3 @@ export const WEAK_PASSWORD = 'Password is too weak'
 export const EMAIL_INVALID = 'Invalid email address format, please try again.'
 export const NO_DISPLAY_NAME = 'Please enter a display name'
 
-export const isEmailValid = (email: string) => {
-  const validRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-  return validRegex.test(email)
-}

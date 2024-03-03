@@ -11,15 +11,15 @@ import {
   TextInput as PaperTextInput,
   Button as PaperButton,
 } from "react-native-paper";
-import {
-  EMAIL_ALREADY_IN_USE,
-  EMAIL_INVALID,
-  INCORRECT_PASSWORD,
-  NO_EMAIL_ENTERED,
-  NO_PASSWORD_ENTERED,
-  isEmailValid,
-} from "../utils/constants";
 import { useFocusEffect } from "@react-navigation/native";
+import { isEmailValid } from "@/utils/utils";
+import {
+  NO_EMAIL_ENTERED,
+  EMAIL_INVALID,
+  NO_PASSWORD_ENTERED,
+  EMAIL_ALREADY_IN_USE,
+  INCORRECT_PASSWORD,
+} from "@/utils/constants";
 
 export default function Login() {
   const searchParams = useLocalSearchParams();

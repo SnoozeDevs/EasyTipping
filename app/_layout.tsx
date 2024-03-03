@@ -1,4 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Drawer } from "expo-router/drawer";
 import {
   DarkTheme,
   DefaultTheme,
@@ -53,6 +55,9 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      {/* <GestureHandlerRootView style={{ flex: 1 }}>
+        <Drawer />
+      </GestureHandlerRootView> */}
       <Stack
         initialRouteName="login"
         screenOptions={{

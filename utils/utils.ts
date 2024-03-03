@@ -27,3 +27,26 @@ export const signOutUser = () => {
       console.log("user signed out");
     });
 };
+
+export const createUserRecord = (userID: string, displayName: string) => {
+  firestore()
+    .collection('users')
+    .doc(userID)
+    .set({
+      userID: userID,
+      displayName: displayName
+    }, { merge: true }).then(() => {
+      console.log('user added')
+    })
+}
+
+export const updateUserRecord = async (userID: string, randomString: string) => {
+  firestore()
+    .collection('users')
+    .doc(userID)
+    .set({
+      randomString: randomString
+    }, { merge: true }).then(() => {
+      console.log('random thing added')
+    })
+}

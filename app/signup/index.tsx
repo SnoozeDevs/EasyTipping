@@ -11,7 +11,7 @@ import * as S from "./signup.styles";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
 import { useFocusEffect } from "@react-navigation/native";
-import { isEmailValid } from "@/utils/utils";
+import { createUserRecord, isEmailValid } from "@/utils/utils";
 import {
   NO_EMAIL_ENTERED,
   EMAIL_INVALID,
@@ -85,10 +85,13 @@ export default function Signup() {
       .then(async (res) => {
         const update = {
           displayName: displayName,
-          photoUrl: "https://cataas.com/cat",
         };
 
         await auth().currentUser?.updateProfile(update);
+        const userId = auth().currentUser?.uid;
+        const dName = auth().currentUser?.displayName;
+
+        await createUserRecord(userId!, dName!);
         console.log("User account created & signed in!", res);
         router.navigate("/dashboard");
       })

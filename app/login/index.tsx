@@ -31,7 +31,7 @@ export default function Login() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [passwordSecured, setPasswordSecured] = useState(true);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
-  const colors = useColorScheme();
+  const theme = useColorScheme() === "light" ? stdTheme : drkTheme;
 
   useFocusEffect(
     useCallback(() => {
@@ -111,7 +111,7 @@ export default function Login() {
     <S.Login>
       <S.InputContainer>
         <PaperTextInput
-          theme={colors === "light" ? stdTheme : drkTheme}
+          theme={theme}
           style={{ width: "100%" }}
           autoCapitalize="none"
           mode="outlined"
@@ -128,7 +128,7 @@ export default function Login() {
       </S.InputContainer>
       <S.InputContainer>
         <PaperTextInput
-          theme={colors === "light" ? stdTheme : drkTheme}
+          theme={theme}
           style={{ width: "100%" }}
           autoCapitalize="none"
           mode="outlined"
@@ -156,7 +156,7 @@ export default function Login() {
         {passwordHasError && <S.Error>{passwordErrorMessage}</S.Error>}
       </S.InputContainer>
       <PaperButton
-        theme={colors === "light" ? stdTheme : drkTheme}
+        theme={theme}
         style={{ width: "100%" }}
         icon=""
         mode="contained"

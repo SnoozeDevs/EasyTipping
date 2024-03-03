@@ -1,24 +1,11 @@
 import { useState } from "react";
 import { IDrawerProps } from "./Drawer.types";
-import { Drawer as PaperDrawer } from "react-native-paper";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const Drawer = ({}: IDrawerProps) => {
-  const [active, setActive] = useState(0);
+  const Drawer = createDrawerNavigator();
 
-  return (
-    <PaperDrawer.Section title="Some title">
-      <PaperDrawer.Item
-        label="First Item"
-        active={active === 1}
-        onPress={() => setActive(1)}
-      />
-      <PaperDrawer.Item
-        label="Second Item"
-        active={active === 2}
-        onPress={() => setActive(2)}
-      />
-    </PaperDrawer.Section>
-  );
+  return <h1>Hello world</h1>;
 };
 
 export default Drawer;

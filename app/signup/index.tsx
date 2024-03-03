@@ -43,7 +43,7 @@ export default function Signup() {
     }, [])
   );
 
-  const signUpUser = () => {
+  const signUpUser = async () => {
     let hasError = false;
     setEmailHasError(false);
     setPasswordHasError(false);
@@ -80,7 +80,7 @@ export default function Signup() {
 
     setIsSignupLoading(true);
 
-    auth()
+    await auth()
       .createUserWithEmailAndPassword(email, password)
       .then(async (res) => {
         const update = {

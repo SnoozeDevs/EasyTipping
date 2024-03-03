@@ -7,7 +7,7 @@ import auth from "@react-native-firebase/auth";
 
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
-import { getLadder, signOutUser } from "@/utils/utils";
+import { getLadder, signOutUser, updateUserRecord } from "@/utils/utils";
 
 export default function Dashboard() {
   const [teamData, setTeamData] = useState<Array<string>>([]);
@@ -35,11 +35,33 @@ export default function Dashboard() {
     }, [getLadder])
   );
 
+  //! WIP -- Not Complete yet. ----------
+  useEffect(() => {
+    console.log("user record changed");
+    const userDocChange = firestore()
+      .collection("users")
+      .doc(auth()?.currentUser?.uid)
+      .onSnapshot(
+        (snapshot) => {
+          console.log("snapshot changed", snapshot.data());
+        },
+        (error) => console.error(error)
+      );
+    return () => userDocChange();
+  }, []);
+  //! WIP -------------------------
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
       <Text>Current user: {currentUser?.displayName}</Text>
       <Button title="Signout" onPress={signOutUser} />
+      <Button
+        title="Update record"
+        onPress={() => {
+          updateUserRecord(auth().currentUser?.uid!, "Random update test");
+        }}
+      />
       <View
         style={styles.separator}
         lightColor="#eee"

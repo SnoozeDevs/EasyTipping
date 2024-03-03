@@ -40,7 +40,7 @@ export const createUserRecord = (userID: string, displayName: string) => {
     })
 }
 
-export const updateUserRecord = async (userID: string, randomString: string) => {
+export const updateUserRecord = async (userID: string, randomString: string, randomVal: any, setRandomVal: any) => {
   firestore()
     .collection('users')
     .doc(userID)
@@ -48,5 +48,6 @@ export const updateUserRecord = async (userID: string, randomString: string) => 
       randomString: randomString
     }, { merge: true }).then(() => {
       console.log('random thing added')
+      setRandomVal(randomVal + 1)
     })
 }

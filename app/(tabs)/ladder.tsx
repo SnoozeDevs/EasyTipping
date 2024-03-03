@@ -13,7 +13,9 @@ export default function Dashboard() {
   const [teamData, setTeamData] = useState<Array<string>>([]);
   const [isTeamDataLoaded, setIsTeamDataLoaded] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState(auth().currentUser);
+  const [user, setUser] = useState<any>();
   const isFocused = useIsFocused();
+  const [dummyVal, setDummyVal] = useState(0);
 
   //TODO ||| Create boolean to return loader when user data is not ready to be displayed,
   //TODO ||| this can be broken up to loading states for different parts of the page, and will provide load states for when data is not
@@ -44,22 +46,30 @@ export default function Dashboard() {
       .onSnapshot(
         (snapshot) => {
           console.log("snapshot changed", snapshot.data());
+          const data = snapshot.data();
+          setUser(data);
         },
         (error) => console.error(error)
       );
     return () => userDocChange();
-  }, []);
+  }, [dummyVal]);
   //! WIP -------------------------
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
       <Text>Current user: {currentUser?.displayName}</Text>
+      <Text>Random val: {user?.randomString}</Text>
       <Button title="Signout" onPress={signOutUser} />
       <Button
         title="Update record"
         onPress={() => {
-          updateUserRecord(auth().currentUser?.uid!, "Random update test");
+          updateUserRecord(
+            auth().currentUser?.uid!,
+            "Hello world",
+            dummyVal,
+            setDummyVal
+          );
         }}
       />
       <View

@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "922171320829",
+    "firebase_url": "https://easytipping-a7ad3-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "easytipping-a7ad3",
+    "storage_bucket": "easytipping-a7ad3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922171320829:android:0180277918af18aab05194",
+        "android_client_info": {
+          "package_name": "com.SnoozeDevs.EasyTipping"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANtENKgCXAUYk-OwjhQp1YB3mRn8fmfa8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922171320829-tsmarrsfie6co2pujuhkvef07unap48i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.snoozedevs.easytipping"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

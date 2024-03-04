@@ -4,6 +4,7 @@ import { Drawer } from "expo-router/drawer";
 import {
   DarkTheme,
   DefaultTheme,
+  NavigationContainer,
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -55,9 +56,6 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      {/* <GestureHandlerRootView style={{ flex: 1 }}>
-        <Drawer />
-      </GestureHandlerRootView> */}
       <Stack
         initialRouteName="login"
         screenOptions={{
@@ -65,6 +63,9 @@ function RootLayoutNav() {
           gestureEnabled: true,
           animationTypeForReplace: "push",
         }}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Drawer />
+        </GestureHandlerRootView>
         <Stack.Screen name="login/index" options={{ headerShown: false }} />
         <Stack.Screen name="signup/index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

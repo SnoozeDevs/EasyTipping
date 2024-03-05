@@ -12,6 +12,7 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { DrawerToggleButton } from "@react-navigation/drawer";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -26,7 +27,9 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName="dashboard"
       screenOptions={{
+        headerLeft: () => <DrawerToggleButton />,
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
@@ -36,6 +39,7 @@ export default function TabLayout() {
         name="fixtures"
         options={{
           title: "Fixtures",
+
           tabBarIcon: ({ color }) => (
             <AntDesign name="calendar" size={28} color={color} />
           ),

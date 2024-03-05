@@ -16,7 +16,7 @@ export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState(auth().currentUser);
   const [user, setUser] = useState<any>();
   const isFocused = useIsFocused();
-  const [dummyVal, setDummyVal] = useState(0);
+  const [updateTestValue, setUpdateTestValue] = useState("");
 
   //TODO ||| Create boolean to return loader when user data is not ready to be displayed,
   //TODO ||| this can be broken up to loading states for different parts of the page, and will provide load states for when data is not
@@ -38,11 +38,8 @@ export default function Dashboard() {
     }, [getLadder])
   );
 
-  const [updateTestValue, setUpdateTestValue] = useState("");
-
-  //! WIP -- Not Complete yet. ----------
+  //* Fetch real time data from db as soon as their data model changes
   useEffect(() => {
-    console.log("user record changed");
     const userDocChange = firestore()
       .collection("users")
       .doc(auth()?.currentUser?.uid)
@@ -56,14 +53,12 @@ export default function Dashboard() {
       );
     return () => userDocChange();
   }, []);
-  //! WIP -------------------------
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
       <Text>Current user: {currentUser?.displayName}</Text>
       <Text>Random val: {user?.randomString}</Text>
-      <Button title="Signout" onPress={signOutUser} />
       <TextInput
         autoCapitalize="none"
         mode="outlined"

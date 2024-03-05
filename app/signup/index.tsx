@@ -90,10 +90,11 @@ export default function Signup() {
         };
 
         await auth().currentUser?.updateProfile(update);
-        const userId = auth().currentUser?.uid;
-        const dName = auth().currentUser?.displayName;
+        const userId = auth().currentUser?.uid!;
+        const userDisplayName = auth().currentUser?.displayName!;
+        const email = auth().currentUser?.email!;
 
-        await createUserRecord(userId!, dName!);
+        await createUserRecord(userId, userDisplayName, email);
         console.log("User account created & signed in!", res);
         router.navigate("/dashboard");
       })

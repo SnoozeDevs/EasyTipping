@@ -28,13 +28,14 @@ export const signOutUser = () => {
     });
 };
 
-export const createUserRecord = (userID: string, displayName: string) => {
+export const createUserRecord = (userID: string, displayName: string, email: string) => {
   firestore()
     .collection('users')
     .doc(userID)
     .set({
       userID: userID,
-      displayName: displayName
+      displayName: displayName,
+      email: email,
     }, { merge: true }).then(() => {
       console.log('user added')
     })
@@ -49,4 +50,14 @@ export const updateUserRecord = async (userID: string, randomString: string) => 
     }, { merge: true }).then(() => {
       console.log('random thing added test')
     })
+}
+
+
+
+export const getUserDetails = async (userID: string, userData: Dispatch<SetStateAction<any>>) => {
+  firestore().collection('users').doc(userID).get().then((res: any) => {
+    userData(res._data)
+  }).catch((err) => {
+    console.error(err)
+  })
 }

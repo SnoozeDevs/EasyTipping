@@ -23,7 +23,7 @@ export default function Dashboard() {
   //TODO ||| fetched from the DB or from firebase (eg to display their name).
   useEffect(() => {
     setCurrentUser(auth().currentUser);
-  }, [isFocused]);
+  }, [auth().currentUser]);
 
   //* Only calls ladder data from DB if it is not loaded
   useFocusEffect(
@@ -40,24 +40,28 @@ export default function Dashboard() {
 
   //* Fetch real time data from db as soon as their data model changes
   useEffect(() => {
-    const userDocChange = firestore()
-      .collection("users")
-      .doc(auth()?.currentUser?.uid)
-      .onSnapshot(
-        (snapshot) => {
-          console.log("snapshot changed", snapshot.data());
-          const data = snapshot.data();
-          setUser(data);
-        },
-        (error) => console.error(error)
-      );
-    return () => userDocChange();
+    if (auth().currentUser) {
+      const userDocChange = firestore()
+        .collection("users")
+        .doc(auth()?.currentUser?.uid)
+        .onSnapshot(
+          (snapshot) => {
+            console.log("snapshot changed", snapshot.data());
+            const data = snapshot.data();
+            setUser(data);
+          },
+          (error) => console.error(error)
+        );
+      return () => userDocChange();
+    }
   }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
-      <Text>Current user: {currentUser?.displayName}</Text>
+      <Text>
+        Current user: {currentUser ? currentUser?.displayName : "Loading..."}
+      </Text>
       <Text>Random val: {user?.randomString}</Text>
       <TextInput
         autoCapitalize="none"

@@ -8,6 +8,7 @@ import auth from "@react-native-firebase/auth";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import { getLadder, signOutUser, updateUserRecord } from "@/utils/utils";
+import { TextInput } from "react-native-paper";
 
 export default function Dashboard() {
   const [teamData, setTeamData] = useState<Array<string>>([]);
@@ -37,6 +38,8 @@ export default function Dashboard() {
     }, [getLadder])
   );
 
+  const [updateTestValue, setUpdateTestValue] = useState("");
+
   //! WIP -- Not Complete yet. ----------
   useEffect(() => {
     console.log("user record changed");
@@ -52,7 +55,7 @@ export default function Dashboard() {
         (error) => console.error(error)
       );
     return () => userDocChange();
-  }, [dummyVal]);
+  }, []);
   //! WIP -------------------------
 
   return (
@@ -61,15 +64,20 @@ export default function Dashboard() {
       <Text>Current user: {currentUser?.displayName}</Text>
       <Text>Random val: {user?.randomString}</Text>
       <Button title="Signout" onPress={signOutUser} />
+      <TextInput
+        autoCapitalize="none"
+        mode="outlined"
+        label="Enter db update"
+        onChangeText={(event: any) => {
+          setUpdateTestValue(event);
+        }}
+        value={updateTestValue ?? ""}
+        placeholder="Enter email address"
+      />
       <Button
-        title="Update record"
+        title="Update test record"
         onPress={() => {
-          updateUserRecord(
-            auth().currentUser?.uid!,
-            "Hello world",
-            dummyVal,
-            setDummyVal
-          );
+          updateUserRecord(auth().currentUser?.uid!, updateTestValue);
         }}
       />
       <View

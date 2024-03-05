@@ -63,12 +63,9 @@ function RootLayoutNav() {
           gestureEnabled: true,
           animationTypeForReplace: "push",
         }}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <Drawer />
-        </GestureHandlerRootView>
         <Stack.Screen name="login/index" options={{ headerShown: false }} />
         <Stack.Screen name="signup/index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(home)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       </Stack>
     </ThemeProvider>

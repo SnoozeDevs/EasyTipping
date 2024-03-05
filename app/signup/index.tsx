@@ -40,6 +40,8 @@ export default function Signup() {
       setEmailHasError(false);
       setPasswordHasError(false);
       setDisplayNameHasError(false);
+      setEmail("");
+      setPassword("");
     }, [])
   );
 

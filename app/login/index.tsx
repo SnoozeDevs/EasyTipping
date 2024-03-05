@@ -37,6 +37,8 @@ export default function Login() {
     useCallback(() => {
       setEmailHasError(false);
       setPasswordHasError(false);
+      setEmail("");
+      setPassword("");
     }, [])
   );
 

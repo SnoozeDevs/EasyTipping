@@ -28,7 +28,7 @@ export default function Layout() {
       screenOptions={{ headerShown: false, drawerHideStatusBarOnOpen: true }}
       drawerContent={() => {
         return (
-          <DrawerContentScrollView>
+          <DrawerContentScrollView style={{ display: "flex", flex: 1 }}>
             <CustomDrawer />
           </DrawerContentScrollView>
         );

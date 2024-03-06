@@ -4,6 +4,8 @@ import auth from "@react-native-firebase/auth";
 import { Button, View, Text } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import * as S from "./CustomDrawer.styles";
+import Drawer from "expo-router/drawer";
+import { router } from "expo-router";
 
 const CustomDrawer = ({}: ICustomDrawerProps) => {
   const [user, setUser] = useState<TUserRecord>();
@@ -24,7 +26,7 @@ const CustomDrawer = ({}: ICustomDrawerProps) => {
       <Button
         title="Settings"
         onPress={() => {
-          console.log("settings pressed");
+          router.navigate("settings");
         }}
       />
       <Button

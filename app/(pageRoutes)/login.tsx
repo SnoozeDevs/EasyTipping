@@ -1,5 +1,4 @@
 import { Pressable, useColorScheme } from "react-native";
-import * as S from "./login.styles";
 import { Link } from "expo-router";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
@@ -7,6 +6,7 @@ import auth from "@react-native-firebase/auth";
 import { useCallback, useEffect, useState } from "react";
 import { useLocalSearchParams, useGlobalSearchParams } from "expo-router";
 import { router } from "expo-router";
+import styled from "styled-components/native";
 import {
   TextInput as PaperTextInput,
   Button as PaperButton,
@@ -21,7 +21,7 @@ import {
   INCORRECT_PASSWORD,
 } from "@/utils/constants";
 
-export default function Login() {
+export default function LoginPage() {
   const searchParams = useLocalSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -110,8 +110,8 @@ export default function Login() {
   };
 
   return (
-    <S.Login>
-      <S.InputContainer>
+    <Login>
+      <InputContainer>
         <PaperTextInput
           theme={theme}
           style={{ width: "100%" }}
@@ -126,9 +126,9 @@ export default function Login() {
           value={email ?? ""}
           placeholder="Enter email address"
         />
-        {emailHasError && <S.Error>{emailErrorMessage}</S.Error>}
-      </S.InputContainer>
-      <S.InputContainer>
+        {emailHasError && <Error>{emailErrorMessage}</Error>}
+      </InputContainer>
+      <InputContainer>
         <PaperTextInput
           theme={theme}
           style={{ width: "100%" }}
@@ -155,8 +155,8 @@ export default function Login() {
           value={password ?? ""}
           placeholder="Enter password"
         />
-        {passwordHasError && <S.Error>{passwordErrorMessage}</S.Error>}
-      </S.InputContainer>
+        {passwordHasError && <Error>{passwordErrorMessage}</Error>}
+      </InputContainer>
       <PaperButton
         theme={theme}
         style={{ width: "100%" }}
@@ -167,11 +167,43 @@ export default function Login() {
         Login
       </PaperButton>
 
-      <Link href="/signup/" asChild>
+      <Link href="/signup" asChild>
         <Pressable>
-          <S.Link>Create an account</S.Link>
+          <StyledLink>Create an account</StyledLink>
         </Pressable>
       </Link>
-    </S.Login>
+    </Login>
   );
 }
+
+const Login = styled.View`
+  background-color: transparent;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  gap: 8px;
+  padding: 60px;
+`;
+
+export const StyledLink = styled.Text`
+  display: flex;
+  text-align: center;
+  font-size: 12px;
+  color: #000000;
+  text-decoration: underline;
+`;
+
+export const Error = styled.Text`
+  color: red;
+  font-size: 10px;
+  text-align: left;
+  width: 100%;
+`;
+
+export const InputContainer = styled.View`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;

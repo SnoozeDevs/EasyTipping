@@ -1,29 +1,20 @@
 import { StyleSheet, FlatList, Button } from "react-native";
-import axios from "axios";
+
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import auth from "@react-native-firebase/auth";
 
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import firestore from "@react-native-firebase/firestore";
-import { getLadder, signOutUser, updateUserRecord } from "@/utils/utils";
+import { useFocusEffect } from "@react-navigation/native";
+import { getLadder, updateUserRecord } from "@/utils/utils";
 import { TextInput } from "react-native-paper";
+import { useCurrentUser } from "@/utils/customHooks";
 
 export default function Dashboard() {
+  const currentUser = useCurrentUser();
   const [teamData, setTeamData] = useState<Array<string>>([]);
   const [isTeamDataLoaded, setIsTeamDataLoaded] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState(auth().currentUser);
-  const [user, setUser] = useState<any>();
-  const isFocused = useIsFocused();
   const [updateTestValue, setUpdateTestValue] = useState("");
-
-  //TODO ||| Create boolean to return loader when user data is not ready to be displayed,
-  //TODO ||| this can be broken up to loading states for different parts of the page, and will provide load states for when data is not
-  //TODO ||| fetched from the DB or from firebase (eg to display their name).
-  useEffect(() => {
-    setCurrentUser(auth().currentUser);
-  }, [auth().currentUser]);
 
   //* Only calls ladder data from DB if it is not loaded
   useFocusEffect(
@@ -38,31 +29,13 @@ export default function Dashboard() {
     }, [getLadder])
   );
 
-  //* Fetch real time data from db as soon as their data model changes
-  useEffect(() => {
-    if (auth().currentUser) {
-      const userDocChange = firestore()
-        .collection("users")
-        .doc(auth()?.currentUser?.uid)
-        .onSnapshot(
-          (snapshot) => {
-            console.log("snapshot changed", snapshot.data());
-            const data = snapshot.data();
-            setUser(data);
-          },
-          (error) => console.error(error)
-        );
-      return () => userDocChange();
-    }
-  }, []);
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
       <Text>
         Current user: {currentUser ? currentUser?.displayName : "Loading..."}
       </Text>
-      <Text>Random val: {user?.randomString}</Text>
+      <Text>Random val: {currentUser?.randomString}</Text>
       <TextInput
         autoCapitalize="none"
         mode="outlined"

@@ -52,8 +52,6 @@ export const updateUserRecord = async (userID: string, randomString: string) => 
     })
 }
 
-
-
 export const getUserDetails = async (userID: string, userData: Dispatch<SetStateAction<any>>) => {
   firestore().collection('users').doc(userID).get().then((res: any) => {
     userData(res._data)
@@ -61,3 +59,4 @@ export const getUserDetails = async (userID: string, userData: Dispatch<SetState
     console.error(err)
   })
 }
+

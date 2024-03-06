@@ -57,22 +57,37 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack
-        initialRouteName="login"
+        initialRouteName="(pageRoutes)/login"
         screenOptions={{
           gestureDirection: "horizontal",
           gestureEnabled: true,
           animationTypeForReplace: "push",
         }}>
-        <Stack.Screen name="login/index" options={{ headerShown: false }} />
-        <Stack.Screen name="signup/index" options={{ headerShown: false }} />
-        <Stack.Screen name="(home)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         <Stack.Screen
-          name="settings"
+          name="(pageRoutes)/login"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="(pageRoutes)/signup"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="(home)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(pageRoutes)/modal"
+          options={{ presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="(pageRoutes)/settings"
           options={{
             headerShown: true,
             headerTitle: "Settings",
             headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="index"
+          options={{
+            headerShown: false,
           }}
         />
       </Stack>

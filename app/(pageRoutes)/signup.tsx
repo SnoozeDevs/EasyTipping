@@ -7,9 +7,9 @@ import {
   TextInput as PaperTextInput,
   Button as PaperButton,
 } from "react-native-paper";
-import * as S from "./signup.styles";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
+import styled from "styled-components/native";
 import { useFocusEffect } from "@react-navigation/native";
 import { createUserRecord, isEmailValid } from "@/utils/utils";
 import {
@@ -123,8 +123,8 @@ export default function Signup() {
   };
 
   return (
-    <S.Signup>
-      <S.InputContainer>
+    <StyledSignup>
+      <InputContainer>
         <PaperTextInput
           theme={colors === "light" ? stdTheme : drkTheme}
           autoCapitalize="none"
@@ -138,10 +138,10 @@ export default function Signup() {
           value={email ?? ""}
           placeholder="Enter email address"
         />
-        {emailHasError && <S.Error>{emailErrorMessage}</S.Error>}
-      </S.InputContainer>
+        {emailHasError && <Error>{emailErrorMessage}</Error>}
+      </InputContainer>
 
-      <S.InputContainer>
+      <InputContainer>
         <PaperTextInput
           theme={colors === "light" ? stdTheme : drkTheme}
           autoCapitalize="none"
@@ -167,9 +167,9 @@ export default function Signup() {
           value={password ?? ""}
           placeholder="Enter password"
         />
-        {passwordHasError && <S.Error>{passwordErrorMessage}</S.Error>}
-      </S.InputContainer>
-      <S.InputContainer>
+        {passwordHasError && <Error>{passwordErrorMessage}</Error>}
+      </InputContainer>
+      <InputContainer>
         <PaperTextInput
           theme={colors === "light" ? stdTheme : drkTheme}
           autoCapitalize="none"
@@ -183,8 +183,8 @@ export default function Signup() {
           value={displayName ?? ""}
           placeholder="Enter display name"
         />
-        {displayNameHasError && <S.Error>{displaNameErrorMessage}</S.Error>}
-      </S.InputContainer>
+        {displayNameHasError && <Error>{displaNameErrorMessage}</Error>}
+      </InputContainer>
       <PaperButton
         style={{ width: "100%" }}
         mode="contained"
@@ -193,11 +193,43 @@ export default function Signup() {
         theme={colors === "light" ? stdTheme : drkTheme}>
         Sign Up
       </PaperButton>
-      <Link href="/login/" asChild>
+      <Link href="/login" asChild>
         <Pressable>
-          <S.Link>Already have an account? Log in</S.Link>
+          <StyledLink>Already have an account? Log in</StyledLink>
         </Pressable>
       </Link>
-    </S.Signup>
+    </StyledSignup>
   );
 }
+
+export const StyledSignup = styled.View`
+  background-color: transparent;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  gap: 8px;
+  padding: 60px;
+`;
+
+export const StyledLink = styled.Text`
+  display: flex;
+  text-align: center;
+  font-size: 12px;
+  color: #000000;
+  text-decoration: underline;
+`;
+
+export const Error = styled.Text`
+  color: red;
+  font-size: 10px;
+  text-align: left;
+  width: 100%;
+`;
+
+export const InputContainer = styled.View`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;

@@ -6,22 +6,18 @@ import { useEffect, useMemo, useState } from "react";
 import * as S from "./CustomDrawer.styles";
 import Drawer from "expo-router/drawer";
 import { router } from "expo-router";
+import { useIsFocused } from "@react-navigation/native";
+import { useCurrentUser } from "@/utils/customHooks";
 
 const CustomDrawer = ({}: ICustomDrawerProps) => {
-  const [user, setUser] = useState<TUserRecord>();
-
-  //* Updates the user details in the tab as soon as the account auth changes
-  //TODO we need to figure out a smarter way to update user state across the app. I think we
-  //TODO either have a parent context or pass state between components
-  useEffect(() => {
-    getUserDetails(auth().currentUser?.uid!, setUser);
-  }, [auth().currentUser]);
+  const currentUser = useCurrentUser();
 
   return (
     <S.CustomDrawer>
       <View>
-        <Text>Welcome: {user?.displayName}</Text>
-        <Text>{user?.email}</Text>
+        <Text>Welcome: {currentUser?.displayName}</Text>
+        <Text>Random val: {currentUser?.randomString}</Text>
+        <Text>{currentUser?.email}</Text>
       </View>
       <Button
         title="Settings"

@@ -37,7 +37,12 @@ const CustomDrawer = ({}: ICustomDrawerProps) => {
           console.log("dark mode pressed");
         }}
       />
-      <Button title="Log out" onPress={signOutUser} />
+      <Button
+        title="Log out"
+        onPress={() => {
+          router.navigate("login");
+        }}
+      />
     </S.CustomDrawer>
   );
 };

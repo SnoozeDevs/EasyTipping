@@ -5,17 +5,25 @@ import { TUserRecord } from "@/components/CustomDrawer";
 import firestore from "@react-native-firebase/firestore";
 
 export function useCurrentUser() {
-  //TODO move user type to shared typeface
-  //TODO fixed log out firestore permission error.
-  const [user, setUser] = useState<TUserRecord>();
+  const [user, setUser] = useState<TUserRecord | null>(null);
 
+  //* Update user if they are authorised, clear user if not.
   useEffect(() => {
-    getUserDetails(auth().currentUser?.uid!, setUser);
+    const unsubscribeAuth = auth().onAuthStateChanged((currentUser) => {
+      if (currentUser) {
+        getUserDetails(currentUser.uid, setUser);
+      } else {
+        setUser(null);
+      }
+    });
+    return () => unsubscribeAuth();
   }, [auth().currentUser]);
 
+  //* Update user record as soon as value is updated in Firestore Database
   useEffect(() => {
+    //* Check if user is authenticate to listen for DB changes.
     if (auth().currentUser) {
-      const userRecordChange = firestore()
+      const unsubscribeFirestore = firestore()
         .collection("users")
         .doc(auth().currentUser?.uid!)
         .onSnapshot(
@@ -25,7 +33,8 @@ export function useCurrentUser() {
           },
           (error) => console.error(error)
         );
-      return () => userRecordChange();
+
+      return () => unsubscribeFirestore();
     }
   }, []);
 

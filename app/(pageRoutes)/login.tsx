@@ -11,8 +11,8 @@ import {
   TextInput as PaperTextInput,
   Button as PaperButton,
 } from "react-native-paper";
-import { useFocusEffect } from "@react-navigation/native";
-import { isEmailValid } from "@/utils/utils";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { isEmailValid, signOutUser } from "@/utils/utils";
 import {
   NO_EMAIL_ENTERED,
   EMAIL_INVALID,
@@ -32,6 +32,13 @@ export default function LoginPage() {
   const [passwordSecured, setPasswordSecured] = useState(true);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const theme = useColorScheme() === "light" ? stdTheme : drkTheme;
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused && auth().currentUser) {
+      signOutUser();
+    }
+  }, [isFocused]);
 
   useFocusEffect(
     useCallback(() => {

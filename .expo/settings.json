@@ -1,3 +1,10 @@
 {
-  "urlRandomness": "oY0VTlM"
+  "urlRandomness": "oY0VTlM",
+  "dev": true,
+  "minify": false,
+  "https": false,
+  "scheme": "exp+easytipping",
+  "hostType": "lan",
+  "lanType": "ip",
+  "devClient": false
 }

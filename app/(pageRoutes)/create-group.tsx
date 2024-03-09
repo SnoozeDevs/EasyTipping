@@ -7,15 +7,15 @@ import Button from "@/components/Button";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
 import { useState } from "react";
-import { Checkbox } from "react-native-paper";
+import { Switch } from "react-native-paper";
 
 export default function CreateJoinGroup() {
   const colors = useColorScheme();
   const [groupName, setgroupName] = useState();
   const [groupNameHasError, setGroupNameHasError] = useState<boolean>();
-  const [hasJokerRound, setHasJokerRound] = useState(false);
-  const [hasPerfectRound, setHasPerfectRound] = useState(false);
-  const [hasFinals, setHasFinals] = useState(false);
+  const [hasJokerRound, setHasJokerRound] = useState(true);
+  const [hasPerfectRound, setHasPerfectRound] = useState(true);
+  const [hasFinals, setHasFinals] = useState(true);
 
   return (
     <View style={styles.container}>
@@ -35,24 +35,33 @@ export default function CreateJoinGroup() {
         value={groupName ?? ""}
         placeholder="Group name"
       />
-      <Checkbox
-        status={hasJokerRound ? "checked" : "unchecked"}
-        onPress={() => {
-          setHasJokerRound(!hasJokerRound);
-        }}
-      />
-      <Checkbox
-        status={hasPerfectRound ? "checked" : "unchecked"}
-        onPress={() => {
-          setHasPerfectRound(!hasPerfectRound);
-        }}
-      />
-      <Checkbox
-        status={hasFinals ? "checked" : "unchecked"}
-        onPress={() => {
-          setHasFinals(!hasFinals);
-        }}
-      />
+      <View>
+        <Text>Has Joker round?</Text>
+        <Switch
+          value={hasJokerRound}
+          onValueChange={() => {
+            setHasJokerRound(!hasJokerRound);
+          }}
+        />
+      </View>
+      <View>
+        <Text>Has Perfect round?</Text>
+        <Switch
+          value={hasPerfectRound}
+          onValueChange={() => {
+            setHasPerfectRound(!hasPerfectRound);
+          }}
+        />
+      </View>
+      <View>
+        <Text>Has Finals?</Text>
+        <Switch
+          value={hasFinals}
+          onValueChange={() => {
+            setHasFinals(!hasFinals);
+          }}
+        />
+      </View>
       <Button
         title="Create group"
         onPress={() => {

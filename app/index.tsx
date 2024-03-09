@@ -7,8 +7,14 @@ export default function Index() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<any>();
 
+  if (user) {
+    user.getIdToken(true).then((res: any) => {
+      console.log("res", res);
+    });
+  }
+
   // Handle user state changes
-  function onAuthStateChanged(user: any) {
+  async function onAuthStateChanged(user: any) {
     setUser(user);
     if (initializing) setInitializing(false);
   }

@@ -1,6 +1,5 @@
 import firestore from "@react-native-firebase/firestore";
-import { Dispatch, SetStateAction } from "react";
-import { router } from "expo-router";
+import { Dispatch, SetStateAction, useState } from "react";
 import auth from "@react-native-firebase/auth";
 
 export const isEmailValid = (email: string) => {
@@ -20,12 +19,7 @@ export const getLadder = async (setTeamData: Dispatch<SetStateAction<Array<strin
 };
 
 export const signOutUser = () => {
-  auth()
-    .signOut()
-    .then(async () => {
-      router.navigate("login");
-      console.log("user signed out");
-    });
+  auth().signOut()
 };
 
 export const createUserRecord = (userID: string, displayName: string, email: string) => {
@@ -39,6 +33,18 @@ export const createUserRecord = (userID: string, displayName: string, email: str
     }, { merge: true }).then(() => {
       console.log('user added')
     })
+}
+
+export const getCurrentRound = async (year: string, setRound: Dispatch<SetStateAction<number>>) => {
+  await firestore().collection("standings").doc(`${year}`).get().then((res: any) => {
+    setRound(res._data.currentRound)
+  })
+}
+
+export const getFixturesForCurrentRound = async (year: string, currentRound: string, setFixtures: Dispatch<SetStateAction<number>>) => {
+  await firestore().collection('standings').doc(`${year}`).collection('rounds').doc(`${currentRound}`).get().then((res: any) => {
+    setFixtures(res._data.roundArray)
+  })
 }
 
 export const updateUserRecord = async (userID: string, randomString: string) => {

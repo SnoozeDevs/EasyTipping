@@ -77,10 +77,30 @@ function RootLayoutNav() {
           options={{ presentation: "modal" }}
         />
         <Stack.Screen
+          name="(pageRoutes)/groups"
+          options={{
+            presentation: "card",
+            headerBackTitle: "Back",
+            headerBackTitleVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="(pageRoutes)/create-group"
+          options={{ presentation: "modal", headerBackTitle: "Back" }}
+        />
+        <Stack.Screen
           name="(pageRoutes)/settings"
           options={{
             headerShown: true,
             headerTitle: "Settings",
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="(pageRoutes)/profile"
+          options={{
+            headerShown: true,
+            headerTitle: "Profile",
             headerBackTitle: "Back",
           }}
         />

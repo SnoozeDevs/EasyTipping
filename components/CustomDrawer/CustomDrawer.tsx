@@ -32,7 +32,7 @@ const CustomDrawer = ({}: ICustomDrawerProps) => {
             title="Profile"
             iconName="verified-user"
             onPress={() => {
-              console.log("profile pressed");
+              router.navigate("profile");
             }}
           />
           <Button

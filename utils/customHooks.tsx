@@ -36,7 +36,7 @@ export function useCurrentUser() {
 
       return () => unsubscribeFirestore();
     }
-  }, []);
+  }, [auth().currentUser]);
 
   return user;
 }

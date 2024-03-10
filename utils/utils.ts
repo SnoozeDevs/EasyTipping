@@ -2,6 +2,7 @@ import firestore from "@react-native-firebase/firestore";
 import { Dispatch, SetStateAction, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import uuid from 'react-native-uuid';
+import { router } from "expo-router";
 
 export const isEmailValid = (email: string) => {
   const validRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -90,6 +91,7 @@ export const createGroup = async (groupData: any) => {
       console.log('group created', res)
     }).catch((err) => {
       console.error(err);
+      return
     })
 
   //* Adds the user who created it an makes them an admin
@@ -103,6 +105,7 @@ export const createGroup = async (groupData: any) => {
     console.log(`user added to group ${groupData.groupName}`, res)
   }).catch((err) => {
     console.error(err);
+    return
   })
 
   const groupObject = {
@@ -116,7 +119,19 @@ export const createGroup = async (groupData: any) => {
     console.log("Group associated with user record", res);
   }).catch((err) => {
     console.error(err);
+    return
   })
 
+  //TODO send group id as param to automatically select that tip on tip page
+  //TODO when navigating back to tip screen
+  router.navigate('tip')
+}
+
+export const getGroups = (userId: string, userGroups: Dispatch<SetStateAction<any>>) => {
+  firestore().collection('users').doc(userId).get().then((res: any) => {
+    userGroups(res._data.groups)
+  }).catch((err) => {
+    console.error(err)
+  })
 }
 

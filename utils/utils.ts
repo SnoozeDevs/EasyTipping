@@ -8,6 +8,7 @@ export const isEmailValid = (email: string) => {
   return validRegex.test(email)
 }
 
+//! Deprecated --- needs to be updated
 export const getLadder = async (setTeamData: Dispatch<SetStateAction<Array<string>>>, setIsTeamDataLoaded: Dispatch<SetStateAction<boolean>>) => {
   await firestore()
     .collection("standings")
@@ -75,6 +76,7 @@ export const createGroup = async (groupData: any) => {
 
   const groupId = uuid.v4().toString()
 
+  //* Creates initial group record
   await firestore()
     .collection('groups').doc(groupId)
     .set({
@@ -90,7 +92,9 @@ export const createGroup = async (groupData: any) => {
       console.error(err);
     })
 
+  //* Adds the user who created it an makes them an admin
   await firestore().collection('groups').doc(groupId).collection('users').doc(auth().currentUser?.uid).set({
+    name: auth().currentUser?.displayName,
     isAdmin: true,
     tips: {
       round1: 'Blah'
@@ -107,6 +111,7 @@ export const createGroup = async (groupData: any) => {
     isAdmin: true,
   }
 
+  //* Associates the newly created group in the users collection to serve on user powered pages.
   await updateUserRecord(auth().currentUser?.uid!, 'groups', groupObject, true).then((res) => {
     console.log("Group associated with user record", res);
   }).catch((err) => {

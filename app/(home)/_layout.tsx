@@ -1,7 +1,7 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
-import { Button, Pressable, View } from "react-native";
+import { Button, Platform, Pressable, View } from "react-native";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
@@ -25,7 +25,10 @@ export default function Layout() {
 
   return (
     <Drawer
-      screenOptions={{ headerShown: false, drawerHideStatusBarOnOpen: true }}
+      screenOptions={{
+        headerShown: false,
+        drawerHideStatusBarOnOpen: Platform.OS === "ios" ? true : false,
+      }}
       drawerContent={() => {
         return (
           <DrawerContentScrollView

@@ -7,3 +7,4 @@ expo-env.d.ts
 # @end expo-cli
 .expo/
 .expo/devices.json
+node_modules

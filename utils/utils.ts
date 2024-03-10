@@ -37,13 +37,17 @@ export const createUserRecord = (userID: string, displayName: string, email: str
 
 export const getCurrentRound = async (year: string, setRound: Dispatch<SetStateAction<number>>) => {
   await firestore().collection("standings").doc(`${year}`).get().then((res: any) => {
-    setRound(res._data.currentRound)
+    setRound(res._data?.currentRound)
+  }).catch((err) => {
+    console.error(err)
   })
 }
 
 export const getFixturesForCurrentRound = async (year: string, currentRound: string, setFixtures: Dispatch<SetStateAction<number>>) => {
   await firestore().collection('standings').doc(`${year}`).collection('rounds').doc(`${currentRound}`).get().then((res: any) => {
-    setFixtures(res._data.roundArray)
+    setFixtures(res._data?.roundArray)
+  }).catch((err) => {
+    console.error(err)
   })
 }
 
@@ -59,6 +63,14 @@ export const updateUserRecord = async (userID: string, randomString: string) => 
 }
 
 export const getUserDetails = async (userID: string, userData: Dispatch<SetStateAction<any>>) => {
+  firestore().collection('users').doc(userID).get().then((res: any) => {
+    userData(res._data)
+  }).catch((err) => {
+    console.error(err)
+  })
+}
+
+export const createGroup = async (userID: string, userData: Dispatch<SetStateAction<any>>) => {
   firestore().collection('users').doc(userID).get().then((res: any) => {
     userData(res._data)
   }).catch((err) => {

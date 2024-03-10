@@ -52,12 +52,12 @@ export const getFixturesForCurrentRound = async (year: string, currentRound: str
   })
 }
 
-export const updateUserRecord = async (userID: string, recordKey: string, recordValue: any) => {
+export const updateUserRecord = async (userID: string, recordKey: string, recordValue: any, isArray: boolean) => {
   firestore()
     .collection('users')
     .doc(userID)
     .set({
-      [recordKey]: recordValue
+      [recordKey]: isArray ? firestore.FieldValue.arrayUnion(recordValue) : recordValue
     }, { merge: true }).then(() => {
       console.log('Record updated')
     })
@@ -101,11 +101,13 @@ export const createGroup = async (groupData: any) => {
     console.error(err);
   })
 
-  await updateUserRecord(auth().currentUser?.uid!, 'groups', {
+  const groupObject = {
     groupName: groupData.groupName,
     groupId: groupId,
     isAdmin: true,
-  }).then((res) => {
+  }
+
+  await updateUserRecord(auth().currentUser?.uid!, 'groups', groupObject, true).then((res) => {
     console.log("Group associated with user record", res);
   }).catch((err) => {
     console.error(err);

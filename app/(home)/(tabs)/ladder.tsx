@@ -49,7 +49,12 @@ export default function Dashboard() {
       <Button
         title="Update test record"
         onPress={() => {
-          updateUserRecord(auth().currentUser?.uid!, updateTestValue);
+          updateUserRecord(
+            auth().currentUser?.uid!,
+            "randomString",
+            updateTestValue,
+            false
+          );
         }}
       />
       <View

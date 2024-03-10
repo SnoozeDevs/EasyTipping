@@ -9,6 +9,7 @@ import Button from "@/components/Button";
 import { router } from "expo-router";
 import { SegmentedButtons } from "react-native-paper";
 import { stdTheme } from "@/themes/stdTheme";
+import React from "react";
 
 export default function TipComponent() {
   const [round, setRound] = useState<any>(null);

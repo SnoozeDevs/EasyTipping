@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
@@ -7,10 +7,13 @@ import { getCurrentRound, getFixturesForCurrentRound } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { router } from "expo-router";
+import { SegmentedButtons } from "react-native-paper";
+import { stdTheme } from "@/themes/stdTheme";
 
 export default function TipComponent() {
   const [round, setRound] = useState<any>(null);
   const [fixtures, setFixtures] = useState<any>(null);
+  const [value, setValue] = useState("");
 
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
   useEffect(() => {
@@ -21,10 +24,28 @@ export default function TipComponent() {
     getFixturesForCurrentRound("2024", round, setFixtures);
   }, [round]);
 
-  console.log("fixtures", fixtures);
+  // console.log("fixtures", fixtures);
+  console.log("value", value);
 
   return (
     <Tip>
+      <SegmentedButtons
+        value={value}
+        theme={stdTheme}
+        onValueChange={setValue}
+        buttons={[
+          {
+            value: "walk",
+            label: "Walking",
+          },
+          {
+            value: "train",
+            label: "Transit",
+          },
+          { value: "drive", label: "Driving" },
+        ]}
+      />
+
       <Button
         title="Create or join group"
         onPress={() => {

@@ -1,6 +1,7 @@
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
+import React from "react";
 
 export default function Index() {
   // Set an initializing state whilst Firebase connects
@@ -8,8 +9,8 @@ export default function Index() {
   const [user, setUser] = useState<any>();
 
   if (user) {
-    user.getIdToken(true).then((res: any) => {
-      console.log("res", res);
+    user.getIdToken(true).then(() => {
+      console.log("User token refreshed");
     });
   }
 

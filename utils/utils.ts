@@ -1,6 +1,7 @@
 import firestore from "@react-native-firebase/firestore";
 import { Dispatch, SetStateAction, useState } from "react";
 import auth from "@react-native-firebase/auth";
+import uuid from 'react-native-uuid';
 
 export const isEmailValid = (email: string) => {
   const validRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -51,14 +52,14 @@ export const getFixturesForCurrentRound = async (year: string, currentRound: str
   })
 }
 
-export const updateUserRecord = async (userID: string, randomString: string) => {
+export const updateUserRecord = async (userID: string, recordKey: string, recordValue: any) => {
   firestore()
     .collection('users')
     .doc(userID)
     .set({
-      randomString: randomString
+      [recordKey]: recordValue
     }, { merge: true }).then(() => {
-      console.log('random thing added test')
+      console.log('Record updated')
     })
 }
 
@@ -70,11 +71,45 @@ export const getUserDetails = async (userID: string, userData: Dispatch<SetState
   })
 }
 
-export const createGroup = async (userID: string, userData: Dispatch<SetStateAction<any>>) => {
-  firestore().collection('users').doc(userID).get().then((res: any) => {
-    userData(res._data)
+export const createGroup = async (groupData: any) => {
+
+  const groupId = uuid.v4().toString()
+
+  await firestore()
+    .collection('groups').doc(groupId)
+    .set({
+      groupName: groupData.groupName,
+      admin: auth().currentUser?.uid,
+      adminName: auth().currentUser?.displayName,
+      hasJoker: groupData.hasJokerRound,
+      hasPerfectRound: groupData.hasPerfectRound,
+      hasFinals: groupData.hasFinals,
+    }, { merge: true }).then((res) => {
+      console.log('group created', res)
+    }).catch((err) => {
+      console.error(err);
+    })
+
+  await firestore().collection('groups').doc(groupId).collection('users').doc(auth().currentUser?.uid).set({
+    isAdmin: true,
+    tips: {
+      round1: 'Blah'
+    }
+  }).then((res) => {
+    console.log(`user added to group ${groupData.groupName}`, res)
   }).catch((err) => {
-    console.error(err)
+    console.error(err);
   })
+
+  await updateUserRecord(auth().currentUser?.uid!, 'groups', {
+    groupName: groupData.groupName,
+    groupId: groupId,
+    isAdmin: true,
+  }).then((res) => {
+    console.log("Group associated with user record", res);
+  }).catch((err) => {
+    console.error(err);
+  })
+
 }
 

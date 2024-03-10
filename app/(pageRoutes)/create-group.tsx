@@ -8,14 +8,31 @@ import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
 import { useState } from "react";
 import { Switch } from "react-native-paper";
+import { createGroup } from "@/utils/utils";
 
 export default function CreateJoinGroup() {
   const colors = useColorScheme();
-  const [groupName, setgroupName] = useState();
+  const [groupName, setgroupName] = useState<string>();
   const [groupNameHasError, setGroupNameHasError] = useState<boolean>();
   const [hasJokerRound, setHasJokerRound] = useState(true);
   const [hasPerfectRound, setHasPerfectRound] = useState(true);
   const [hasFinals, setHasFinals] = useState(true);
+
+  const parseGroupData = (
+    groupName: string,
+    jokerRound: boolean,
+    perfectRound: boolean,
+    finals: boolean
+  ) => {
+    const groupData = {
+      groupName: groupName,
+      hasJokerRound: jokerRound,
+      hasPerfectRound: perfectRound,
+      hasFinals: finals,
+    };
+
+    return groupData;
+  };
 
   return (
     <View style={styles.container}>
@@ -65,7 +82,14 @@ export default function CreateJoinGroup() {
       <Button
         title="Create group"
         onPress={() => {
-          console.log("group group");
+          createGroup(
+            parseGroupData(
+              groupName!,
+              hasJokerRound,
+              hasPerfectRound,
+              hasFinals
+            )
+          );
         }}
       />
 

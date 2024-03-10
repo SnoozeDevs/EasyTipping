@@ -5,6 +5,7 @@ import { TUserRecord } from "@/components/CustomDrawer";
 import firestore from "@react-native-firebase/firestore";
 
 export function useCurrentUser() {
+  //TODO build in listeners for all user changes in the db.
   const [user, setUser] = useState<TUserRecord | null>(null);
 
   //* Update user if they are authorised, clear user if not.
@@ -28,6 +29,7 @@ export function useCurrentUser() {
         .doc(auth().currentUser?.uid!)
         .onSnapshot(
           (snapshot) => {
+            //TODO update user record type.
             const data = snapshot.data() as TUserRecord;
             setUser(data);
           },

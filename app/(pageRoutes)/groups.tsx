@@ -8,6 +8,7 @@ import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
 import { useState } from "react";
 import { router } from "expo-router";
+import React from "react";
 
 export default function CreateJoinGroup() {
   const colors = useColorScheme();

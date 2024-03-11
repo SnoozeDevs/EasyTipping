@@ -13,6 +13,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
 import { useColorScheme } from "@/components/useColorScheme";
+import React from "react";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -86,7 +87,11 @@ function RootLayoutNav() {
         />
         <Stack.Screen
           name="(pageRoutes)/create-group"
-          options={{ presentation: "modal", headerBackTitle: "Back" }}
+          options={{
+            presentation: "modal",
+            headerBackTitle: "Back",
+            headerBackTitleVisible: false,
+          }}
         />
         <Stack.Screen
           name="(pageRoutes)/settings"
@@ -94,6 +99,7 @@ function RootLayoutNav() {
             headerShown: true,
             headerTitle: "Settings",
             headerBackTitle: "Back",
+            headerBackTitleVisible: false,
           }}
         />
         <Stack.Screen
@@ -102,6 +108,7 @@ function RootLayoutNav() {
             headerShown: true,
             headerTitle: "Profile",
             headerBackTitle: "Back",
+            headerBackTitleVisible: false,
           }}
         />
         <Stack.Screen

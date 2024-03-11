@@ -33,6 +33,7 @@ export const createUserRecord = (userID: string, displayName: string, email: str
       userID: userID,
       displayName: displayName,
       email: email,
+      groups: [],
     }, { merge: true }).then(() => {
       console.log('user added')
     })
@@ -48,7 +49,8 @@ export const getCurrentRound = async (year: string, setRound: Dispatch<SetStateA
 
 export const getFixturesForCurrentRound = async (year: string, currentRound: string, setFixtures: Dispatch<SetStateAction<number>>) => {
   await firestore().collection('standings').doc(`${year}`).collection('rounds').doc(`${currentRound}`).get().then((res: any) => {
-    setFixtures(res._data?.roundArray)
+    const timeSortedFixtures = res._data?.roundArray.sort((a: any, b: any) => a.unixtime - b.unixtime);
+    setFixtures(timeSortedFixtures)
   }).catch((err) => {
     console.error(err)
   })
@@ -73,8 +75,8 @@ export const getUserDetails = async (userID: string, userData: Dispatch<SetState
   })
 }
 
-export const createGroup = async (groupData: any) => {
-
+export const createGroup = async (groupData: any, isLoading?: Dispatch<SetStateAction<boolean>>) => {
+  isLoading && isLoading(true)
   const groupId = uuid.v4().toString()
 
   //* Creates initial group record
@@ -122,9 +124,10 @@ export const createGroup = async (groupData: any) => {
     return
   })
 
-  //TODO send group id as param to automatically select that tip on tip page
+  //TODO send group id as param to automatically select that tip
   //TODO when navigating back to tip screen
   router.navigate('tip')
+  isLoading && isLoading(false)
 }
 
 export const getGroups = (userId: string, userGroups: Dispatch<SetStateAction<any>>) => {
@@ -135,3 +138,45 @@ export const getGroups = (userId: string, userGroups: Dispatch<SetStateAction<an
   })
 }
 
+export const abbreviateTeam = (teamName: string) => {
+
+  switch (teamName) {
+    case 'Richmond':
+      return 'RICH'
+    case 'Carlton':
+      return 'CARL'
+    case 'Sydney':
+      return 'SYD'
+    case 'CollingWood':
+      return 'COLL'
+    case 'Hawthorn':
+      return 'HAW'
+    case 'Essendon':
+      return 'ESS'
+    case 'Brisbane Lions':
+      return 'BL'
+    case 'Fremantle':
+      return 'FRE'
+    case 'St Kilda':
+      return 'STK'
+    case 'Geelong':
+      return 'GEEL'
+    case 'Adelaide':
+      return 'ADEL'
+    case 'Gold Coast':
+      return 'GCFC'
+    case 'North Melbourne':
+      return 'NMFC'
+    case 'Greater Western Sydney':
+      return 'GWS'
+    case 'Western Bulldogs':
+      return 'WB'
+    case 'Melbourne':
+      return 'MELB'
+    case 'West Coast':
+      return 'WCE'
+    case 'Port Adelaide':
+      return 'PORT'
+
+  }
+}

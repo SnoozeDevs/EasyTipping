@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleProp, StyleSheet, ViewStyle } from "react-native";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
@@ -19,7 +19,7 @@ import { useCurrentUser } from "@/utils/customHooks";
 export default function TipComponent() {
   const [round, setRound] = useState<any>(null);
   const [fixtures, setFixtures] = useState<any>(null);
-  const [selectedGroup, setSelectedGroup] = useState();
+  const [selectedGroup, setSelectedGroup] = useState<any>();
   const user = useCurrentUser();
 
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
@@ -44,6 +44,16 @@ export default function TipComponent() {
       const mappedObject = {
         value: group.groupId,
         label: group.groupName,
+        style:
+          groupData.length < 2
+            ? {
+                borderTopRightRadius: 25,
+                borderBottomRightRadius: 25,
+                borderTopLeftRadius: 25,
+                borderBottomLeftRadius: 25,
+                borderRightWidth: 1,
+              }
+            : {},
       };
       mappedArray.push(mappedObject);
     });
@@ -51,29 +61,34 @@ export default function TipComponent() {
     return mappedArray;
   };
 
+  console.log(fixtures);
+
   return (
     <Tip>
       {user ? (
         user.groups.length > 0 ? (
-          <>
-            <SegmentedButtons
-              value={selectedGroup!}
-              theme={stdTheme}
-              onValueChange={setSelectedGroup}
-              buttons={parseTippingGroups(user.groups)}
-            />
-            <Text>This is the tip page</Text>
-            <Text>Round: {round}</Text>
-            <Text>{fixtures ? fixtures[0].ateam : "Loading..."}</Text>
-          </>
+          <TipContainer>
+            <SafeAreaView>
+              <SegmentedButtons
+                style={{ width: "90%" }}
+                value={selectedGroup!}
+                theme={stdTheme}
+                onValueChange={setSelectedGroup}
+                buttons={parseTippingGroups(user.groups)}
+              />
+            </SafeAreaView>
+            <Heading>Round {round}</Heading>
+          </TipContainer>
         ) : (
-          <Button
-            title="Create or join group"
-            onPress={() => {
-              router.navigate("/groups");
-            }}
-            iconName="group-add"
-          />
+          <ButtonContainer>
+            <Button
+              title="Create or Join Group"
+              onPress={() => {
+                router.navigate("/groups");
+              }}
+              iconName="account-group"
+            />
+          </ButtonContainer>
         )
       ) : (
         <Text>Loading...</Text>
@@ -84,7 +99,25 @@ export default function TipComponent() {
 
 const Tip = styled.View`
   flex: 1;
+  padding: 5% 0;
+  background-color: #fff;
+`;
+
+const TipContainer = styled.View`
+  display: flex;
+  width: 100%;
+  align-items: center;
+`;
+
+const Heading = styled.Text`
+  font-size: 22px;
+  font-weight: 600;
+  margin: 20px 0;
+`;
+
+const ButtonContainer = styled.View`
+  display: flex;
+  flex: 1;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
 `;

@@ -20,6 +20,8 @@ import {
   EMAIL_ALREADY_IN_USE,
   INCORRECT_PASSWORD,
 } from "@/utils/constants";
+import React from "react";
+import Button from "@/components/Button";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -185,14 +187,14 @@ export default function Signup() {
         />
         {displayNameHasError && <Error>{displaNameErrorMessage}</Error>}
       </InputContainer>
-      <PaperButton
-        style={{ width: "100%" }}
-        mode="contained"
-        loading={isSignupLoading}
+      <Button
+        fullWidth
+        title="Sign up"
+        theme="standard"
+        iconName="account-plus-outline"
         onPress={signUpUser}
-        theme={colors === "light" ? stdTheme : drkTheme}>
-        Sign Up
-      </PaperButton>
+        loading={isSignupLoading}
+      />
       <Link href="/login" asChild>
         <Pressable>
           <StyledLink>Already have an account? Log in</StyledLink>

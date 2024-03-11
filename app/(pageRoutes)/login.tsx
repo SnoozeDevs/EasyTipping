@@ -20,6 +20,8 @@ import {
   EMAIL_ALREADY_IN_USE,
   INCORRECT_PASSWORD,
 } from "@/utils/constants";
+import React from "react";
+import Button from "@/components/Button";
 
 export default function LoginPage() {
   const searchParams = useLocalSearchParams();
@@ -164,16 +166,14 @@ export default function LoginPage() {
         />
         {passwordHasError && <Error>{passwordErrorMessage}</Error>}
       </InputContainer>
-      <PaperButton
-        theme={theme}
-        style={{ width: "100%" }}
-        icon=""
-        mode="contained"
+      <Button
+        fullWidth
+        title="Login"
+        theme="standard"
+        iconName="login"
         onPress={loginUser}
-        loading={isLoginLoading}>
-        Login
-      </PaperButton>
-
+        loading={isLoginLoading}
+      />
       <Link href="/signup" asChild>
         <Pressable>
           <StyledLink>Create an account</StyledLink>

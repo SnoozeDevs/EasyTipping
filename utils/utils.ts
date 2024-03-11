@@ -147,7 +147,7 @@ export const abbreviateTeam = (teamName: string) => {
       return 'CARL'
     case 'Sydney':
       return 'SYD'
-    case 'CollingWood':
+    case 'Collingwood':
       return 'COLL'
     case 'Hawthorn':
       return 'HAW'
@@ -198,12 +198,34 @@ export const convertUnixToLocalTime = (unixTimeCode: number) => {
     hour12: false,
   };
   const formattedLocalTime = date.toLocaleString(undefined, displayOptions);
-  const splitData = formattedLocalTime.replace(" at ", ",").replace(", ", ",").split(',');
+  console.log('formatted time', formattedLocalTime)
+  const splitData = formattedLocalTime.replace(" at ", ",").split(',');
 
   return {
     matchDay: splitData[0],
-    matchDate: splitData[1],
-    matchTime: splitData[2],
+    matchDate: `${splitData[1]}${splitData[2]}`,
+    matchTime: splitData[3],
   }
 
+}
+
+export const ImageFetch: any = {
+  CARL: require('../assets/images/CARL.png'),
+  RICH: require('../assets/images/RICH.png'),
+  COLL: require('../assets/images/COLL.png'),
+  SYD: require('../assets/images/SYD.png'),
+  ESS: require('../assets/images/ESS.png'),
+  HAW: require('../assets/images/HAW.png'),
+  GWS: require('../assets/images/GWS.png'),
+  NMFC: require('../assets/images/NMFC.png'),
+  GEEL: require('../assets/images/GEEL.png'),
+  STK: require('../assets/images/STK.png'),
+  GCFC: require('../assets/images/GCFC.png'),
+  ADEL: require('../assets/images/ADEL.png'),
+  MELB: require('../assets/images/MELB.png'),
+  WB: require('../assets/images/WB.png'),
+  PORT: require('../assets/images/PORT.png'),
+  WCE: require('../assets/images/WCE.png'),
+  FRE: require('../assets/images/FRE.png'),
+  BL: require('../assets/images/BL.png')
 }

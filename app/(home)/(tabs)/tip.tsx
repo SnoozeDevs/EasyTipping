@@ -2,7 +2,12 @@ import { SafeAreaView } from "react-native";
 
 import { Text } from "@/components/Themed";
 import styled from "styled-components/native";
-import { getCurrentRound, getFixturesForCurrentRound } from "@/utils/utils";
+import {
+  abbreviateTeam,
+  convertUnixToLocalTime,
+  getCurrentRound,
+  getFixturesForCurrentRound,
+} from "@/utils/utils";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { router } from "expo-router";
@@ -12,6 +17,7 @@ import React from "react";
 import { useCurrentUser } from "@/utils/customHooks";
 import TippingCard from "@/components/TippingCard";
 import { Image, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function TipComponent() {
   const [round, setRound] = useState<any>(null);
@@ -58,7 +64,16 @@ export default function TipComponent() {
     return mappedArray;
   };
 
-  console.log(fixtures);
+  const fixtureArray = fixtures?.map((match: any) => {
+    return (
+      <TippingCard
+        stadium={match.venue}
+        homeName={abbreviateTeam(match.hteam)!}
+        awayName={abbreviateTeam(match.ateam)!}
+        matchTiming={convertUnixToLocalTime(match.unixtime)}
+      />
+    );
+  });
 
   return (
     <Tip>
@@ -75,9 +90,8 @@ export default function TipComponent() {
               />
             </SafeAreaView>
             <Heading>Round {round}</Heading>
-            <View>
-              <TippingCard />
-            </View>
+
+            <View style={{ display: "flex" }}>{fixtureArray}</View>
           </TipContainer>
         ) : (
           <ButtonContainer>
@@ -100,7 +114,7 @@ export default function TipComponent() {
 const Tip = styled.View`
   flex: 1;
   padding: 5% 0;
-  background-color: #fff;
+  background-color: #ffffffb3;
 `;
 
 const TipContainer = styled.View`

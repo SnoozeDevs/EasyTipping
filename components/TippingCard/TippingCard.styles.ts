@@ -2,20 +2,25 @@ import styled from 'styled-components/native'
 
 export const TippingCard = styled.View`
 display: flex;
-justify-content: space-evenly;
+justify-content: space-around;
 flex-direction: row;
-width: 95%;
-background-color: lightgray;
-padding: 8px;
+width: 90%;
+background-color: #fff;
 border-radius: 16px;
-box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);
+align-items: center;
+justify-content: center;
 `
 
-export const TeamContainer = styled.View`
+export const TeamContainer = styled.Pressable`
 display: flex;
+flex: 1;
 flex-direction: row;
 justify-content: center;
 align-items: center;
+gap: 6px;
+padding: 4px;
+border-radius: 16px;
+/* background-color: #82dd82 */
 `
 
 export const TeamText = styled.Text`
@@ -30,7 +35,7 @@ align-items: center;
 `
 
 export const Image = styled.Image`
-width: 60px;
-height: 60px;
+width: 45px;
+height: 45px;
 object-fit: contain;
 `

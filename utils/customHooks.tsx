@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import auth from "@react-native-firebase/auth";
 import { getUserDetails } from "./utils";
-import { TUserRecord } from "@/components/CustomDrawer";
 import firestore from "@react-native-firebase/firestore";
+import { TUserRecord } from "./types";
 
 export function useCurrentUser() {
   //TODO build in listeners for all user changes in the db.

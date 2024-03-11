@@ -180,3 +180,30 @@ export const abbreviateTeam = (teamName: string) => {
 
   }
 }
+
+export const convertUnixToLocalTime = (unixTimeCode: number) => {
+  //* Keep these incase we need UTC test comparisons
+  // const formattedUTCTime = date.toUTCString();
+  // const formattedLocalTime = date.toLocaleString();
+
+  const date = new Date(unixTimeCode * 1000);
+
+  const displayOptions: any = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false,
+  };
+  const formattedLocalTime = date.toLocaleString(undefined, displayOptions);
+  const splitData = formattedLocalTime.replace(" at ", ",").replace(", ", ",").split(',');
+
+  return {
+    matchDay: splitData[0],
+    matchDate: splitData[1],
+    matchTime: splitData[2],
+  }
+
+}

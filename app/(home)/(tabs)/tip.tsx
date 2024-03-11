@@ -1,13 +1,8 @@
-import { SafeAreaView, StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { SafeAreaView } from "react-native";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
-import { Text, View } from "@/components/Themed";
+import { Text } from "@/components/Themed";
 import styled from "styled-components/native";
-import {
-  getCurrentRound,
-  getFixturesForCurrentRound,
-  getGroups,
-} from "@/utils/utils";
+import { getCurrentRound, getFixturesForCurrentRound } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { router } from "expo-router";
@@ -15,6 +10,8 @@ import { SegmentedButtons } from "react-native-paper";
 import { stdTheme } from "@/themes/stdTheme";
 import React from "react";
 import { useCurrentUser } from "@/utils/customHooks";
+import TippingCard from "@/components/TippingCard";
+import { Image, View } from "react-native";
 
 export default function TipComponent() {
   const [round, setRound] = useState<any>(null);
@@ -78,6 +75,9 @@ export default function TipComponent() {
               />
             </SafeAreaView>
             <Heading>Round {round}</Heading>
+            <View>
+              <TippingCard />
+            </View>
           </TipContainer>
         ) : (
           <ButtonContainer>

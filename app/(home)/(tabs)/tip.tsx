@@ -64,9 +64,10 @@ export default function TipComponent() {
     return mappedArray;
   };
 
-  const fixtureArray = fixtures?.map((match: any) => {
+  const fixtureArray = fixtures?.map((match: any, matchIndex: number) => {
     return (
       <TippingCard
+        key={`tip-${matchIndex}`}
         stadium={match.venue}
         homeName={abbreviateTeam(match.hteam)!}
         awayName={abbreviateTeam(match.ateam)!}
@@ -90,8 +91,21 @@ export default function TipComponent() {
               />
             </SafeAreaView>
             <Heading>Round {round}</Heading>
-
-            <View style={{ display: "flex" }}>{fixtureArray}</View>
+            <ScrollView
+              contentContainerStyle={{
+                padding: 12,
+                display: "flex",
+                gap: 32,
+                width: "100%",
+                height: "auto",
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "scroll",
+                // paddingBottom: "25%",
+              }}
+              showsVerticalScrollIndicator={false}>
+              {fixtureArray}
+            </ScrollView>
           </TipContainer>
         ) : (
           <ButtonContainer>
@@ -114,13 +128,14 @@ export default function TipComponent() {
 const Tip = styled.View`
   flex: 1;
   padding: 5% 0;
-  background-color: #ffffffb3;
+  background-color: #f3f2f2e3;
 `;
 
 const TipContainer = styled.View`
   display: flex;
   width: 100%;
   align-items: center;
+  flex: 1;
 `;
 
 const Heading = styled.Text`

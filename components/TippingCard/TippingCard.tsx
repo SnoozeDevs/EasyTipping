@@ -15,37 +15,34 @@ const TippingCard = ({
       style={{
         ...Platform.select({
           ios: {
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.5,
-            shadowRadius: 4,
+            shadowColor: "#171717",
+            shadowOffset: { width: -2, height: 4 },
+            shadowOpacity: 0.2,
+            shadowRadius: 3,
           },
           android: {
             elevation: 5,
           },
         }),
       }}>
-      <S.TeamContainer
+      <S.HomeTeam
         onPress={() => {
           console.log("pressed");
         }}>
         <S.TeamText>{homeName}</S.TeamText>
         <S.Image source={ImageFetch[homeName]} />
-      </S.TeamContainer>
+      </S.HomeTeam>
       <S.InfoContainer>
-        {/* <View> */}
-        {/* <Text>Thursday 14 March 2024</Text> */}
-        <Text>{matchTiming.matchTime}</Text>
-        {/* </View> */}
-        <View>
-          <Text>VS</Text>
-        </View>
-        <Text>{stadium}</Text>
+        <S.InformationText>{matchTiming.matchTime}</S.InformationText>
+        <S.VersusContainer>
+          <S.VersusText>VS</S.VersusText>
+        </S.VersusContainer>
+        <S.InformationText>{stadium}</S.InformationText>
       </S.InfoContainer>
-      <S.TeamContainer>
+      <S.AwayTeam>
         <S.Image source={ImageFetch[awayName]} />
         <S.TeamText>{awayName}</S.TeamText>
-      </S.TeamContainer>
+      </S.AwayTeam>
     </S.TippingCard>
   );
 };

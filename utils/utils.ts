@@ -3,7 +3,6 @@ import { Dispatch, SetStateAction, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import uuid from 'react-native-uuid';
 import { router } from "expo-router";
-import { Platform } from "react-native";
 
 export const isEmailValid = (email: string) => {
   const validRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -198,23 +197,15 @@ export const convertUnixToLocalTime = (unixTimeCode: number) => {
     minute: "numeric",
     hour12: false,
   };
-  const formattedLocalTime = date.toLocaleString(undefined, displayOptions);
-  console.log('formatted time', formattedLocalTime)
+
+
+  const formattedLocalTime = date.toLocaleString('en-AU', displayOptions);
   const splitData = formattedLocalTime.replace(" at ", ",").split(',');
 
-
-  if (Platform.OS === 'ios') {
-    return {
-      matchDay: splitData[0],
-      matchDate: splitData[1],
-      matchTime: splitData[2],
-    }
-  } else {
-    return {
-      matchDay: splitData[0],
-      matchDate: `${splitData[1]}${splitData[2]}`,
-      matchTime: splitData[3],
-    }
+  return {
+    matchDay: splitData[0],
+    matchDate: splitData[1],
+    matchTime: splitData[2],
   }
 }
 

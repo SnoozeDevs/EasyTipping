@@ -90,6 +90,7 @@ export default function TipComponent() {
                 buttons={parseTippingGroups(user.groups)}
               />
             </SafeAreaView>
+            {/* //TODO convert thisd to react swiper component so the user can swipe between rounds and see their previous tips */}
             <Heading>Round {round}</Heading>
             <ScrollView
               contentContainerStyle={{

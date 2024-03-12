@@ -21,17 +21,17 @@ align-items: center;
 gap: 6px;
 padding: 12px;
 border-radius: 16px;
-background-color: #82dd82;
 height: 100%;
 `
 
-export const HomeTeam = styled(TeamContainer)`
+export const HomeTeam = styled(TeamContainer) <{ $selected?: boolean; }>`
 border-radius: 16px 0 0 16px;
-
+background-color: ${props => props.$selected ? '#39A0ED' : 'transparent'}
 `
 
-export const AwayTeam = styled(TeamContainer)`
-border-radius: 0 16px 16px 0%;
+export const AwayTeam = styled(TeamContainer) <{ $selected?: boolean; }>`
+border-radius: 0 16px 16px 0;
+background-color: ${props => props.$selected ? '#39A0ED' : 'transparent'}
 `
 
 export const TeamText = styled.Text`

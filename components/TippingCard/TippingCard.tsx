@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ITippingCardProps } from "./TippingCard.types";
 import * as S from "./TippingCard.styles";
 import { Image, Platform, Text, View } from "react-native";
@@ -10,6 +10,8 @@ const TippingCard = ({
   matchTiming,
   stadium,
 }: ITippingCardProps) => {
+  const [selected, setSelected] = useState<string>();
+
   return (
     <S.TippingCard
       style={{
@@ -26,8 +28,9 @@ const TippingCard = ({
         }),
       }}>
       <S.HomeTeam
+        $selected={selected === "home"}
         onPress={() => {
-          console.log("pressed");
+          setSelected("home");
         }}>
         <S.TeamText>{homeName}</S.TeamText>
         <S.Image source={ImageFetch[homeName]} />
@@ -39,7 +42,11 @@ const TippingCard = ({
         </S.VersusContainer>
         <S.InformationText>{stadium}</S.InformationText>
       </S.InfoContainer>
-      <S.AwayTeam>
+      <S.AwayTeam
+        $selected={selected === "away"}
+        onPress={() => {
+          setSelected("away");
+        }}>
         <S.Image source={ImageFetch[awayName]} />
         <S.TeamText>{awayName}</S.TeamText>
       </S.AwayTeam>

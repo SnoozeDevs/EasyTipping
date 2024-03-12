@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import uuid from 'react-native-uuid';
 import { router } from "expo-router";
+import { Platform } from "react-native";
 
 export const isEmailValid = (email: string) => {
   const validRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -142,41 +143,41 @@ export const abbreviateTeam = (teamName: string) => {
 
   switch (teamName) {
     case 'Richmond':
-      return 'RICH'
+      return 'RIC'
     case 'Carlton':
-      return 'CARL'
+      return 'CAR'
     case 'Sydney':
       return 'SYD'
     case 'Collingwood':
-      return 'COLL'
+      return 'COL'
     case 'Hawthorn':
       return 'HAW'
     case 'Essendon':
       return 'ESS'
     case 'Brisbane Lions':
-      return 'BL'
+      return 'BRI'
     case 'Fremantle':
       return 'FRE'
     case 'St Kilda':
       return 'STK'
     case 'Geelong':
-      return 'GEEL'
+      return 'GEL'
     case 'Adelaide':
-      return 'ADEL'
+      return 'ADE'
     case 'Gold Coast':
-      return 'GCFC'
+      return 'GCS'
     case 'North Melbourne':
-      return 'NMFC'
+      return 'NOR'
     case 'Greater Western Sydney':
       return 'GWS'
     case 'Western Bulldogs':
-      return 'WB'
+      return 'WBD'
     case 'Melbourne':
-      return 'MELB'
+      return 'MEL'
     case 'West Coast':
       return 'WCE'
     case 'Port Adelaide':
-      return 'PORT'
+      return 'POR'
 
   }
 }
@@ -201,31 +202,39 @@ export const convertUnixToLocalTime = (unixTimeCode: number) => {
   console.log('formatted time', formattedLocalTime)
   const splitData = formattedLocalTime.replace(" at ", ",").split(',');
 
-  return {
-    matchDay: splitData[0],
-    matchDate: `${splitData[1]}${splitData[2]}`,
-    matchTime: splitData[3],
-  }
 
+  if (Platform.OS === 'ios') {
+    return {
+      matchDay: splitData[0],
+      matchDate: splitData[1],
+      matchTime: splitData[2],
+    }
+  } else {
+    return {
+      matchDay: splitData[0],
+      matchDate: `${splitData[1]}${splitData[2]}`,
+      matchTime: splitData[3],
+    }
+  }
 }
 
 export const ImageFetch: any = {
-  CARL: require('../assets/images/CARL.png'),
-  RICH: require('../assets/images/RICH.png'),
-  COLL: require('../assets/images/COLL.png'),
+  CAR: require('../assets/images/CARL.png'),
+  RIC: require('../assets/images/RICH.png'),
+  COL: require('../assets/images/COLL.png'),
   SYD: require('../assets/images/SYD.png'),
   ESS: require('../assets/images/ESS.png'),
   HAW: require('../assets/images/HAW.png'),
   GWS: require('../assets/images/GWS.png'),
-  NMFC: require('../assets/images/NMFC.png'),
-  GEEL: require('../assets/images/GEEL.png'),
+  NOR: require('../assets/images/NMFC.png'),
+  GEL: require('../assets/images/GEEL.png'),
   STK: require('../assets/images/STK.png'),
-  GCFC: require('../assets/images/GCFC.png'),
-  ADEL: require('../assets/images/ADEL.png'),
-  MELB: require('../assets/images/MELB.png'),
-  WB: require('../assets/images/WB.png'),
-  PORT: require('../assets/images/PORT.png'),
+  GCS: require('../assets/images/GCFC.png'),
+  ADE: require('../assets/images/ADEL.png'),
+  MEL: require('../assets/images/MELB.png'),
+  WBD: require('../assets/images/WB.png'),
+  POR: require('../assets/images/PORT.png'),
   WCE: require('../assets/images/WCE.png'),
   FRE: require('../assets/images/FRE.png'),
-  BL: require('../assets/images/BL.png')
+  BRI: require('../assets/images/BL.png')
 }

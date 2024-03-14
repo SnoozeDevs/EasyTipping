@@ -65,6 +65,7 @@ export default function TipComponent() {
   };
 
   const fixtureArray = fixtures?.map((match: any, matchIndex: number) => {
+    //TODO write google cloud function which updates match record every minute between fixture
     return (
       <TippingCard
         key={`tip-${matchIndex}`}

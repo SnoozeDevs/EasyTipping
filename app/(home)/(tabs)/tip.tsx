@@ -18,12 +18,15 @@ import { useCurrentUser } from "@/utils/customHooks";
 import TippingCard from "@/components/TippingCard";
 import { Image, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import Swiper from "@/components/Swiper";
 
 export default function TipComponent() {
   const [round, setRound] = useState<any>(null);
   const [fixtures, setFixtures] = useState<any>(null);
   const [selectedGroup, setSelectedGroup] = useState<any>();
   const user = useCurrentUser();
+  const roundArray = Array.from({ length: 30 }, (_, index) => index);
+  const startValue = roundArray[parseInt(round)];
 
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
   useEffect(() => {
@@ -65,7 +68,9 @@ export default function TipComponent() {
   };
 
   const fixtureArray = fixtures?.map((match: any, matchIndex: number) => {
-    //TODO write google cloud function which updates match record every minute between fixture
+    //TODO write google cloud function which updates match record every minute between fixtures
+    //! This can easily be done on the free tier, even if we run fixtures updates every min 24/7, it will only use ~40k calls month,
+    //! and you get 2 mill free a month
     return (
       <TippingCard
         key={`tip-${matchIndex}`}
@@ -91,8 +96,13 @@ export default function TipComponent() {
                 buttons={parseTippingGroups(user.groups)}
               />
             </SafeAreaView>
-            {/* //TODO convert thisd to react swiper component so the user can swipe between rounds and see their previous tips */}
-            <Heading>Round {round}</Heading>
+            <View style={{ display: "flex" }}>
+              <Swiper
+                values={roundArray}
+                selected={setRound}
+                startingIndex={startValue}
+              />
+            </View>
             <ScrollView
               contentContainerStyle={{
                 padding: 12,
@@ -138,12 +148,6 @@ const TipContainer = styled.View`
   width: 100%;
   align-items: center;
   flex: 1;
-`;
-
-const Heading = styled.Text`
-  font-size: 22px;
-  font-weight: 600;
-  margin: 20px 0;
 `;
 
 const ButtonContainer = styled.View`

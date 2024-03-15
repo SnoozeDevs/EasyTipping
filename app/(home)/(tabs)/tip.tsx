@@ -29,6 +29,8 @@ export default function TipComponent() {
   const user = useCurrentUser();
   const roundArray = Array.from({ length: 30 }, (_, index) => index);
   const startValue = roundArray[parseInt(round)];
+  //* Currently not being referenced, and due to the speed of firestore, I don't think
+  //* we need it (idk why im writing docs when no one else is reading :) )
   const [fixturesLoading, setFixturesLoading] = useState(false);
 
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
@@ -106,25 +108,22 @@ export default function TipComponent() {
                 startingIndex={startValue}
               />
             </View>
-            {!fixturesLoading ? (
-              <ScrollView
-                contentContainerStyle={{
-                  padding: 12,
-                  display: "flex",
-                  gap: 32,
-                  width: "100%",
-                  height: "auto",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  overflow: "scroll",
-                  // paddingBottom: "25%",
-                }}
-                showsVerticalScrollIndicator={false}>
-                {fixtureArray}
-              </ScrollView>
-            ) : (
-              <Text>We loading</Text>
-            )}
+
+            <ScrollView
+              contentContainerStyle={{
+                padding: 12,
+                display: "flex",
+                gap: 32,
+                width: "100%",
+                height: "auto",
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "scroll",
+                // paddingBottom: "25%",
+              }}
+              showsVerticalScrollIndicator={false}>
+              {fixtureArray}
+            </ScrollView>
           </TipContainer>
         ) : (
           <ButtonContainer>

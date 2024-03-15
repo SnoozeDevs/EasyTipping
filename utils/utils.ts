@@ -104,7 +104,7 @@ export const createGroup = async (groupData: any, isLoading?: Dispatch<SetStateA
     name: auth().currentUser?.displayName,
     isAdmin: true,
     tips: {
-      round1: 'Blah'
+
     }
   }).then((res) => {
     console.log(`user added to group ${groupData.groupName}`, res)
@@ -231,4 +231,8 @@ export const ImageFetch: any = {
   WCE: require('../assets/images/WCE.png'),
   FRE: require('../assets/images/FRE.png'),
   BRI: require('../assets/images/BL.png')
+}
+
+export const uploadTips = async (selectedGroup: string, round: string,) => {
+
 }

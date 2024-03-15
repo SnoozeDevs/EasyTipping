@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ITippingCardProps } from "./TippingCard.types";
 import * as S from "./TippingCard.styles";
 import { Image, Platform, Text, View } from "react-native";
@@ -9,8 +9,26 @@ const TippingCard = ({
   awayName,
   matchTiming,
   stadium,
+  totalTips,
+  matchId,
 }: ITippingCardProps) => {
   const [selected, setSelected] = useState<string>();
+
+  useEffect(() => {
+    if (selected) {
+      totalTips((prevTotalTips: any) => ({
+        ...prevTotalTips,
+        [matchId]: selected,
+      }));
+      // totalTips((prevTotalTips: any) => [
+      //   ...prevTotalTips,
+      //   {
+      //     matchId: matchId,
+      //     tip: selected,
+      //   },
+      // ]);
+    }
+  }, [selected]);
 
   return (
     <S.TippingCard
@@ -28,9 +46,9 @@ const TippingCard = ({
         }),
       }}>
       <S.HomeTeam
-        $selected={selected === "home"}
+        $selected={selected === homeName}
         onPress={() => {
-          setSelected("home");
+          setSelected(homeName);
         }}>
         <S.TeamText>{homeName}</S.TeamText>
         <S.Image source={ImageFetch[homeName]} />
@@ -43,9 +61,9 @@ const TippingCard = ({
         <S.InformationText>{stadium}</S.InformationText>
       </S.InfoContainer>
       <S.AwayTeam
-        $selected={selected === "away"}
+        $selected={selected === awayName}
         onPress={() => {
-          setSelected("away");
+          setSelected(awayName);
         }}>
         <S.Image source={ImageFetch[awayName]} />
         <S.TeamText>{awayName}</S.TeamText>

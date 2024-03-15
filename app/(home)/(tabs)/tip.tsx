@@ -7,6 +7,7 @@ import {
   convertUnixToLocalTime,
   getCurrentRound,
   getFixturesForCurrentRound,
+  uploadTips,
 } from "@/utils/utils";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
@@ -32,6 +33,9 @@ export default function TipComponent() {
   //* Currently not being referenced, and due to the speed of firestore, I don't think
   //* we need it (idk why im writing docs when no one else is reading :) )
   const [fixturesLoading, setFixturesLoading] = useState(false);
+  const [totalTips, setTotalTips] = useState<any>([]);
+
+  console.log("total tips", totalTips);
 
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
   useEffect(() => {
@@ -78,6 +82,8 @@ export default function TipComponent() {
     //! and you get 2 mill free a month
     return (
       <TippingCard
+        matchId={match.id}
+        totalTips={setTotalTips}
         key={`tip-${matchIndex}`}
         stadium={match.venue}
         homeName={abbreviateTeam(match.hteam)!}
@@ -86,6 +92,9 @@ export default function TipComponent() {
       />
     );
   });
+
+  // console.log(fixtures);
+  const totalTipLength = Object.keys(totalTips).length;
 
   return (
     <Tip>
@@ -124,6 +133,14 @@ export default function TipComponent() {
               showsVerticalScrollIndicator={false}>
               {fixtureArray}
             </ScrollView>
+            {totalTipLength > 0 && (
+              <Button
+                title={`SUBMIT ${totalTipLength}/${fixtures.length}`}
+                onPress={() => {
+                  uploadTips(selectedGroup, round);
+                }}
+              />
+            )}
           </TipContainer>
         ) : (
           <ButtonContainer>

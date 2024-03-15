@@ -19,6 +19,8 @@ import TippingCard from "@/components/TippingCard";
 import { Image, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Swiper from "@/components/Swiper";
+import TippingLoader from "@/components/TippingCard/TippingLoader";
+import { Facebook } from "react-content-loader/native";
 
 export default function TipComponent() {
   const [round, setRound] = useState<any>(null);
@@ -27,6 +29,7 @@ export default function TipComponent() {
   const user = useCurrentUser();
   const roundArray = Array.from({ length: 30 }, (_, index) => index);
   const startValue = roundArray[parseInt(round)];
+  const [fixturesLoading, setFixturesLoading] = useState(false);
 
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
   useEffect(() => {
@@ -34,7 +37,7 @@ export default function TipComponent() {
   }, []);
 
   useEffect(() => {
-    getFixturesForCurrentRound("2024", round, setFixtures);
+    getFixturesForCurrentRound("2024", round, setFixtures, setFixturesLoading);
   }, [round]);
 
   //* Automatically select first group when page loads
@@ -103,21 +106,25 @@ export default function TipComponent() {
                 startingIndex={startValue}
               />
             </View>
-            <ScrollView
-              contentContainerStyle={{
-                padding: 12,
-                display: "flex",
-                gap: 32,
-                width: "100%",
-                height: "auto",
-                justifyContent: "center",
-                alignItems: "center",
-                overflow: "scroll",
-                // paddingBottom: "25%",
-              }}
-              showsVerticalScrollIndicator={false}>
-              {fixtureArray}
-            </ScrollView>
+            {!fixturesLoading ? (
+              <ScrollView
+                contentContainerStyle={{
+                  padding: 12,
+                  display: "flex",
+                  gap: 32,
+                  width: "100%",
+                  height: "auto",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  overflow: "scroll",
+                  // paddingBottom: "25%",
+                }}
+                showsVerticalScrollIndicator={false}>
+                {fixtureArray}
+              </ScrollView>
+            ) : (
+              <Text>We loading</Text>
+            )}
           </TipContainer>
         ) : (
           <ButtonContainer>

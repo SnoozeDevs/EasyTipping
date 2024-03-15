@@ -47,10 +47,13 @@ export const getCurrentRound = async (year: string, setRound: Dispatch<SetStateA
   })
 }
 
-export const getFixturesForCurrentRound = async (year: string, currentRound: string, setFixtures: Dispatch<SetStateAction<number>>) => {
+export const getFixturesForCurrentRound = async (year: string, currentRound: string, setFixtures: Dispatch<SetStateAction<number>>, setFixturesLoading: Dispatch<SetStateAction<boolean>>) => {
+  setFixturesLoading(true)
+
   await firestore().collection('standings').doc(`${year}`).collection('rounds').doc(`${currentRound}`).get().then((res: any) => {
     const timeSortedFixtures = res._data?.roundArray.sort((a: any, b: any) => a.unixtime - b.unixtime);
     setFixtures(timeSortedFixtures)
+    setFixturesLoading(false)
   }).catch((err) => {
     console.error(err)
   })

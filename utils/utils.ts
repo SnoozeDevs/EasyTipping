@@ -1,4 +1,4 @@
-import firestore from "@react-native-firebase/firestore";
+import firestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { Dispatch, SetStateAction, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import uuid from 'react-native-uuid';
@@ -71,11 +71,40 @@ export const updateUserRecord = async (userID: string, recordKey: string, record
 }
 
 export const getUserDetails = async (userID: string, userData: Dispatch<SetStateAction<any>>) => {
-  firestore().collection('users').doc(userID).get().then((res: any) => {
-    userData(res._data)
+  const userPath = firestore().collection('users').doc(userID);
+  let userEmail, userDisplayName, userId;
+
+  //* Adds all of the base level document data
+  await userPath.get().then((res: any) => {
+    userEmail = res._data.email,
+      userDisplayName = res._data.displayName,
+      userId = res._data.userID
   }).catch((err) => {
     console.error(err)
   })
+
+  //* Loops over all of the documents in the group collection and adds that to the user object
+  const groupObject = await destructureGroupData()
+
+
+  //* For next collection -> repeat above process.
+
+  //* at end of process when all data is fetched, set total user in one hit
+  userData({
+    email: userEmail,
+    displayName: userDisplayName,
+    userID: userId,
+    groups: groupObject
+  })
+}
+
+export const getCollectionData = (querySnapshot: FirebaseFirestoreTypes.QuerySnapshot<FirebaseFirestoreTypes.DocumentData>) => {
+  const groupArray: any = [];
+  querySnapshot.forEach((record) => {
+    groupArray.push(record.data());
+  });
+
+  return groupArray;
 }
 
 export const createGroup = async (groupData: any, isLoading?: Dispatch<SetStateAction<boolean>>) => {
@@ -120,11 +149,10 @@ export const createGroup = async (groupData: any, isLoading?: Dispatch<SetStateA
   }
 
   //* Associates the newly created group in the users collection to serve on user powered pages.
-  await updateUserRecord(auth().currentUser?.uid!, 'groups', groupObject, true).then((res) => {
-    console.log("Group associated with user record", res);
+  firestore().collection('users').doc(auth().currentUser?.uid).collection('groups').doc(groupId).set(groupObject, { merge: true }).then((res) => {
+    console.log('Group successfully associated with user record!')
   }).catch((err) => {
-    console.error(err);
-    return
+    console.error(err)
   })
 
   //TODO send group id as param to automatically select that tip
@@ -233,6 +261,46 @@ export const ImageFetch: any = {
   BRI: require('../assets/images/BL.png')
 }
 
-export const uploadTips = async (selectedGroup: string, round: string,) => {
+export const uploadTips = async (selectedGroup: string, round: string, tips: any, tipsLoading: Dispatch<SetStateAction<boolean>>) => {
+  //TODO update user record to reflect the tips for that round
+  tipsLoading(true)
+  const groupTipRef = firestore().collection('users').doc(auth().currentUser?.uid).collection('groups').doc(selectedGroup).collection('tips').doc(`${round}`)
+  groupTipRef.set(tips, { merge: true }).then((res) => {
+    console.log('Tips added to user group')
+    tipsLoading(false)
+  }).catch((err) => {
+    tipsLoading(false)
+    console.error('Error adding tips')
+  })
 
+  //TODO - once the game is over, update the record in the user AND the selcted group
+  //todo to update scoring and group data
+  //! This part will have to be done in the functions
 }
+
+export const destructureGroupData = async () => {
+  const userDocRef = firestore().collection("users").doc(auth().currentUser?.uid!);
+  const userGroupsCollectionRef = userDocRef.collection("groups");
+  const groupArray: any = []
+  const groupSnapshots = await userGroupsCollectionRef.get();
+
+  for (const groupDoc of groupSnapshots.docs) {
+    const tipArray: any = [];
+    const tipCollectionRef = userGroupsCollectionRef.doc(groupDoc.id).collection('tips');
+    const tipSnapshots = await tipCollectionRef.get();
+
+    tipSnapshots.forEach((doc) => {
+      tipArray.push({
+        round: doc.id,
+        tips: doc.data(),
+      });
+    });
+
+    groupArray.push({
+      ...groupDoc.data(),
+      tips: tipArray
+    })
+  }
+
+  return groupArray
+};

@@ -7,6 +7,7 @@ export interface ITippingCardProps {
   stadium: string;
   matchId: number;
   totalTips: Dispatch<SetStateAction<any>>;
+  currentTips?: [];
 }
 
 type MatchTiming = {

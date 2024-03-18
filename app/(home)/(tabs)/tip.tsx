@@ -34,8 +34,8 @@ export default function TipComponent() {
   //* we need it (idk why im writing docs when no one else is reading :) )
   const [fixturesLoading, setFixturesLoading] = useState(false);
   const [totalTips, setTotalTips] = useState<any>([]);
-
-  console.log("total tips", totalTips);
+  const totalTipLength = Object.keys(totalTips).length;
+  const [tipsLoading, setTipsLoading] = useState(false);
 
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
   useEffect(() => {
@@ -44,12 +44,19 @@ export default function TipComponent() {
 
   useEffect(() => {
     getFixturesForCurrentRound("2024", round, setFixtures, setFixturesLoading);
+    setTotalTips([]);
   }, [round]);
 
   //* Automatically select first group when page loads
   useEffect(() => {
-    if (user && user.groups.length > 0) {
+    if (user && user.groups?.length > 0) {
       setSelectedGroup(user.groups[0].groupId);
+      //! Wip - bones of fetching tips from Db dynamically
+      //! may need to be moved elsewhere
+      // const selectedGroupIndex = user?.groups.findIndex(
+      //   (obj) => obj.groupId === selectedGroup
+      // );
+      // setTotalTips(user.groups[selectedGroupIndex]?.tips);
     }
   }, [user]);
 
@@ -89,17 +96,15 @@ export default function TipComponent() {
         homeName={abbreviateTeam(match.hteam)!}
         awayName={abbreviateTeam(match.ateam)!}
         matchTiming={convertUnixToLocalTime(match.unixtime)}
+        currentTips={totalTips}
       />
     );
   });
 
-  // console.log(fixtures);
-  const totalTipLength = Object.keys(totalTips).length;
-
   return (
     <Tip>
       {user ? (
-        user.groups.length > 0 ? (
+        user.groups?.length > 0 ? (
           <TipContainer>
             <SafeAreaView>
               <SegmentedButtons
@@ -137,8 +142,10 @@ export default function TipComponent() {
               <Button
                 title={`SUBMIT ${totalTipLength}/${fixtures.length}`}
                 onPress={() => {
-                  uploadTips(selectedGroup, round);
+                  uploadTips(selectedGroup, round, totalTips, setTipsLoading);
                 }}
+                iconName={totalTipLength > 1 ? "check-all" : "check"}
+                loading={tipsLoading}
               />
             )}
           </TipContainer>

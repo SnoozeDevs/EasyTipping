@@ -11,4 +11,5 @@ type GroupType = {
   isAdmin: boolean;
   //TODO build the current rank in.
   currentRank?: string
+  tips?: Array<string>;
 }

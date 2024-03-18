@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import auth from "@react-native-firebase/auth";
-import { getUserDetails } from "./utils";
+import { destructureGroupData, getUserDetails } from "./utils";
 import firestore from "@react-native-firebase/firestore";
 import { TUserRecord } from "./types";
 
 export function useCurrentUser() {
-  //TODO build in listeners for all user changes in the db.
   const [user, setUser] = useState<TUserRecord | null>(null);
+  const userDocRef = firestore()
+    .collection("users")
+    .doc(auth().currentUser?.uid!);
 
   //* Update user if they are authorised, clear user if not.
   useEffect(() => {
@@ -24,17 +26,23 @@ export function useCurrentUser() {
   useEffect(() => {
     //* Check if user is authenticate to listen for DB changes.
     if (auth().currentUser) {
-      const unsubscribeFirestore = firestore()
-        .collection("users")
-        .doc(auth().currentUser?.uid!)
-        .onSnapshot(
-          (snapshot) => {
-            //TODO update user record type.
-            const data = snapshot.data() as TUserRecord;
-            setUser(data);
-          },
-          (error) => console.error(error)
-        );
+      const unsubscribeFirestore = userDocRef.onSnapshot(
+        async (snapshot) => {
+          //* Gets users top level data
+          const data = snapshot.data() as Partial<TUserRecord>;
+
+          //* Grabs group collection data from user
+          const groupObject = await destructureGroupData();
+
+          setUser({
+            email: data.email!,
+            displayName: data.displayName!,
+            userID: data.userID!,
+            groups: groupObject,
+          });
+        },
+        (error) => console.error(error)
+      );
 
       return () => unsubscribeFirestore();
     }

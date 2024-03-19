@@ -53,10 +53,12 @@ export default function TipComponent() {
       setSelectedGroup(user.groups[0].groupId);
       //! Wip - bones of fetching tips from Db dynamically
       //! may need to be moved elsewhere
+      //! The object destructuring here needs to be changed here.
       // const selectedGroupIndex = user?.groups.findIndex(
       //   (obj) => obj.groupId === selectedGroup
       // );
-      // setTotalTips(user.groups[selectedGroupIndex]?.tips);
+      // setTotalTips(user.groups[selectedGroupIndex]?.tips[round]);
+      // console.log("tips", user.groups[selectedGroupIndex]?.tips[round]);
     }
   }, [user]);
 

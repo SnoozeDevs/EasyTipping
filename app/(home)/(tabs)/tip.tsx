@@ -36,6 +36,12 @@ export default function TipComponent() {
   const [totalTips, setTotalTips] = useState<any>([]);
   const totalTipLength = Object.keys(totalTips).length;
   const [tipsLoading, setTipsLoading] = useState(false);
+  const selectedGroupIndex: number = user?.groups?.findIndex(
+    (obj) => obj.groupId === selectedGroup
+  )!;
+  const selectedRoundIndex: number = user?.groups[
+    selectedGroupIndex
+  ]?.tips?.findIndex((obj: any) => obj.round === `${round}`)!;
 
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
   useEffect(() => {
@@ -51,16 +57,14 @@ export default function TipComponent() {
   useEffect(() => {
     if (user && user.groups?.length > 0) {
       setSelectedGroup(user.groups[0].groupId);
-      //! Wip - bones of fetching tips from Db dynamically
-      //! may need to be moved elsewhere
-      //! The object destructuring here needs to be changed here.
-      // const selectedGroupIndex = user?.groups.findIndex(
-      //   (obj) => obj.groupId === selectedGroup
-      // );
-      // setTotalTips(user.groups[selectedGroupIndex]?.tips[round]);
-      // console.log("tips", user.groups[selectedGroupIndex]?.tips[round]);
     }
   }, [user]);
+
+  useEffect(() => {
+    setTotalTips(
+      user?.groups[selectedGroupIndex]?.tips[selectedRoundIndex]?.tips ?? {}
+    );
+  }, [user, round]);
 
   const parseTippingGroups = (groupData: any) => {
     const mappedArray: any = [];
@@ -98,7 +102,7 @@ export default function TipComponent() {
         homeName={abbreviateTeam(match.hteam)!}
         awayName={abbreviateTeam(match.ateam)!}
         matchTiming={convertUnixToLocalTime(match.unixtime)}
-        currentTips={totalTips}
+        currentSelection={totalTips[`${match.id}`]}
       />
     );
   });

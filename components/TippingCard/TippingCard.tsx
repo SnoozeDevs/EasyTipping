@@ -11,11 +11,9 @@ const TippingCard = ({
   stadium,
   totalTips,
   matchId,
-  currentTips,
+  currentSelection,
 }: ITippingCardProps) => {
   const [selected, setSelected] = useState<string>("");
-  const currentTipArray = currentTips ?? [];
-  const tipArrayLength = Object.keys(currentTipArray).length;
 
   useEffect(() => {
     if (selected) {
@@ -26,13 +24,9 @@ const TippingCard = ({
     }
   }, [selected]);
 
-  //* Reset the selected tips when the round changes / resets
-  //! wip needs to be changed as db data is now being fetched for tips
   useEffect(() => {
-    if (tipArrayLength < 1) {
-      setSelected("");
-    }
-  }, [currentTips]);
+    setSelected(currentSelection);
+  }, [currentSelection]);
 
   return (
     <S.TippingCard

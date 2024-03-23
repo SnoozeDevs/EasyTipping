@@ -292,7 +292,7 @@ export const destructureGroupData = async () => {
     tipSnapshots.forEach((doc) => {
       tipArray.push({
         round: doc.id,
-        tips: doc.data(),
+        roundTips: doc.data(),
       });
     });
 

@@ -27,7 +27,7 @@ export default function TipComponent() {
   const [round, setRound] = useState<any>(null);
   const [fixtures, setFixtures] = useState<any>(null);
   const [selectedGroup, setSelectedGroup] = useState<any>();
-  const user = useCurrentUser();
+  const user = useCurrentUser(selectedGroup, round);
   const roundArray = Array.from({ length: 30 }, (_, index) => index);
   const startValue = roundArray[parseInt(round)];
   //* Currently not being referenced, and due to the speed of firestore, I don't think
@@ -50,21 +50,24 @@ export default function TipComponent() {
 
   useEffect(() => {
     getFixturesForCurrentRound("2024", round, setFixtures, setFixturesLoading);
-    setTotalTips([]);
   }, [round]);
 
   //* Automatically select first group when page loads
   useEffect(() => {
-    if (user && user.groups?.length > 0) {
+    if (user && user.groups?.length > 0 && !selectedGroup) {
       setSelectedGroup(user.groups[0].groupId);
     }
   }, [user]);
 
+  //* Fetches users current tips from DB and displays them.
   useEffect(() => {
-    setTotalTips(
-      user?.groups[selectedGroupIndex]?.tips[selectedRoundIndex]?.tips ?? {}
-    );
-  }, [user, round]);
+    if (user?.groups[selectedGroupIndex]) {
+      const selectedGroupTips: any = user?.groups[selectedGroupIndex];
+      const selectedRoundTips: any =
+        selectedGroupTips.tips[selectedRoundIndex]?.roundTips ?? {};
+      setTotalTips(selectedRoundTips);
+    }
+  }, [user, round, selectedGroup]);
 
   const parseTippingGroups = (groupData: any) => {
     const mappedArray: any = [];

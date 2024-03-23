@@ -69,6 +69,7 @@ export default function TipComponent() {
     }
   }, [user, round, selectedGroup]);
 
+  //TODO - update listener for when record is deleted based on new db structure
   const parseTippingGroups = (groupData: any) => {
     const mappedArray: any = [];
     groupData.map((group: any) => {

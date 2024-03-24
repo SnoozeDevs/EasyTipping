@@ -148,7 +148,7 @@ export default function TipComponent() {
               showsVerticalScrollIndicator={false}>
               {fixtureArray}
             </ScrollView>
-            {totalTipLength > 0 && (
+            {totalTipLength > 0 && !fixturesLoading && (
               <Button
                 title={`SUBMIT ${totalTipLength}/${fixtures.length}`}
                 onPress={() => {

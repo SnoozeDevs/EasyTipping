@@ -24,18 +24,20 @@ import TippingLoader from "@/components/TippingCard/TippingLoader";
 import { Facebook } from "react-content-loader/native";
 
 export default function TipComponent() {
+  //? Variable declarations
   const [round, setRound] = useState<any>(null);
   const [fixtures, setFixtures] = useState<any>(null);
   const [selectedGroup, setSelectedGroup] = useState<any>();
   const user = useCurrentUser(selectedGroup, round);
   const roundArray = Array.from({ length: 30 }, (_, index) => index);
   const startValue = roundArray[parseInt(round)];
-  //* Currently not being referenced, and due to the speed of firestore, I don't think
-  //* we need it (idk why im writing docs when no one else is reading :) )
   const [fixturesLoading, setFixturesLoading] = useState(false);
   const [totalTips, setTotalTips] = useState<any>([]);
   const totalTipLength = Object.keys(totalTips).length;
   const [tipsLoading, setTipsLoading] = useState(false);
+  const [currentDatabaseTips, setCurrentDatabaseTips] = useState({});
+  const [areTipsInSync, setAreTipsInSync] = useState(true);
+  const [areDbTipsLoaded, setAreDbTipsLoaded] = useState(false);
   const selectedGroupIndex: number = user?.groups?.findIndex(
     (obj) => obj.groupId === selectedGroup
   )!;
@@ -43,6 +45,7 @@ export default function TipComponent() {
     selectedGroupIndex
   ]?.tips?.findIndex((obj: any) => obj.round === `${round}`)!;
 
+  //? --- State management to support changes in rounds / tipping groups ---
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
   useEffect(() => {
     getCurrentRound("2024", setRound);
@@ -59,6 +62,17 @@ export default function TipComponent() {
     }
   }, [user]);
 
+  //* Checks if the db tips and the local tips are in sync, logic used to display tip submission button
+  //* and to reduce unnecessary writes to the db of duplicate data
+  useEffect(() => {
+    if (areDbTipsLoaded) {
+      JSON.stringify(totalTips) === JSON.stringify(currentDatabaseTips) &&
+      totalTipLength === fixtures.length
+        ? setAreTipsInSync(true)
+        : setAreTipsInSync(false);
+    }
+  }, [totalTips, areDbTipsLoaded, currentDatabaseTips]);
+
   //* Fetches users current tips from DB and displays them.
   useEffect(() => {
     if (user?.groups[selectedGroupIndex]) {
@@ -66,9 +80,12 @@ export default function TipComponent() {
       const selectedRoundTips: any =
         selectedGroupTips.tips[selectedRoundIndex]?.roundTips ?? {};
       setTotalTips(selectedRoundTips);
+      setCurrentDatabaseTips(selectedRoundTips);
+      setAreDbTipsLoaded(true);
     }
   }, [user, round, selectedGroup]);
 
+  //? --- Function logic to support frontend UI ---
   //TODO - update listener for when record is deleted based on new db structure
   const parseTippingGroups = (groupData: any) => {
     const mappedArray: any = [];
@@ -148,7 +165,7 @@ export default function TipComponent() {
               showsVerticalScrollIndicator={false}>
               {fixtureArray}
             </ScrollView>
-            {totalTipLength > 0 && !fixturesLoading && (
+            {totalTipLength > 0 && !fixturesLoading && !areTipsInSync && (
               <Button
                 title={`SUBMIT ${totalTipLength}/${fixtures.length}`}
                 onPress={() => {

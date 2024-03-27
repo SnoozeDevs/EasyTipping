@@ -17,9 +17,14 @@ export function useCurrentUser(selectedGroup?: string, selectedRound?: any) {
 
   //* Update user if they are authorised, clear user if not.
   useEffect(() => {
-    const unsubscribeAuth = auth().onAuthStateChanged((currentUser) => {
+    const unsubscribeAuth = auth().onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
-        getUserDetails(currentUser.uid, setUser);
+        // * Wait until document exists until setting user details.
+        await userDocRef.get().then((res) => {
+          if (res.exists) {
+            getUserDetails(currentUser.uid, setUser);
+          }
+        });
       } else {
         setUser(null);
       }
@@ -27,7 +32,7 @@ export function useCurrentUser(selectedGroup?: string, selectedRound?: any) {
     return () => unsubscribeAuth();
   }, [auth().currentUser]);
 
-  //* Update user record as soon as value is updated in Firestore Database
+  //* Update base user record (name, email etc) as soon as value is updated in Firestore Database
   useEffect(() => {
     //* Check if user is authenticate to listen for DB changes.
     if (auth().currentUser) {
@@ -51,8 +56,6 @@ export function useCurrentUser(selectedGroup?: string, selectedRound?: any) {
     }
   }, [auth().currentUser]);
 
-  //! May be room to put this into its own custom hook to keep tip data and
-  //! user data decoupled
   //* Updates when tips are changed for specific group
   useEffect(() => {
     //* Check if user is authenticate to listen for DB changes.
@@ -74,6 +77,28 @@ export function useCurrentUser(selectedGroup?: string, selectedRound?: any) {
       return () => unsubscribeFirestore();
     }
   }, [auth().currentUser, selectedGroup, selectedRound]);
+
+  //* Updates when users group record changes
+  useEffect(() => {
+    //* Check if user is authenticate to listen for DB changes.
+    if (auth().currentUser) {
+      const unsubscribeFirestore = userGroupsCollectionRef.onSnapshot(
+        async (snapshot) => {
+          //* Grabs group collection data from user
+          const groupObject = await destructureGroupData();
+
+          user &&
+            setUser({
+              ...(user as TUserRecord),
+              groups: groupObject,
+            });
+        },
+        (error) => console.error(error)
+      );
+
+      return () => unsubscribeFirestore();
+    }
+  }, [auth().currentUser, user?.groups]);
 
   return user;
 }

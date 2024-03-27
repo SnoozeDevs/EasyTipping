@@ -9,10 +9,12 @@ import { drkTheme } from "@/themes/drkTheme";
 import { useState } from "react";
 import { router } from "expo-router";
 import React from "react";
+import { joinGroup } from "@/utils/utils";
 
 export default function CreateJoinGroup() {
   const colors = useColorScheme();
-  const [groupCode, setGroupCode] = useState();
+  const [groupCode, setGroupCode] = useState<string>("");
+  const [joinGroupLoading, setJoinGroupLoading] = useState(false);
   const [groupCodeHasError, setGroupCodeHasError] = useState<boolean>();
   return (
     <View style={styles.container}>
@@ -46,8 +48,9 @@ export default function CreateJoinGroup() {
       />
       <Button
         title="Join"
+        loading={joinGroupLoading}
         onPress={() => {
-          console.log("search for group");
+          joinGroup(groupCode, setJoinGroupLoading);
         }}
       />
 

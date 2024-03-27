@@ -17,11 +17,9 @@ import { stdTheme } from "@/themes/stdTheme";
 import React from "react";
 import { useCurrentUser } from "@/utils/customHooks";
 import TippingCard from "@/components/TippingCard";
-import { Image, View } from "react-native";
+import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Swiper from "@/components/Swiper";
-import TippingLoader from "@/components/TippingCard/TippingLoader";
-import { Facebook } from "react-content-loader/native";
 
 export default function TipComponent() {
   //? Variable declarations

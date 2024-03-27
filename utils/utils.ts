@@ -25,8 +25,8 @@ export const signOutUser = () => {
   auth().signOut()
 };
 
-export const createUserRecord = (userID: string, displayName: string, email: string) => {
-  firestore()
+export const createUserRecord = async (userID: string, displayName: string, email: string) => {
+  await firestore()
     .collection('users')
     .doc(userID)
     .set({
@@ -36,6 +36,8 @@ export const createUserRecord = (userID: string, displayName: string, email: str
       groups: [],
     }, { merge: true }).then(() => {
       console.log('user added')
+    }).catch((err) => {
+      console.error(err)
     })
 }
 
@@ -157,6 +159,64 @@ export const createGroup = async (groupData: any, isLoading?: Dispatch<SetStateA
 
   //TODO send group id as param to automatically select that tip
   //TODO when navigating back to tip screen
+  router.navigate('tip')
+  isLoading && isLoading(false)
+}
+
+export const joinGroup = async (groupId: string, isLoading?: Dispatch<SetStateAction<boolean>>) => {
+  isLoading && isLoading(true)
+
+  const groupRef = firestore().collection('groups').doc(groupId)
+  const usersRef = groupRef.collection('users').doc(auth().currentUser?.uid)
+
+  const addNewUser = async () => {
+
+    let groupResponseData: any = {};
+
+    await groupRef.get().then((res) => {
+      groupResponseData = res.data()!
+    }).catch((err) => {
+      console.log(err)
+      return
+    })
+
+    //* Add user to group
+    await usersRef.set({
+      name: auth().currentUser?.displayName,
+      isAdmin: false,
+      tips: {
+      }
+    }).catch((err) => {
+      console.error(err);
+      return
+    })
+
+    const groupData = {
+      groupId: groupId,
+      groupName: groupResponseData.groupName,
+      isAdmin: auth().currentUser?.uid === groupResponseData.admin
+    }
+
+    //* Associate group into user document
+    await firestore().collection('users').doc(auth().currentUser?.uid).collection('groups').doc(groupId).set(groupData, { merge: true }).then((res) => {
+      console.log('Group successfully associated with user record!')
+    }).catch((err) => {
+      console.error(err)
+    })
+
+  }
+
+  await usersRef.get().then(async (res) => {
+    if (res.exists) {
+      console.error('User is already part of group')
+    } else {
+      await addNewUser()
+    }
+  }).catch((err) => {
+    console.error(err)
+    isLoading && isLoading(false)
+  })
+
   router.navigate('tip')
   isLoading && isLoading(false)
 }

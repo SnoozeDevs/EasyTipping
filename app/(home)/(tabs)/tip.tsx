@@ -63,13 +63,13 @@ export default function TipComponent() {
   //* Checks if the db tips and the local tips are in sync, logic used to display tip submission button
   //* and to reduce unnecessary writes to the db of duplicate data
   useEffect(() => {
-    if (areDbTipsLoaded) {
+    if (areDbTipsLoaded && fixtures) {
       JSON.stringify(totalTips) === JSON.stringify(currentDatabaseTips) &&
       totalTipLength === fixtures.length
         ? setAreTipsInSync(true)
         : setAreTipsInSync(false);
     }
-  }, [totalTips, areDbTipsLoaded, currentDatabaseTips]);
+  }, [totalTips, areDbTipsLoaded, currentDatabaseTips, fixtures]);
 
   //* Fetches users current tips from DB and displays them.
   useEffect(() => {

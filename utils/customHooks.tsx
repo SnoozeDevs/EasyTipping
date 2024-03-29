@@ -21,9 +21,7 @@ export function useCurrentUser(selectedGroup?: string, selectedRound?: any) {
       if (currentUser) {
         // * Wait until document exists until setting user details.
         await userDocRef.get().then((res) => {
-          if (res.exists) {
-            getUserDetails(currentUser.uid, setUser);
-          }
+          getUserDetails(currentUser.uid, setUser);
         });
       } else {
         setUser(null);
@@ -98,7 +96,7 @@ export function useCurrentUser(selectedGroup?: string, selectedRound?: any) {
 
       return () => unsubscribeFirestore();
     }
-  }, [auth().currentUser, user?.groups]);
+  }, [auth().currentUser]);
 
   return user;
 }

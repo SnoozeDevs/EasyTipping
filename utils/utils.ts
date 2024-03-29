@@ -78,9 +78,11 @@ export const getUserDetails = async (userID: string, userData: Dispatch<SetState
 
   //* Adds all of the base level document data
   await userPath.get().then((res: any) => {
-    userEmail = res._data.email,
-      userDisplayName = res._data.displayName,
-      userId = res._data.userID
+    if (res.exists) {
+      userEmail = res._data.email,
+        userDisplayName = res._data.displayName,
+        userId = res._data.userID
+    }
   }).catch((err) => {
     console.error(err)
   })

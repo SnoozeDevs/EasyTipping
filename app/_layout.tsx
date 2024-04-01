@@ -14,6 +14,7 @@ import { useEffect } from "react";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import React from "react";
+import { UserProvider } from "@/utils/AppContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,68 +57,70 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack
-        initialRouteName="(pageRoutes)/login"
-        screenOptions={{
-          gestureDirection: "horizontal",
-          gestureEnabled: true,
-          animationTypeForReplace: "push",
-        }}>
-        <Stack.Screen
-          name="(pageRoutes)/login"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="(pageRoutes)/signup"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="(home)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(pageRoutes)/modal"
-          options={{ presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="(pageRoutes)/groups"
-          options={{
-            presentation: "card",
-            headerBackTitle: "Back",
-            headerBackTitleVisible: false,
-          }}
-        />
-        <Stack.Screen
-          name="(pageRoutes)/create-group"
-          options={{
-            presentation: "modal",
-            headerBackTitle: "Back",
-            headerBackTitleVisible: false,
-          }}
-        />
-        <Stack.Screen
-          name="(pageRoutes)/settings"
-          options={{
-            headerShown: true,
-            headerTitle: "Settings",
-            headerBackTitle: "Back",
-            headerBackTitleVisible: false,
-          }}
-        />
-        <Stack.Screen
-          name="(pageRoutes)/profile"
-          options={{
-            headerShown: true,
-            headerTitle: "Profile",
-            headerBackTitle: "Back",
-            headerBackTitleVisible: false,
-          }}
-        />
-        <Stack.Screen
-          name="index"
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack>
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack
+          initialRouteName="(pageRoutes)/login"
+          screenOptions={{
+            gestureDirection: "horizontal",
+            gestureEnabled: true,
+            animationTypeForReplace: "push",
+          }}>
+          <Stack.Screen
+            name="(pageRoutes)/login"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(pageRoutes)/signup"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="(home)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(pageRoutes)/modal"
+            options={{ presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="(pageRoutes)/groups"
+            options={{
+              presentation: "card",
+              headerBackTitle: "Back",
+              headerBackTitleVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="(pageRoutes)/create-group"
+            options={{
+              presentation: "modal",
+              headerBackTitle: "Back",
+              headerBackTitleVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="(pageRoutes)/settings"
+            options={{
+              headerShown: true,
+              headerTitle: "Settings",
+              headerBackTitle: "Back",
+              headerBackTitleVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="(pageRoutes)/profile"
+            options={{
+              headerShown: true,
+              headerTitle: "Profile",
+              headerBackTitle: "Back",
+              headerBackTitleVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </UserProvider>
   );
 }

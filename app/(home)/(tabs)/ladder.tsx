@@ -2,19 +2,30 @@ import { StyleSheet, FlatList, Button } from "react-native";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
 
 import { useFocusEffect } from "@react-navigation/native";
 import { getLadder, updateUserRecord } from "@/utils/utils";
 import { TextInput } from "react-native-paper";
 import { useCurrentUser } from "@/utils/customHooks";
+import {
+  UserProviderType,
+  baseUserListener,
+  useActiveUser,
+} from "@/utils/AppContext";
 
 export default function Dashboard() {
   const currentUser = useCurrentUser();
   const [teamData, setTeamData] = useState<Array<string>>([]);
   const [isTeamDataLoaded, setIsTeamDataLoaded] = useState<boolean>(false);
   const [updateTestValue, setUpdateTestValue] = useState("");
+
+  const userProvider: UserProviderType = useActiveUser();
+  const userObject = userProvider.userValue;
+  useEffect(() => {
+    baseUserListener(userObject!, userProvider.userSetter);
+  }, []);
 
   //* Only calls ladder data from DB if it is not loaded
   useFocusEffect(
@@ -35,7 +46,7 @@ export default function Dashboard() {
       <Text>
         Current user: {currentUser ? currentUser?.displayName : "Loading..."}
       </Text>
-      <Text>Random val: {currentUser?.randomString}</Text>
+      <Text>User value: {userObject?.displayName}</Text>
       <TextInput
         autoCapitalize="none"
         mode="outlined"
@@ -50,8 +61,8 @@ export default function Dashboard() {
         title="Update test record"
         onPress={() => {
           updateUserRecord(
-            auth().currentUser?.uid!,
-            "randomString",
+            userObject?.userID!,
+            "displayName",
             updateTestValue,
             false
           );

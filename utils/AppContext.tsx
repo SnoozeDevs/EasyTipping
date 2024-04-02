@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import { TUserRecord } from "./types";
-import { getUserDetails } from "./utils";
+import { destructureGroupData, getUserDetails } from "./utils";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 
@@ -60,13 +60,14 @@ export const baseUserListener = (
       async (snapshot) => {
         //* Gets users top level data
         const data = snapshot.data() as Partial<TUserRecord>;
-
+        const groupObject = await destructureGroupData();
         user &&
           setUser({
             ...(user as TUserRecord),
             email: data.email!,
             displayName: data.displayName!,
             userID: data.userID!,
+            groups: groupObject,
           });
       },
       (error) => console.error(error)
@@ -74,4 +75,36 @@ export const baseUserListener = (
 
     return () => unsubscribeFirestore();
   }
+};
+
+export const tipUpdateListener = (
+  user: TUserRecord,
+  setUser: Dispatch<SetStateAction<TUserRecord>> | any,
+  selectedGroup: string,
+  selectedRound: string
+) => {
+  const userDocRef = firestore()
+    .collection("users")
+    .doc(auth().currentUser?.uid!);
+  const userGroupsCollectionRef = userDocRef.collection("groups");
+  const selectedGroupTipRef = userGroupsCollectionRef
+    .doc(selectedGroup)
+    .collection("tips")
+    .doc(selectedRound);
+
+  const unsubscribeFirestore = selectedGroupTipRef.onSnapshot(
+    async (snapshot) => {
+      //* Grabs group collection data from user
+      const groupObject = await destructureGroupData();
+
+      user &&
+        setUser({
+          ...(user as TUserRecord),
+          groups: groupObject,
+        });
+    },
+    (error) => console.error(error)
+  );
+
+  return () => unsubscribeFirestore();
 };

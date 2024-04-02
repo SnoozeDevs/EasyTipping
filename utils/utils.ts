@@ -87,18 +87,11 @@ export const getUserDetails = async (userID: string, userData: Dispatch<SetState
     console.error(err)
   })
 
-  //* Loops over all of the documents in the group collection and adds that to the user object
-  const groupObject = await destructureGroupData()
-
-
-  //* For next collection -> repeat above process.
-
   //* at end of process when all data is fetched, set total user in one hit
   userData({
     email: userEmail,
     displayName: userDisplayName,
     userID: userId,
-    groups: groupObject
   })
 }
 

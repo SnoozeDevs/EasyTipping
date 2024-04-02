@@ -20,6 +20,12 @@ import TippingCard from "@/components/TippingCard";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Swiper from "@/components/Swiper";
+import {
+  UserProviderType,
+  useActiveUser,
+  baseUserListener,
+  tipUpdateListener,
+} from "@/utils/AppContext";
 
 export default function TipComponent() {
   //? Variable declarations
@@ -33,15 +39,46 @@ export default function TipComponent() {
   const [totalTips, setTotalTips] = useState<any>([]);
   const totalTipLength = Object.keys(totalTips).length;
   const [tipsLoading, setTipsLoading] = useState(false);
-  const [currentDatabaseTips, setCurrentDatabaseTips] = useState({});
-  const [areTipsInSync, setAreTipsInSync] = useState(true);
-  const [areDbTipsLoaded, setAreDbTipsLoaded] = useState(false);
-  const selectedGroupIndex: number = user?.groups?.findIndex(
-    (obj) => obj.groupId === selectedGroup
-  )!;
-  const selectedRoundIndex: number = user?.groups[
-    selectedGroupIndex
-  ]?.tips?.findIndex((obj: any) => obj.round === `${round}`)!;
+  const [groupIndex, setGroupIndex] = useState<number>(-1);
+  const [roundIndex, setRoundIndex] = useState<number>(-1);
+  // const [currentDatabaseTips, setCurrentDatabaseTips] = useState({});
+  // const [areTipsInSync, setAreTipsInSync] = useState(true);
+  // const [areDbTipsLoaded, setAreDbTipsLoaded] = useState(false);
+  // const selectedGroupIndex: number = user?.groups?.findIndex(
+  //   (obj) => obj.groupId === selectedGroup
+  // )!;
+  // const selectedRoundIndex: number = user?.groups[
+  //   selectedGroupIndex
+  // ]?.tips?.findIndex((obj: any) => obj.round === `${round}`)!;
+
+  const userProvider: UserProviderType = useActiveUser();
+  const userObject = userProvider.userValue;
+
+  // const selectedGroupIndex: number = userObject?.groups?.findIndex(
+  //   (obj) => obj.groupId === selectedGroup
+  // )!;
+
+  // const selectedRoundIndex: number = userObject?.groups[
+  //   selectedGroupIndex
+  // ]?.tips?.findIndex((obj: any) => obj.round === `${round}`)!;
+
+  useEffect(() => {
+    baseUserListener(userObject!, userProvider.userSetter);
+  }, []);
+
+  useEffect(() => {
+    setGroupIndex(
+      userObject?.groups?.findIndex((obj) => obj.groupId === selectedGroup)!
+    );
+    groupIndex > -1 &&
+      setRoundIndex(
+        userObject?.groups[groupIndex]?.tips?.findIndex(
+          (obj: any) => obj.round === `${round}`
+        )!
+      );
+  }, [userObject?.groups]);
+
+  console.log(groupIndex, roundIndex);
 
   //? --- State management to support changes in rounds / tipping groups ---
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
@@ -62,26 +99,26 @@ export default function TipComponent() {
 
   //* Checks if the db tips and the local tips are in sync, logic used to display tip submission button
   //* and to reduce unnecessary writes to the db of duplicate data
-  useEffect(() => {
-    if (areDbTipsLoaded && fixtures) {
-      JSON.stringify(totalTips) === JSON.stringify(currentDatabaseTips) &&
-      totalTipLength === fixtures.length
-        ? setAreTipsInSync(true)
-        : setAreTipsInSync(false);
-    }
-  }, [totalTips, areDbTipsLoaded, currentDatabaseTips, fixtures]);
+  // useEffect(() => {
+  //   if (areDbTipsLoaded && fixtures) {
+  //     JSON.stringify(totalTips) === JSON.stringify(currentDatabaseTips) &&
+  //     totalTipLength === fixtures.length
+  //       ? setAreTipsInSync(true)
+  //       : setAreTipsInSync(false);
+  //   }
+  // }, [totalTips, areDbTipsLoaded, currentDatabaseTips, fixtures]);
 
   //* Fetches users current tips from DB and displays them.
-  useEffect(() => {
-    if (user?.groups[selectedGroupIndex]) {
-      const selectedGroupTips: any = user?.groups[selectedGroupIndex];
-      const selectedRoundTips: any =
-        selectedGroupTips.tips[selectedRoundIndex]?.roundTips ?? {};
-      setTotalTips(selectedRoundTips);
-      setCurrentDatabaseTips(selectedRoundTips);
-      setAreDbTipsLoaded(true);
-    }
-  }, [user, round, selectedGroup]);
+  // useEffect(() => {
+  //   if (user?.groups[selectedGroupIndex]) {
+  //     const selectedGroupTips: any = user?.groups[selectedGroupIndex];
+  //     const selectedRoundTips: any =
+  //       selectedGroupTips.tips[selectedRoundIndex]?.roundTips ?? {};
+  //     setTotalTips(selectedRoundTips);
+  //     setCurrentDatabaseTips(selectedRoundTips);
+  //     setAreDbTipsLoaded(true);
+  //   }
+  // }, [user, round, selectedGroup]);
 
   //? --- Function logic to support frontend UI ---
   //TODO - update listener for when record is deleted based on new db structure
@@ -163,11 +200,22 @@ export default function TipComponent() {
               showsVerticalScrollIndicator={false}>
               {fixtureArray}
             </ScrollView>
-            {totalTipLength > 0 && !fixturesLoading && !areTipsInSync && (
+            {totalTipLength > 0 && (
               <Button
                 title={`SUBMIT ${totalTipLength}/${fixtures.length}`}
-                onPress={() => {
-                  uploadTips(selectedGroup, round, totalTips, setTipsLoading);
+                onPress={async () => {
+                  await uploadTips(
+                    selectedGroup,
+                    round,
+                    totalTips,
+                    setTipsLoading
+                  );
+                  tipUpdateListener(
+                    userObject!,
+                    userProvider.userSetter,
+                    selectedGroup,
+                    round.toString()
+                  );
                 }}
                 iconName={totalTipLength > 1 ? "check-all" : "check"}
                 loading={tipsLoading}

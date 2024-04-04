@@ -78,8 +78,6 @@ export default function TipComponent() {
       );
   }, [userObject?.groups]);
 
-  console.log(groupIndex, roundIndex);
-
   //? --- State management to support changes in rounds / tipping groups ---
   //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
   useEffect(() => {

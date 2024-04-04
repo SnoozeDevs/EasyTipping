@@ -340,20 +340,17 @@ export const destructureGroupData = async () => {
   const groupSnapshots = await userGroupsCollectionRef.get();
 
   for (const groupDoc of groupSnapshots.docs) {
-    const tipArray: any = [];
     const tipCollectionRef = userGroupsCollectionRef.doc(groupDoc.id).collection('tips');
     const tipSnapshots = await tipCollectionRef.get();
+    const tipObject: any = {}
 
     tipSnapshots.forEach((doc) => {
-      tipArray.push({
-        round: doc.id,
-        roundTips: doc.data(),
-      });
+      tipObject[doc.id] = doc.data()
     });
 
     groupArray.push({
       ...groupDoc.data(),
-      tips: tipArray
+      tips: tipObject
     })
   }
 

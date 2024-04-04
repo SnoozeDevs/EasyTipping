@@ -32,7 +32,7 @@ export default function TipComponent() {
   const [round, setRound] = useState<any>(null);
   const [fixtures, setFixtures] = useState<any>(null);
   const [selectedGroup, setSelectedGroup] = useState<any>();
-  const user = useCurrentUser(selectedGroup, round);
+  // const user = useCurrentUser(selectedGroup, round);
   const roundArray = Array.from({ length: 30 }, (_, index) => index);
   const startValue = roundArray[parseInt(round)];
   const [fixturesLoading, setFixturesLoading] = useState(false);
@@ -64,36 +64,38 @@ export default function TipComponent() {
 
   useEffect(() => {
     baseUserListener(userObject!, userProvider.userSetter);
-  }, []);
-
-  useEffect(() => {
-    setGroupIndex(
-      userObject?.groups?.findIndex((obj) => obj.groupId === selectedGroup)!
-    );
-    groupIndex > -1 &&
-      setRoundIndex(
-        userObject?.groups[groupIndex]?.tips?.findIndex(
-          (obj: any) => obj.round === `${round}`
-        )!
-      );
-  }, [userObject?.groups]);
-
-  //? --- State management to support changes in rounds / tipping groups ---
-  //* These two '2024' vars can be put in env vars (or we can use the current year using a date formatter)
-  useEffect(() => {
     getCurrentRound("2024", setRound);
   }, []);
 
+  // useEffect(() => {
+  //   setGroupIndex(
+  //     userObject?.groups?.findIndex((obj) => obj.groupId === selectedGroup)!
+  //   );
+
+  //   groupIndex > -1 &&
+  //     setRoundIndex(
+  //       userObject?.groups[groupIndex]?.tips?.findIndex(
+  //         (obj: any) => obj.round === `${round}`
+  //       )!
+  //     );
+  // }, [userObject?.groups]);
+
+  //? --- State management to support changes in rounds / tipping groups ---
   useEffect(() => {
     getFixturesForCurrentRound("2024", round, setFixtures, setFixturesLoading);
   }, [round]);
 
   //* Automatically select first group when page loads
   useEffect(() => {
-    if (user && user.groups?.length > 0 && !selectedGroup) {
-      setSelectedGroup(user.groups[0].groupId);
+    if (userObject && userObject.groups?.length > 0 && !selectedGroup) {
+      setSelectedGroup(userObject.groups[0].groupId);
     }
-  }, [user]);
+  }, [userObject]);
+
+  if (userObject?.groups) {
+    console.log(round);
+    console.log(userObject!.groups[0].tips[round]);
+  }
 
   //* Checks if the db tips and the local tips are in sync, logic used to display tip submission button
   //* and to reduce unnecessary writes to the db of duplicate data
@@ -163,8 +165,8 @@ export default function TipComponent() {
 
   return (
     <Tip>
-      {user ? (
-        user.groups?.length > 0 ? (
+      {userObject ? (
+        userObject.groups?.length > 0 ? (
           <TipContainer>
             <SafeAreaView>
               <SegmentedButtons
@@ -172,7 +174,7 @@ export default function TipComponent() {
                 value={selectedGroup!}
                 theme={stdTheme}
                 onValueChange={setSelectedGroup}
-                buttons={parseTippingGroups(user.groups)}
+                buttons={parseTippingGroups(userObject.groups)}
               />
             </SafeAreaView>
             <View style={{ display: "flex" }}>

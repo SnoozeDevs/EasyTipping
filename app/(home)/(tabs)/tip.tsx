@@ -65,13 +65,6 @@ export default function TipComponent() {
     }
   }, [selectedGroup, round]);
 
-  useEffect(() => {
-    const userGroupExists = userObject && userObject.groups?.length > 0;
-    if (userObject?.groups && userGroupExists) {
-      setSelectedGroup(userObject.groups[0].groupId);
-    }
-  }, [userObject]);
-
   //? --- Function logic to support frontend UI ---
 
   const fetchDatabaseTips = (

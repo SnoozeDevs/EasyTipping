@@ -15,7 +15,6 @@ import { router } from "expo-router";
 import { SegmentedButtons } from "react-native-paper";
 import { stdTheme } from "@/themes/stdTheme";
 import React from "react";
-import { useCurrentUser } from "@/utils/customHooks";
 import TippingCard from "@/components/TippingCard";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -26,59 +25,26 @@ import {
   baseUserListener,
   tipUpdateListener,
 } from "@/utils/AppContext";
+import { TUserRecord } from "@/utils/types";
 
 export default function TipComponent() {
   //? Variable declarations
   const [round, setRound] = useState<any>(null);
   const [fixtures, setFixtures] = useState<any>(null);
-  const [selectedGroup, setSelectedGroup] = useState<any>();
-  // const user = useCurrentUser(selectedGroup, round);
+  const [selectedGroup, setSelectedGroup] = useState<any>("");
   const roundArray = Array.from({ length: 30 }, (_, index) => index);
   const startValue = roundArray[parseInt(round)];
   const [fixturesLoading, setFixturesLoading] = useState(false);
-  const [totalTips, setTotalTips] = useState<any>([]);
-  const totalTipLength = Object.keys(totalTips).length;
+  const [totalTips, setTotalTips] = useState<any>({});
+  const [totalTipLength, setTotalTipLength] = useState(0);
   const [tipsLoading, setTipsLoading] = useState(false);
-  const [groupIndex, setGroupIndex] = useState<number>(-1);
-  const [roundIndex, setRoundIndex] = useState<number>(-1);
-  // const [currentDatabaseTips, setCurrentDatabaseTips] = useState({});
-  // const [areTipsInSync, setAreTipsInSync] = useState(true);
-  // const [areDbTipsLoaded, setAreDbTipsLoaded] = useState(false);
-  // const selectedGroupIndex: number = user?.groups?.findIndex(
-  //   (obj) => obj.groupId === selectedGroup
-  // )!;
-  // const selectedRoundIndex: number = user?.groups[
-  //   selectedGroupIndex
-  // ]?.tips?.findIndex((obj: any) => obj.round === `${round}`)!;
-
   const userProvider: UserProviderType = useActiveUser();
   const userObject = userProvider.userValue;
-
-  // const selectedGroupIndex: number = userObject?.groups?.findIndex(
-  //   (obj) => obj.groupId === selectedGroup
-  // )!;
-
-  // const selectedRoundIndex: number = userObject?.groups[
-  //   selectedGroupIndex
-  // ]?.tips?.findIndex((obj: any) => obj.round === `${round}`)!;
 
   useEffect(() => {
     baseUserListener(userObject!, userProvider.userSetter);
     getCurrentRound("2024", setRound);
   }, []);
-
-  // useEffect(() => {
-  //   setGroupIndex(
-  //     userObject?.groups?.findIndex((obj) => obj.groupId === selectedGroup)!
-  //   );
-
-  //   groupIndex > -1 &&
-  //     setRoundIndex(
-  //       userObject?.groups[groupIndex]?.tips?.findIndex(
-  //         (obj: any) => obj.round === `${round}`
-  //       )!
-  //     );
-  // }, [userObject?.groups]);
 
   //? --- State management to support changes in rounds / tipping groups ---
   useEffect(() => {
@@ -87,40 +53,56 @@ export default function TipComponent() {
 
   //* Automatically select first group when page loads
   useEffect(() => {
-    if (userObject && userObject.groups?.length > 0 && !selectedGroup) {
+    const userGroupExists = userObject && userObject.groups?.length > 0;
+    userGroupExists && !selectedGroup
+      ? setSelectedGroup(userObject.groups[0].groupId)
+      : "";
+  }, [userObject?.groups]);
+
+  useEffect(() => {
+    if (selectedGroup !== undefined && userObject) {
+      fetchDatabaseTips(userObject, selectedGroup);
+    }
+  }, [selectedGroup, round]);
+
+  useEffect(() => {
+    const userGroupExists = userObject && userObject.groups?.length > 0;
+    if (userObject?.groups && userGroupExists) {
       setSelectedGroup(userObject.groups[0].groupId);
     }
   }, [userObject]);
 
-  if (userObject?.groups) {
-    console.log(round);
-    console.log(userObject!.groups[0].tips[round]);
-  }
-
-  //* Checks if the db tips and the local tips are in sync, logic used to display tip submission button
-  //* and to reduce unnecessary writes to the db of duplicate data
-  // useEffect(() => {
-  //   if (areDbTipsLoaded && fixtures) {
-  //     JSON.stringify(totalTips) === JSON.stringify(currentDatabaseTips) &&
-  //     totalTipLength === fixtures.length
-  //       ? setAreTipsInSync(true)
-  //       : setAreTipsInSync(false);
-  //   }
-  // }, [totalTips, areDbTipsLoaded, currentDatabaseTips, fixtures]);
-
-  //* Fetches users current tips from DB and displays them.
-  // useEffect(() => {
-  //   if (user?.groups[selectedGroupIndex]) {
-  //     const selectedGroupTips: any = user?.groups[selectedGroupIndex];
-  //     const selectedRoundTips: any =
-  //       selectedGroupTips.tips[selectedRoundIndex]?.roundTips ?? {};
-  //     setTotalTips(selectedRoundTips);
-  //     setCurrentDatabaseTips(selectedRoundTips);
-  //     setAreDbTipsLoaded(true);
-  //   }
-  // }, [user, round, selectedGroup]);
-
   //? --- Function logic to support frontend UI ---
+
+  const fetchDatabaseTips = (
+    userRecord: TUserRecord,
+    selectedGroup: string
+  ) => {
+    if (!userRecord || !userRecord.groups) {
+      console.log("User record or groups not defined");
+      return;
+    }
+
+    const selectedGroupIndex: number = userRecord?.groups?.findIndex(
+      (obj) => obj.groupId === selectedGroup
+    )!;
+
+    if (selectedGroupIndex < 0) {
+      console.log("Selected group not found");
+      return;
+    }
+    const userHasTips = round in userRecord.groups[selectedGroupIndex].tips!;
+
+    if (userHasTips) {
+      setTotalTips(userRecord.groups[selectedGroupIndex].tips![round]);
+      setTotalTipLength(
+        Object.keys(userRecord.groups[selectedGroupIndex].tips![round]).length
+      );
+    } else {
+      setTotalTips({});
+    }
+  };
+
   //TODO - update listener for when record is deleted based on new db structure
   const parseTippingGroups = (groupData: any) => {
     const mappedArray: any = [];
@@ -146,9 +128,10 @@ export default function TipComponent() {
   };
 
   const fixtureArray = fixtures?.map((match: any, matchIndex: number) => {
+    let matchId = "";
+    match.id in totalTips ? (matchId = match.id) : (matchId = "");
+
     //TODO write google cloud function which updates match record every minute between fixtures
-    //! This can easily be done on the free tier, even if we run fixtures updates every min 24/7, it will only use ~40k calls month,
-    //! and you get 2 mill free a month
     return (
       <TippingCard
         matchId={match.id}
@@ -158,7 +141,7 @@ export default function TipComponent() {
         homeName={abbreviateTeam(match.hteam)!}
         awayName={abbreviateTeam(match.ateam)!}
         matchTiming={convertUnixToLocalTime(match.unixtime)}
-        currentSelection={totalTips[`${match.id}`]}
+        currentSelection={totalTips[`${matchId}`]}
       />
     );
   });
@@ -200,7 +183,7 @@ export default function TipComponent() {
               showsVerticalScrollIndicator={false}>
               {fixtureArray}
             </ScrollView>
-            {totalTipLength > 0 && (
+            {totalTipLength > 0 && fixtures && (
               <Button
                 title={`SUBMIT ${totalTipLength}/${fixtures.length}`}
                 onPress={async () => {

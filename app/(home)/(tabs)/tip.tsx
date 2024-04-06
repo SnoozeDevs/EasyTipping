@@ -1,7 +1,6 @@
-import { SafeAreaView } from "react-native";
-
 import { Text } from "@/components/Themed";
 import styled from "styled-components/native";
+import auth from "@react-native-firebase/auth";
 import {
   abbreviateTeam,
   convertUnixToLocalTime,
@@ -16,7 +15,7 @@ import { SegmentedButtons } from "react-native-paper";
 import { stdTheme } from "@/themes/stdTheme";
 import React from "react";
 import TippingCard from "@/components/TippingCard";
-import { View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Swiper from "@/components/Swiper";
 import {
@@ -30,7 +29,8 @@ import { TUserRecord } from "@/utils/types";
 export default function TipComponent() {
   //? Variable declarations
   const [round, setRound] = useState<any>(null);
-  const [fixtures, setFixtures] = useState<any>(null);
+  const [fixtures, setFixtures] = useState<any>([]);
+  const [fixtureLength, setFixtureLength] = useState(0);
   const [selectedGroup, setSelectedGroup] = useState<any>("");
   const roundArray = Array.from({ length: 30 }, (_, index) => index);
   const startValue = roundArray[parseInt(round)];
@@ -44,11 +44,19 @@ export default function TipComponent() {
   useEffect(() => {
     baseUserListener(userObject!, userProvider.userSetter);
     getCurrentRound("2024", setRound);
-  }, []);
+  }, [auth().currentUser]);
 
   //? --- State management to support changes in rounds / tipping groups ---
   useEffect(() => {
-    getFixturesForCurrentRound("2024", round, setFixtures, setFixturesLoading);
+    if (round || round === 0) {
+      getFixturesForCurrentRound(
+        "2024",
+        round,
+        setFixtures,
+        setFixturesLoading,
+        setFixtureLength
+      );
+    }
   }, [round]);
 
   //* Automatically select first group when page loads
@@ -60,10 +68,14 @@ export default function TipComponent() {
   }, [userObject?.groups]);
 
   useEffect(() => {
-    if (selectedGroup !== undefined && userObject) {
+    if (selectedGroup && userObject) {
       fetchDatabaseTips(userObject, selectedGroup);
     }
   }, [selectedGroup, round]);
+
+  useEffect(() => {
+    setTotalTipLength(Object.keys(totalTips).length);
+  }, [totalTips]);
 
   //? --- Function logic to support frontend UI ---
 
@@ -93,6 +105,7 @@ export default function TipComponent() {
       );
     } else {
       setTotalTips({});
+      setTotalTipLength(0);
     }
   };
 
@@ -176,9 +189,9 @@ export default function TipComponent() {
               showsVerticalScrollIndicator={false}>
               {fixtureArray}
             </ScrollView>
-            {totalTipLength > 0 && fixtures && (
+            {totalTipLength > 0 && !fixturesLoading && (
               <Button
-                title={`SUBMIT ${totalTipLength}/${fixtures.length}`}
+                title={`SUBMIT ${totalTipLength}/${fixtureLength}`}
                 onPress={async () => {
                   await uploadTips(
                     selectedGroup,

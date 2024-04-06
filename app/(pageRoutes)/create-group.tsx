@@ -6,10 +6,15 @@ import { Text, View } from "@/components/Themed";
 import Button from "@/components/Button";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch } from "react-native-paper";
 import { createGroup } from "@/utils/utils";
 import React from "react";
+import {
+  UserProviderType,
+  groupUpdateListener,
+  useActiveUser,
+} from "@/utils/AppContext";
 
 export default function CreateJoinGroup() {
   const colors = useColorScheme();
@@ -19,6 +24,7 @@ export default function CreateJoinGroup() {
   const [hasPerfectRound, setHasPerfectRound] = useState(true);
   const [hasFinals, setHasFinals] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const userProvider: UserProviderType = useActiveUser();
 
   const parseGroupData = (
     groupName: string,
@@ -94,6 +100,8 @@ export default function CreateJoinGroup() {
             ),
             setIsLoading
           );
+
+          groupUpdateListener(userProvider.userValue!, userProvider.userSetter);
         }}
       />
 

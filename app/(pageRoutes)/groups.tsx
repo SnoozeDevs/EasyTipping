@@ -10,12 +10,19 @@ import { useState } from "react";
 import { router } from "expo-router";
 import React from "react";
 import { joinGroup } from "@/utils/utils";
+import {
+  UserProviderType,
+  groupUpdateListener,
+  useActiveUser,
+} from "@/utils/AppContext";
 
 export default function CreateJoinGroup() {
   const colors = useColorScheme();
   const [groupCode, setGroupCode] = useState<string>("");
   const [joinGroupLoading, setJoinGroupLoading] = useState(false);
   const [groupCodeHasError, setGroupCodeHasError] = useState<boolean>();
+  const userProvider: UserProviderType = useActiveUser();
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Groups</Text>
@@ -51,6 +58,7 @@ export default function CreateJoinGroup() {
         loading={joinGroupLoading}
         onPress={() => {
           joinGroup(groupCode, setJoinGroupLoading);
+          groupUpdateListener(userProvider.userValue!, userProvider.userSetter);
         }}
       />
 

@@ -4,7 +4,6 @@ import auth from "@react-native-firebase/auth";
 import uuid from 'react-native-uuid';
 import { router } from "expo-router";
 import { TUserRecord } from "./types";
-import { useActiveUser } from "./AppContext";
 
 export const isEmailValid = (email: string) => {
   const validRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -96,7 +95,6 @@ export const getUserDetails = async (userID: string, user: TUserRecord, userSett
     email: userEmail,
     displayName: userDisplayName,
     userID: userId,
-    groups: []
   })
 }
 

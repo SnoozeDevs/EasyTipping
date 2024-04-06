@@ -31,8 +31,8 @@ export function UserProvider({ children }: Props) {
   const [user, setUser] = useState<TUserRecord | null>(null);
 
   useEffect(() => {
-    getUserDetails(auth().currentUser?.uid!, setUser);
-  }, []);
+    getUserDetails(auth().currentUser?.uid!, user!, setUser);
+  }, [auth().currentUser]);
 
   const updateUser = (userObject: TUserRecord) => {
     setUser(userObject);
@@ -93,7 +93,33 @@ export const tipUpdateListener = (
     .doc(selectedRound);
 
   const unsubscribeFirestore = selectedGroupTipRef.onSnapshot(
-    async (snapshot) => {
+    async () => {
+      //* Grabs group collection data from user
+      const groupObject = await destructureGroupData();
+
+      user &&
+        setUser({
+          ...(user as TUserRecord),
+          groups: groupObject,
+        });
+    },
+    (error) => console.error(error)
+  );
+
+  return () => unsubscribeFirestore();
+};
+
+export const groupUpdateListener = (
+  user: TUserRecord,
+  setUser: Dispatch<SetStateAction<TUserRecord>> | any
+) => {
+  const userDocRef = firestore()
+    .collection("users")
+    .doc(auth().currentUser?.uid!);
+  const userGroupsCollectionRef = userDocRef.collection("groups");
+
+  const unsubscribeFirestore = userGroupsCollectionRef.onSnapshot(
+    async () => {
       //* Grabs group collection data from user
       const groupObject = await destructureGroupData();
 

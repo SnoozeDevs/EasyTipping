@@ -22,6 +22,7 @@ import {
 } from "@/utils/constants";
 import React from "react";
 import Button from "@/components/Button";
+import { UserProviderType, useActiveUser } from "@/utils/AppContext";
 
 export default function LoginPage() {
   const searchParams = useLocalSearchParams();
@@ -35,10 +36,12 @@ export default function LoginPage() {
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const theme = useColorScheme() === "light" ? stdTheme : drkTheme;
   const isFocused = useIsFocused();
+  const userProvider: UserProviderType = useActiveUser();
 
   useEffect(() => {
     if (isFocused && auth().currentUser) {
       signOutUser();
+      userProvider.userSetter({});
     }
   }, [isFocused]);
 

@@ -8,7 +8,6 @@ import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
 import { getLadder, updateUserRecord } from "@/utils/utils";
 import { TextInput } from "react-native-paper";
-import { useCurrentUser } from "@/utils/customHooks";
 import {
   UserProviderType,
   baseUserListener,
@@ -16,16 +15,14 @@ import {
 } from "@/utils/AppContext";
 
 export default function Dashboard() {
-  const currentUser = useCurrentUser();
   const [teamData, setTeamData] = useState<Array<string>>([]);
   const [isTeamDataLoaded, setIsTeamDataLoaded] = useState<boolean>(false);
   const [updateTestValue, setUpdateTestValue] = useState("");
-
   const userProvider: UserProviderType = useActiveUser();
   const userObject = userProvider.userValue;
   useEffect(() => {
     baseUserListener(userObject!, userProvider.userSetter);
-  }, []);
+  }, [auth().currentUser]);
 
   //* Only calls ladder data from DB if it is not loaded
   useFocusEffect(
@@ -43,9 +40,6 @@ export default function Dashboard() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
-      <Text>
-        Current user: {currentUser ? currentUser?.displayName : "Loading..."}
-      </Text>
       <Text>User value: {userObject?.displayName}</Text>
       <TextInput
         autoCapitalize="none"

@@ -3,6 +3,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import uuid from 'react-native-uuid';
 import { router } from "expo-router";
+import { TUserRecord } from "./types";
+import { useActiveUser } from "./AppContext";
 
 export const isEmailValid = (email: string) => {
   const validRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -49,11 +51,12 @@ export const getCurrentRound = async (year: string, setRound: Dispatch<SetStateA
   })
 }
 
-export const getFixturesForCurrentRound = async (year: string, currentRound: string, setFixtures: Dispatch<SetStateAction<number>>, setFixturesLoading: Dispatch<SetStateAction<boolean>>) => {
+export const getFixturesForCurrentRound = async (year: string, currentRound: string, setFixtures: Dispatch<SetStateAction<number>>, setFixturesLoading: Dispatch<SetStateAction<boolean>>, setFixtureLength: Dispatch<SetStateAction<number>>) => {
   setFixturesLoading(true)
 
   await firestore().collection('standings').doc(`${year}`).collection('rounds').doc(`${currentRound}`).get().then((res: any) => {
-    const timeSortedFixtures = res._data?.roundArray.sort((a: any, b: any) => a.unixtime - b.unixtime);
+    const timeSortedFixtures = res.data().roundArray.sort((a: any, b: any) => a.unixtime - b.unixtime);
+    setFixtureLength(res.data().roundArray.length);
     setFixtures(timeSortedFixtures)
     setFixturesLoading(false)
   }).catch((err) => {
@@ -72,7 +75,7 @@ export const updateUserRecord = async (userID: string, recordKey: string, record
     })
 }
 
-export const getUserDetails = async (userID: string, userData: Dispatch<SetStateAction<any>>) => {
+export const getUserDetails = async (userID: string, user: TUserRecord, userSetter: Dispatch<SetStateAction<any>>) => {
   const userPath = firestore().collection('users').doc(userID);
   let userEmail, userDisplayName, userId;
 
@@ -88,10 +91,12 @@ export const getUserDetails = async (userID: string, userData: Dispatch<SetState
   })
 
   //* at end of process when all data is fetched, set total user in one hit
-  userData({
+  userSetter({
+    ...(user as TUserRecord),
     email: userEmail,
     displayName: userDisplayName,
     userID: userId,
+    groups: []
   })
 }
 
@@ -198,7 +203,6 @@ export const joinGroup = async (groupId: string, isLoading?: Dispatch<SetStateAc
     }).catch((err) => {
       console.error(err)
     })
-
   }
 
   await usersRef.get().then(async (res) => {

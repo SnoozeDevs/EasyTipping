@@ -3,6 +3,7 @@ export type TUserRecord = {
   userID: string,
   email: string,
   groups: Array<GroupType>;
+  selectedLeague?: string;
 }
 
 type GroupType = {

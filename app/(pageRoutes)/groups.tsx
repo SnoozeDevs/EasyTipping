@@ -6,7 +6,7 @@ import { Text, View } from "@/components/Themed";
 import Button from "@/components/Button";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import React from "react";
 import { joinGroup } from "@/utils/utils";
@@ -21,7 +21,12 @@ export default function CreateJoinGroup() {
   const [groupCode, setGroupCode] = useState<string>("");
   const [joinGroupLoading, setJoinGroupLoading] = useState(false);
   const [groupCodeHasError, setGroupCodeHasError] = useState<boolean>();
+  const [selectedLeague, setSelectedLeague] = useState("");
   const userProvider: UserProviderType = useActiveUser();
+
+  useEffect(() => {
+    setSelectedLeague(groupCode.split("?")[1]);
+  }, [groupCode]);
 
   return (
     <View style={styles.container}>
@@ -58,7 +63,11 @@ export default function CreateJoinGroup() {
         loading={joinGroupLoading}
         onPress={() => {
           joinGroup(groupCode, setJoinGroupLoading);
-          groupUpdateListener(userProvider.userValue!, userProvider.userSetter);
+          groupUpdateListener(
+            userProvider.userValue!,
+            userProvider.userSetter,
+            selectedLeague
+          );
         }}
       />
 

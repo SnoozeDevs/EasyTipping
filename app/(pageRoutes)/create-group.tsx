@@ -90,18 +90,23 @@ export default function CreateJoinGroup() {
       <Button
         title="Create group"
         loading={isLoading}
-        onPress={() => {
-          createGroup(
+        onPress={async () => {
+          await createGroup(
             parseGroupData(
               groupName!,
               hasJokerRound,
               hasPerfectRound,
               hasFinals
             ),
-            setIsLoading
+            setIsLoading,
+            "afl"
           );
 
-          groupUpdateListener(userProvider.userValue!, userProvider.userSetter);
+          await groupUpdateListener(
+            userProvider.userValue!,
+            userProvider.userSetter,
+            "afl"
+          );
         }}
       />
 

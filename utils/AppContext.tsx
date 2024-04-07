@@ -60,7 +60,7 @@ export const baseUserListener = (
       async (snapshot) => {
         //* Gets users top level data
         const data = snapshot.data() as Partial<TUserRecord>;
-        const groupObject = await destructureGroupData();
+        const groupObject = await destructureGroupData(data.selectedLeague!);
         user &&
           setUser({
             ...(user as TUserRecord),
@@ -86,7 +86,11 @@ export const tipUpdateListener = (
   const userDocRef = firestore()
     .collection("users")
     .doc(auth().currentUser?.uid!);
-  const userGroupsCollectionRef = userDocRef.collection("groups");
+  const selectedLeague = user.selectedLeague;
+  const userGroupsCollectionRef = userDocRef
+    .collection("groups")
+    .doc("league")
+    .collection(selectedLeague!);
   const selectedGroupTipRef = userGroupsCollectionRef
     .doc(selectedGroup)
     .collection("tips")
@@ -95,7 +99,7 @@ export const tipUpdateListener = (
   const unsubscribeFirestore = selectedGroupTipRef.onSnapshot(
     async () => {
       //* Grabs group collection data from user
-      const groupObject = await destructureGroupData();
+      const groupObject = await destructureGroupData(selectedLeague!);
 
       user &&
         setUser({
@@ -109,19 +113,23 @@ export const tipUpdateListener = (
   return () => unsubscribeFirestore();
 };
 
-export const groupUpdateListener = (
+export const groupUpdateListener = async (
   user: TUserRecord,
-  setUser: Dispatch<SetStateAction<TUserRecord>> | any
+  setUser: Dispatch<SetStateAction<TUserRecord>> | any,
+  selectedLeague: string
 ) => {
   const userDocRef = firestore()
     .collection("users")
     .doc(auth().currentUser?.uid!);
-  const userGroupsCollectionRef = userDocRef.collection("groups");
+  const userGroupsCollectionRef = userDocRef
+    .collection("groups")
+    .doc("league")
+    .collection(selectedLeague);
 
   const unsubscribeFirestore = userGroupsCollectionRef.onSnapshot(
-    async () => {
+    async (snapshot: any) => {
       //* Grabs group collection data from user
-      const groupObject = await destructureGroupData();
+      const groupObject = await destructureGroupData(selectedLeague);
 
       user &&
         setUser({

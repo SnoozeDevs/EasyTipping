@@ -44,9 +44,7 @@ export default function TipComponent() {
 
   const fetchGroupData = async () => {
     if (userObject?.selectedLeague) {
-      const groupObject = await destructureGroupData(
-        userObject?.selectedLeague!
-      );
+      const groupObject = await destructureGroupData();
       userProvider.userSetter({
         ...userObject,
         groups: groupObject,
@@ -167,79 +165,87 @@ export default function TipComponent() {
     );
   });
 
+  //* Render if user hasn't loaded
+  if (!userObject) {
+    return <Text>Loading User...</Text>;
+  }
+
+  //* Render if user does not have any groups
+  if (userObject.groups?.length === 0) {
+    return (
+      <ButtonContainer>
+        <Button
+          title="Create or Join Group"
+          onPress={() => {
+            router.navigate("/groups");
+          }}
+          iconName="account-group"
+        />
+      </ButtonContainer>
+    );
+  }
+
+  //* Main tip container render.
   return (
     <Tip>
-      {userObject ? (
-        userObject.groups?.length > 0 ? (
-          <TipContainer>
-            <SafeAreaView>
-              <SegmentedButtons
-                style={{ width: "90%" }}
-                value={selectedGroup!}
-                theme={stdTheme}
-                onValueChange={setSelectedGroup}
-                buttons={parseTippingGroups(userObject.groups)}
-              />
-            </SafeAreaView>
-            <View style={{ display: "flex" }}>
-              <Swiper
-                values={roundArray}
-                selected={setRound}
-                startingIndex={startValue}
-              />
-            </View>
-
-            <ScrollView
-              contentContainerStyle={{
-                padding: 12,
-                display: "flex",
-                gap: 32,
-                width: "100%",
-                height: "auto",
-                justifyContent: "center",
-                alignItems: "center",
-                overflow: "scroll",
-                // paddingBottom: "25%",
-              }}
-              showsVerticalScrollIndicator={false}>
-              {fixtureArray}
-            </ScrollView>
-            {totalTipLength > 0 && !fixturesLoading && (
-              <Button
-                title={`SUBMIT ${totalTipLength}/${fixtureLength}`}
-                onPress={async () => {
-                  await uploadTips(
-                    selectedGroup,
-                    round,
-                    totalTips,
-                    setTipsLoading,
-                    userObject.selectedLeague!
-                  );
-                  tipUpdateListener(
-                    userObject!,
-                    userProvider.userSetter,
-                    selectedGroup,
-                    round.toString()
-                  );
-                }}
-                iconName={totalTipLength > 1 ? "check-all" : "check"}
-                loading={tipsLoading}
-              />
-            )}
-          </TipContainer>
-        ) : (
-          <ButtonContainer>
-            <Button
-              title="Create or Join Group"
-              onPress={() => {
-                router.navigate("/groups");
-              }}
-              iconName="account-group"
-            />
-          </ButtonContainer>
-        )
+      {!userObject.groups ? (
+        <Text>Loading fixtures and groups...</Text>
       ) : (
-        <Text>Loading...</Text>
+        <TipContainer>
+          <SafeAreaView>
+            <SegmentedButtons
+              style={{ width: "90%" }}
+              value={selectedGroup!}
+              theme={stdTheme}
+              onValueChange={setSelectedGroup}
+              buttons={parseTippingGroups(userObject.groups)}
+            />
+          </SafeAreaView>
+          <View style={{ display: "flex" }}>
+            <Swiper
+              values={roundArray}
+              selected={setRound}
+              startingIndex={startValue}
+            />
+          </View>
+
+          <ScrollView
+            contentContainerStyle={{
+              padding: 12,
+              display: "flex",
+              gap: 32,
+              width: "100%",
+              height: "auto",
+              justifyContent: "center",
+              alignItems: "center",
+              overflow: "scroll",
+              // paddingBottom: "25%",
+            }}
+            showsVerticalScrollIndicator={false}>
+            {fixtureArray}
+          </ScrollView>
+          {totalTipLength > 0 && !fixturesLoading && (
+            <Button
+              title={`SUBMIT ${totalTipLength}/${fixtureLength}`}
+              onPress={async () => {
+                await uploadTips(
+                  selectedGroup,
+                  round,
+                  totalTips,
+                  setTipsLoading
+                );
+                tipUpdateListener(
+                  userObject!,
+                  userProvider.userSetter,
+                  selectedGroup,
+                  round.toString()
+                );
+              }}
+              iconName={totalTipLength > 1 ? "check-all" : "check"}
+              loading={tipsLoading}
+            />
+          )}
+        </TipContainer>
       )}
     </Tip>
   );

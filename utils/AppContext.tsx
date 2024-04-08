@@ -60,14 +60,13 @@ export const baseUserListener = (
       async (snapshot) => {
         //* Gets users top level data
         const data = snapshot.data() as Partial<TUserRecord>;
-        const groupObject = await destructureGroupData(data.selectedLeague!);
+
         user &&
           setUser({
             ...(user as TUserRecord),
             email: data.email!,
             displayName: data.displayName!,
             userID: data.userID!,
-            groups: groupObject,
           });
       },
       (error) => console.error(error)
@@ -135,6 +134,7 @@ export const groupUpdateListener = async (
         setUser({
           ...(user as TUserRecord),
           groups: groupObject,
+          selectedLeague: selectedLeague,
         });
     },
     (error) => console.error(error)

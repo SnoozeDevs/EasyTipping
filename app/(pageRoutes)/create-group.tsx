@@ -99,12 +99,14 @@ export default function CreateJoinGroup() {
               hasFinals
             ),
             setIsLoading,
+            // TODO change this from static to dropdown option in the UI
             "afl"
           );
 
           await groupUpdateListener(
             userProvider.userValue!,
             userProvider.userSetter,
+            // TODO change this from static to dropdown option in the UI
             "afl"
           );
         }}

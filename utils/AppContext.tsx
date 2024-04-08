@@ -67,6 +67,7 @@ export const baseUserListener = (
             email: data.email!,
             displayName: data.displayName!,
             userID: data.userID!,
+            selectedLeague: data.selectedLeague ?? "",
           });
       },
       (error) => console.error(error)
@@ -85,11 +86,7 @@ export const tipUpdateListener = (
   const userDocRef = firestore()
     .collection("users")
     .doc(auth().currentUser?.uid!);
-  const selectedLeague = user.selectedLeague;
-  const userGroupsCollectionRef = userDocRef
-    .collection("groups")
-    .doc("league")
-    .collection(selectedLeague!);
+  const userGroupsCollectionRef = userDocRef.collection("groups");
   const selectedGroupTipRef = userGroupsCollectionRef
     .doc(selectedGroup)
     .collection("tips")
@@ -98,7 +95,7 @@ export const tipUpdateListener = (
   const unsubscribeFirestore = selectedGroupTipRef.onSnapshot(
     async () => {
       //* Grabs group collection data from user
-      const groupObject = await destructureGroupData(selectedLeague!);
+      const groupObject = await destructureGroupData();
 
       user &&
         setUser({
@@ -120,15 +117,12 @@ export const groupUpdateListener = async (
   const userDocRef = firestore()
     .collection("users")
     .doc(auth().currentUser?.uid!);
-  const userGroupsCollectionRef = userDocRef
-    .collection("groups")
-    .doc("league")
-    .collection(selectedLeague);
+  const userGroupsCollectionRef = userDocRef.collection("groups");
 
   const unsubscribeFirestore = userGroupsCollectionRef.onSnapshot(
     async (snapshot: any) => {
       //* Grabs group collection data from user
-      const groupObject = await destructureGroupData(selectedLeague);
+      const groupObject = await destructureGroupData();
 
       user &&
         setUser({

@@ -116,7 +116,7 @@ export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAc
 
   //* Creates initial group record
   await firestore()
-    .collection('groups').doc('league').collection(sportsLeague).doc(groupId)
+    .collection('groups').doc(groupId)
     .set({
       groupName: groupData.groupName,
       admin: auth().currentUser?.uid,
@@ -124,6 +124,7 @@ export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAc
       hasJoker: groupData.hasJokerRound,
       hasPerfectRound: groupData.hasPerfectRound,
       hasFinals: groupData.hasFinals,
+      league: sportsLeague,
     }, { merge: true }).then((res) => {
       console.log('group created', res)
     }).catch((err) => {
@@ -132,12 +133,9 @@ export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAc
     })
 
   //* Adds the user who created it an makes them an admin
-  await firestore().collection('groups').doc('league').collection(sportsLeague).doc(groupId).collection('users').doc(auth().currentUser?.uid).set({
+  await firestore().collection('groups').doc(groupId).collection('users').doc(auth().currentUser?.uid).set({
     name: auth().currentUser?.displayName,
     isAdmin: true,
-    tips: {
-
-    }
   }).then((res) => {
     console.log(`user added to group ${groupData.groupName}`, res)
   }).catch((err) => {
@@ -149,14 +147,16 @@ export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAc
     groupName: groupData.groupName,
     groupId: groupId,
     isAdmin: true,
+    league: sportsLeague,
   }
 
+  //* Adds the league the user has selected as their default league selection
   await userRef.update({
     selectedLeague: sportsLeague
   })
 
-  //* Associates the newly created group in the users collection to serve on user powered pages.
-  await userRef.collection('groups').doc('league').collection(sportsLeague).doc(groupId).set(groupObject, { merge: true }).then((res) => {
+  //* Associates the newly created group in the users collection to serve on user powered pages (eg tips).
+  await userRef.collection('groups').doc(groupId).set(groupObject, { merge: true }).then((res) => {
     console.log('Group successfully associated with user record!')
   }).catch((err) => {
     console.error(err)
@@ -173,7 +173,7 @@ export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateA
   const groupId = groupLink.split('?')[0]
   const sportsLeague = groupLink.split('?')[1]
 
-  const groupRef = firestore().collection('groups').doc('league').collection(sportsLeague).doc(groupId)
+  const groupRef = firestore().collection('groups').doc(groupId)
   const usersRef = groupRef.collection('users').doc(auth().currentUser?.uid)
   const userRecordRef = firestore().collection('users').doc(auth().currentUser?.uid)
 
@@ -192,8 +192,6 @@ export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateA
     await usersRef.set({
       name: auth().currentUser?.displayName,
       isAdmin: false,
-      tips: {
-      }
     }).catch((err) => {
       console.error(err);
       return
@@ -210,7 +208,7 @@ export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateA
     })
 
     //* Associate group into user document
-    await userRecordRef.collection('groups').doc('league').collection(sportsLeague).doc(groupId).set(groupData, { merge: true }).then((res) => {
+    await userRecordRef.collection('groups').doc(groupId).set(groupData, { merge: true }).then((res) => {
       console.log('Group successfully associated with user record!')
     }).catch((err) => {
       console.error(err)
@@ -332,14 +330,14 @@ export const ImageFetch: any = {
   BRI: require('../assets/images/BL.png')
 }
 
-export const uploadTips = async (selectedGroup: string, round: string, tips: any, tipsLoading: Dispatch<SetStateAction<boolean>>, selectedLeague: string) => {
+export const uploadTips = async (selectedGroup: string, round: string, tips: any, tipsLoading: Dispatch<SetStateAction<boolean>>) => {
   //TODO update user record to reflect the tips for that round
   tipsLoading(true)
-  const groupTipRef = firestore().collection('users').doc(auth().currentUser?.uid).collection('groups').doc('league').collection(selectedLeague).doc(`${selectedGroup}`).collection('tips').doc(`${round}`)
-  groupTipRef.set(tips, { merge: true }).then((res) => {
+  const groupTipRef = firestore().collection('users').doc(auth().currentUser?.uid).collection('groups').doc(`${selectedGroup}`).collection('tips').doc(`${round}`)
+  groupTipRef.set(tips, { merge: true }).then(() => {
     console.log('Tips added to user group')
     tipsLoading(false)
-  }).catch((err) => {
+  }).catch(() => {
     tipsLoading(false)
     console.error('Error adding tips')
   })
@@ -349,10 +347,9 @@ export const uploadTips = async (selectedGroup: string, round: string, tips: any
   //! This part will have to be done in the functions
 }
 
-export const destructureGroupData = async (selectedLeague: string) => {
+export const destructureGroupData = async () => {
   const userDocRef = firestore().collection("users").doc(auth().currentUser?.uid!);
-  const userGroupsCollectionRef = userDocRef.collection("groups").doc("league")
-    .collection(selectedLeague);
+  const userGroupsCollectionRef = userDocRef.collection("groups")
   const groupArray: any = []
   const groupSnapshots = await userGroupsCollectionRef.get();
 

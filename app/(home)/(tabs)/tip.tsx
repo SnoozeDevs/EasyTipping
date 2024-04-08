@@ -4,6 +4,7 @@ import auth from "@react-native-firebase/auth";
 import {
   abbreviateTeam,
   convertUnixToLocalTime,
+  destructureGroupData,
   getCurrentRound,
   getFixturesForCurrentRound,
   uploadTips,
@@ -41,9 +42,23 @@ export default function TipComponent() {
   const userProvider: UserProviderType = useActiveUser();
   const userObject = userProvider.userValue;
 
+  const fetchGroupData = async () => {
+    if (userObject?.selectedLeague) {
+      const groupObject = await destructureGroupData(
+        userObject?.selectedLeague!
+      );
+      userProvider.userSetter({
+        ...userObject,
+        groups: groupObject,
+      });
+    }
+  };
+
+  //* Initial data load calls
   useEffect(() => {
     baseUserListener(userObject!, userProvider.userSetter);
     getCurrentRound("2024", setRound);
+    fetchGroupData();
   }, [auth().currentUser]);
 
   //? --- State management to support changes in rounds / tipping groups ---
@@ -197,7 +212,8 @@ export default function TipComponent() {
                     selectedGroup,
                     round,
                     totalTips,
-                    setTipsLoading
+                    setTipsLoading,
+                    userObject.selectedLeague!
                   );
                   tipUpdateListener(
                     userObject!,

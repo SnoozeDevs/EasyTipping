@@ -76,14 +76,15 @@ export const updateUserRecord = async (userID: string, recordKey: string, record
 
 export const getUserDetails = async (userID: string, user: TUserRecord, userSetter: Dispatch<SetStateAction<any>>) => {
   const userPath = firestore().collection('users').doc(userID);
-  let userEmail, userDisplayName, userId;
+  let userEmail, userDisplayName, userId, selectedLeague;
 
   //* Adds all of the base level document data
   await userPath.get().then((res: any) => {
     if (res.exists) {
-      userEmail = res._data.email,
-        userDisplayName = res._data.displayName,
-        userId = res._data.userID
+      userEmail = res.data().email,
+        userDisplayName = res.data().displayName,
+        userId = res.data().userID
+      selectedLeague = res.data().selectedLeague
     }
   }).catch((err) => {
     console.error(err)
@@ -95,6 +96,7 @@ export const getUserDetails = async (userID: string, user: TUserRecord, userSett
     email: userEmail,
     displayName: userDisplayName,
     userID: userId,
+    selectedLeague: selectedLeague,
   })
 }
 
@@ -330,10 +332,10 @@ export const ImageFetch: any = {
   BRI: require('../assets/images/BL.png')
 }
 
-export const uploadTips = async (selectedGroup: string, round: string, tips: any, tipsLoading: Dispatch<SetStateAction<boolean>>) => {
+export const uploadTips = async (selectedGroup: string, round: string, tips: any, tipsLoading: Dispatch<SetStateAction<boolean>>, selectedLeague: string) => {
   //TODO update user record to reflect the tips for that round
   tipsLoading(true)
-  const groupTipRef = firestore().collection('users').doc(auth().currentUser?.uid).collection('groups').doc(selectedGroup).collection('tips').doc(`${round}`)
+  const groupTipRef = firestore().collection('users').doc(auth().currentUser?.uid).collection('groups').doc('league').collection(selectedLeague).doc(`${selectedGroup}`).collection('tips').doc(`${round}`)
   groupTipRef.set(tips, { merge: true }).then((res) => {
     console.log('Tips added to user group')
     tipsLoading(false)

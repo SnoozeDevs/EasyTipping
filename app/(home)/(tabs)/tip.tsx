@@ -150,18 +150,35 @@ export default function TipComponent() {
     let matchId = "";
     match.id in totalTips ? (matchId = match.id) : (matchId = "");
 
+    const matchTiming = () => {
+      const unixConversion = convertUnixToLocalTime(match.unixtime);
+
+      if (matchIndex - 1 <= 0) {
+        return <Text>{unixConversion.matchDate}</Text>;
+      } else if (
+        unixConversion.matchDate !==
+        convertUnixToLocalTime(fixtures[matchIndex - 1].unixtime).matchDate
+      ) {
+        return <Text>{unixConversion.matchDate}</Text>;
+      }
+    };
+
     //TODO write google cloud function which updates match record every minute between fixtures
     return (
-      <TippingCard
-        matchId={match.id}
-        totalTips={setTotalTips}
-        key={`tip-${matchIndex}`}
-        stadium={match.venue}
-        homeName={abbreviateTeam(match.hteam)!}
-        awayName={abbreviateTeam(match.ateam)!}
-        matchTiming={convertUnixToLocalTime(match.unixtime)}
-        currentSelection={totalTips[`${matchId}`]}
-      />
+      <>
+        <View>{matchTiming()}</View>
+        <TippingCard
+          matchId={match.id}
+          totalTips={setTotalTips}
+          key={`tip-${matchIndex}`}
+          stadium={match.venue}
+          homeName={abbreviateTeam(match.hteam)!}
+          awayName={abbreviateTeam(match.ateam)!}
+          unixTime={match.unixtime}
+          matchTiming={convertUnixToLocalTime(match.unixtime)}
+          currentSelection={totalTips[`${matchId}`]}
+        />
+      </>
     );
   });
 

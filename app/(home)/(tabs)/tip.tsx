@@ -160,13 +160,18 @@ export default function TipComponent() {
         convertUnixToLocalTime(fixtures[matchIndex - 1].unixtime).matchDate
       ) {
         return <Text>{unixConversion.matchDate}</Text>;
+      } else {
+        return;
       }
     };
 
+    {
+    }
+
     //TODO write google cloud function which updates match record every minute between fixtures
     return (
-      <>
-        <View>{matchTiming()}</View>
+      <CardContainer>
+        <MatchText key={`text-${matchIndex}`}>{matchTiming()}</MatchText>
         <TippingCard
           matchId={match.id}
           totalTips={setTotalTips}
@@ -174,11 +179,10 @@ export default function TipComponent() {
           stadium={match.venue}
           homeName={abbreviateTeam(match.hteam)!}
           awayName={abbreviateTeam(match.ateam)!}
-          unixTime={match.unixtime}
           matchTiming={convertUnixToLocalTime(match.unixtime)}
           currentSelection={totalTips[`${matchId}`]}
         />
-      </>
+      </CardContainer>
     );
   });
 
@@ -236,7 +240,7 @@ export default function TipComponent() {
               justifyContent: "center",
               alignItems: "center",
               overflow: "scroll",
-              // paddingBottom: "25%",
+              paddingBottom: "10%",
             }}
             showsVerticalScrollIndicator={false}>
             {fixtureArray}
@@ -270,8 +274,19 @@ export default function TipComponent() {
 
 const Tip = styled.View`
   flex: 1;
-  padding: 5% 0;
+  padding: 5% 0 0 0;
   background-color: #f3f2f2e3;
+`;
+
+const MatchText = styled.Text`
+  font-family: "Montserrat";
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const CardContainer = styled.View`
+  display: flex;
+  flex-direction: column;
 `;
 
 const TipContainer = styled.View`

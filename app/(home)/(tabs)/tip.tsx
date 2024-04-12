@@ -165,9 +165,6 @@ export default function TipComponent() {
       }
     };
 
-    {
-    }
-
     //TODO write google cloud function which updates match record every minute between fixtures
     return (
       <CardContainer key={`tip-${matchIndex}`}>

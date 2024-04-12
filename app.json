@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.easytipping.EasyTipping",
@@ -45,7 +43,10 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      {
+        "fonts": ["./assets/fonts/Montserrat-Regular.ttf"]
+      }
     ],
     "experiments": {
       "typedRoutes": true

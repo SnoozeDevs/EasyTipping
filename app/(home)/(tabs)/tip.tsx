@@ -170,12 +170,11 @@ export default function TipComponent() {
 
     //TODO write google cloud function which updates match record every minute between fixtures
     return (
-      <CardContainer>
-        <MatchText key={`text-${matchIndex}`}>{matchTiming()}</MatchText>
+      <CardContainer key={`tip-${matchIndex}`}>
+        <MatchText>{matchTiming()}</MatchText>
         <TippingCard
           matchId={match.id}
           totalTips={setTotalTips}
-          key={`tip-${matchIndex}`}
           stadium={match.venue}
           homeName={abbreviateTeam(match.hteam)!}
           awayName={abbreviateTeam(match.ateam)!}

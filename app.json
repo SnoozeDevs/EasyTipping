@@ -43,10 +43,12 @@
           }
         }
       ],
-      "expo-font",
-      {
-        "fonts": ["./assets/fonts/Montserrat-Regular.ttf"]
-      }
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/Montserrat-Regular.ttf"]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

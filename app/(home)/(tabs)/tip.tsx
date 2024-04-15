@@ -123,28 +123,28 @@ export default function TipComponent() {
   };
 
   //TODO - update listener for when record is deleted based on new db structure
-  const parseTippingGroups = (groupData: any) => {
-    const mappedArray: any = [];
-    groupData.map((group: any) => {
-      const mappedObject = {
-        value: group.groupId,
-        label: group.groupName,
-        style:
-          groupData.length < 2
-            ? {
-                borderTopRightRadius: 25,
-                borderBottomRightRadius: 25,
-                borderTopLeftRadius: 25,
-                borderBottomLeftRadius: 25,
-                borderRightWidth: 1,
-              }
-            : {},
-      };
-      mappedArray.push(mappedObject);
-    });
+  // const parseTippingGroups = (groupData: any) => {
+  //   const mappedArray: any = [];
+  //   groupData.map((group: any) => {
+  //     const mappedObject = {
+  //       value: group.groupId,
+  //       label: group.groupName,
+  //       style:
+  //         groupData.length < 2
+  //           ? {
+  //               borderTopRightRadius: 25,
+  //               borderBottomRightRadius: 25,
+  //               borderTopLeftRadius: 25,
+  //               borderBottomLeftRadius: 25,
+  //               borderRightWidth: 1,
+  //             }
+  //           : {},
+  //     };
+  //     mappedArray.push(mappedObject);
+  //   });
 
-    return mappedArray;
-  };
+  //   return mappedArray;
+  // };
 
   const fixtureArray = fixtures?.map((match: any, matchIndex: number) => {
     let matchId = "";
@@ -210,13 +210,13 @@ export default function TipComponent() {
       ) : (
         <TipContainer>
           <SafeAreaView>
-            <SegmentedButtons
+            {/* <SegmentedButtons
               style={{ width: "90%" }}
               value={selectedGroup!}
               theme={stdTheme}
               onValueChange={setSelectedGroup}
               buttons={parseTippingGroups(userObject.groups)}
-            />
+            /> */}
           </SafeAreaView>
           <View style={{ display: "flex" }}>
             <Swiper

@@ -95,6 +95,8 @@ export const tipUpdateListener = (
   const unsubscribeFirestore = selectedGroupTipRef.onSnapshot(
     async () => {
       //* Grabs group collection data from user
+      //TODO remove the generic update from both the groups and tip listener, and only
+      // todo update the object key.
       const groupObject = await destructureGroupData();
 
       user &&

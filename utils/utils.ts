@@ -1,4 +1,4 @@
-import firestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import firestore, { FirebaseFirestoreTypes, firebase } from "@react-native-firebase/firestore";
 import { Dispatch, SetStateAction, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import uuid from 'react-native-uuid';
@@ -52,11 +52,21 @@ export const getCurrentRound = async (year: string, setRound: Dispatch<SetStateA
 
 export const getFixturesForCurrentRound = async (year: string, currentRound: string, setFixtures: Dispatch<SetStateAction<number>>, setFixturesLoading: Dispatch<SetStateAction<boolean>>, setFixtureLength: Dispatch<SetStateAction<number>>) => {
   setFixturesLoading(true)
+  // console.log('server', firebase.firestore.Timestamp.now());
 
   await firestore().collection('standings').doc(`${year}`).collection('rounds').doc(`${currentRound}`).get().then((res: any) => {
     const timeSortedFixtures = res.data().roundArray.sort((a: any, b: any) => a.unixtime - b.unixtime);
+    const fixtureArray = (matches: any) => {
+      return matches.map((match: any) => {
+        const matchStarted = firebase.firestore.Timestamp.now() > match.unixtime
+        return {
+          ...match,
+          matchStarted: matchStarted
+        }
+      })
+    }
     setFixtureLength(res.data().roundArray.length);
-    setFixtures(timeSortedFixtures)
+    setFixtures(fixtureArray(timeSortedFixtures))
     setFixturesLoading(false)
   }).catch((err) => {
     console.error(err)

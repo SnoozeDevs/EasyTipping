@@ -80,7 +80,7 @@ export const baseUserListener = (
 export const tipUpdateListener = (
   user: TUserRecord,
   setUser: Dispatch<SetStateAction<TUserRecord>> | any,
-  selectedGroup: string,
+  selectedGroup: any,
   selectedRound: string
 ) => {
   const userDocRef = firestore()
@@ -93,16 +93,20 @@ export const tipUpdateListener = (
     .doc(selectedRound);
 
   const unsubscribeFirestore = selectedGroupTipRef.onSnapshot(
-    async () => {
-      //* Grabs group collection data from user
-      //TODO remove the generic update from both the groups and tip listener, and only
-      // todo update the object key.
-      const groupObject = await destructureGroupData();
-
+    async (snapshot: any) => {
       user &&
         setUser({
           ...(user as TUserRecord),
-          groups: groupObject,
+          groups: {
+            ...user.groups,
+            [selectedGroup]: {
+              ...user.groups[selectedGroup],
+              tips: {
+                ...user.groups[selectedGroup].tips,
+                [selectedRound]: snapshot.data(),
+              },
+            },
+          },
         });
     },
     (error) => console.error(error)
@@ -124,6 +128,8 @@ export const groupUpdateListener = async (
   const unsubscribeFirestore = userGroupsCollectionRef.onSnapshot(
     async (snapshot: any) => {
       //* Grabs group collection data from user
+      //TODO remove the generic update from both the groups and tip listener, and only
+      // todo update the object key.
       const groupObject = await destructureGroupData();
 
       user &&

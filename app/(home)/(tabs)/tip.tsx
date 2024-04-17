@@ -38,6 +38,7 @@ export default function TipComponent() {
   const [fixturesLoading, setFixturesLoading] = useState(false);
   const [totalTips, setTotalTips] = useState<any>({});
   const [totalTipLength, setTotalTipLength] = useState(0);
+  const [tipResults, setTipResults] = useState<any>({});
   const [tipsLoading, setTipsLoading] = useState(false);
   const userProvider: UserProviderType = useActiveUser();
   const userObject = userProvider.userValue;
@@ -74,9 +75,9 @@ export default function TipComponent() {
 
   //* Automatically select first group when page loads
   useEffect(() => {
-    const userGroupExists = userObject && userObject.groups?.length > 0;
+    const userGroupExists = userObject && userObject.groups;
     userGroupExists && !selectedGroup
-      ? setSelectedGroup(userObject.groups[0].groupId)
+      ? setSelectedGroup(Object.values(userObject.groups)[0].groupId)
       : "";
   }, [userObject?.groups]);
 
@@ -92,59 +93,65 @@ export default function TipComponent() {
 
   //? --- Function logic to support frontend UI ---
 
-  const fetchDatabaseTips = (
-    userRecord: TUserRecord,
-    selectedGroup: string
-  ) => {
+  const fetchDatabaseTips = (userRecord: TUserRecord, selectedGroup: any) => {
     if (!userRecord || !userRecord.groups) {
       console.log("User record or groups not defined");
       return;
     }
 
-    const selectedGroupIndex: number = userRecord?.groups?.findIndex(
-      (obj) => obj.groupId === selectedGroup
-    )!;
-
-    if (selectedGroupIndex < 0) {
+    if (!userRecord.groups[selectedGroup]) {
       console.log("Selected group not found");
       return;
     }
-    const userHasTips = round in userRecord.groups[selectedGroupIndex].tips!;
+
+    const userHasResults = round in userRecord.groups[selectedGroup].results!;
+    const userHasTips = round in userRecord.groups[selectedGroup].tips!;
 
     if (userHasTips) {
-      setTotalTips(userRecord.groups[selectedGroupIndex].tips![round]);
+      setTotalTips(userRecord.groups[selectedGroup].tips![round]);
       setTotalTipLength(
-        Object.keys(userRecord.groups[selectedGroupIndex].tips![round]).length
+        Object.keys(userRecord.groups[selectedGroup].tips![round]).length
       );
     } else {
       setTotalTips({});
       setTotalTipLength(0);
     }
+
+    userHasResults
+      ? setTipResults(userRecord.groups[selectedGroup].results![round])
+      : setTipResults({});
   };
 
-  //TODO - update listener for when record is deleted based on new db structure
-  // const parseTippingGroups = (groupData: any) => {
-  //   const mappedArray: any = [];
-  //   groupData.map((group: any) => {
-  //     const mappedObject = {
-  //       value: group.groupId,
-  //       label: group.groupName,
-  //       style:
-  //         groupData.length < 2
-  //           ? {
-  //               borderTopRightRadius: 25,
-  //               borderBottomRightRadius: 25,
-  //               borderTopLeftRadius: 25,
-  //               borderBottomLeftRadius: 25,
-  //               borderRightWidth: 1,
-  //             }
-  //           : {},
-  //     };
-  //     mappedArray.push(mappedObject);
-  //   });
+  console.log(tipResults);
 
-  //   return mappedArray;
-  // };
+  //TODO - update listener for when record is deleted based on new db structure
+  const parseTippingGroups = (groupData: any) => {
+    const mappedArray: any = [];
+
+    for (const key in groupData) {
+      const objectKey: any = key;
+      const element = userObject?.groups[objectKey]!;
+
+      const mappedObject = {
+        value: element.groupId,
+        label: element.groupName,
+        style:
+          Object.keys(groupData).length < 2
+            ? {
+                borderTopRightRadius: 25,
+                borderBottomRightRadius: 25,
+                borderTopLeftRadius: 25,
+                borderBottomLeftRadius: 25,
+                borderRightWidth: 1,
+              }
+            : {},
+      };
+
+      mappedArray.push(mappedObject);
+    }
+
+    return mappedArray;
+  };
 
   const fixtureArray = fixtures?.map((match: any, matchIndex: number) => {
     let matchId = "";
@@ -177,6 +184,8 @@ export default function TipComponent() {
           awayName={abbreviateTeam(match.ateam)!}
           matchTiming={convertUnixToLocalTime(match.unixtime)}
           currentSelection={totalTips[`${matchId}`]}
+          disabledTips={match.matchStarted}
+          tipResult={tipResults[`${matchId}`]}
         />
       </CardContainer>
     );
@@ -210,13 +219,13 @@ export default function TipComponent() {
       ) : (
         <TipContainer>
           <SafeAreaView>
-            {/* <SegmentedButtons
+            <SegmentedButtons
               style={{ width: "90%" }}
               value={selectedGroup!}
               theme={stdTheme}
               onValueChange={setSelectedGroup}
               buttons={parseTippingGroups(userObject.groups)}
-            /> */}
+            />
           </SafeAreaView>
           <View style={{ display: "flex" }}>
             <Swiper

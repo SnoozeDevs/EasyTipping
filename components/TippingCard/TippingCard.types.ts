@@ -8,6 +8,8 @@ export interface ITippingCardProps {
   matchId: number;
   totalTips: Dispatch<SetStateAction<any>>;
   currentSelection: string;
+  disabledTips?: boolean;
+  tipResult?: string;
 }
 
 type MatchTiming = {

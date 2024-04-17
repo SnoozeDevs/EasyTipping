@@ -58,7 +58,7 @@ export const getFixturesForCurrentRound = async (year: string, currentRound: str
     const timeSortedFixtures = res.data().roundArray.sort((a: any, b: any) => a.unixtime - b.unixtime);
     const fixtureArray = (matches: any) => {
       return matches.map((match: any) => {
-        const matchStarted = firebase.firestore.Timestamp.now() > match.unixtime
+        const matchStarted = firebase.firestore.Timestamp.now().seconds > match.unixtime
         return {
           ...match,
           matchStarted: matchStarted
@@ -99,6 +99,7 @@ export const getUserDetails = async (userID: string, user: TUserRecord, userSett
   }).catch((err) => {
     console.error(err)
   })
+  const groupObject = await destructureGroupData();
 
   //* at end of process when all data is fetched, set total user in one hit
   userSetter({
@@ -107,6 +108,7 @@ export const getUserDetails = async (userID: string, user: TUserRecord, userSett
     displayName: userDisplayName,
     userID: userId,
     selectedLeague: selectedLeague,
+    groups: groupObject
   })
 }
 
@@ -390,6 +392,5 @@ export const destructureGroupData = async () => {
     }
   }
 
-  console.log('group obj ', groupObject)
   return groupObject
 };

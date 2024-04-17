@@ -13,4 +13,5 @@ type GroupType = {
   //TODO build the current rank in.
   currentRank?: string
   tips?: Array<string>;
+  results?: Array<string>;
 }

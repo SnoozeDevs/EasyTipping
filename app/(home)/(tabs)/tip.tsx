@@ -122,8 +122,6 @@ export default function TipComponent() {
       : setTipResults({});
   };
 
-  console.log(tipResults);
-
   //TODO - update listener for when record is deleted based on new db structure
   const parseTippingGroups = (groupData: any) => {
     const mappedArray: any = [];
@@ -152,6 +150,10 @@ export default function TipComponent() {
 
     return mappedArray;
   };
+
+  //todo loop through entire list of fixtures, and check for the
+  //todo matchStarted value on at least one object, if yes, break the loop and flip the value
+  //todo if not, keep the value at false: add this flag to the button render logic
 
   const fixtureArray = fixtures?.map((match: any, matchIndex: number) => {
     let matchId = "";

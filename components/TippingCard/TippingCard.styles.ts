@@ -83,11 +83,12 @@ font-size: 11px;
 
 const returnBorderColour = (props: any) => {
   if (props.$tipResult === 'correct' && props.$selected) {
-    return '3px solid green'
+    return '3px solid #2dd713'
   } else if (props.$tipResult === 'incorrect' && props.$selected) {
-    return '3px solid red'
+    return '3px solid #f52a14'
   } else if (props.$disabled && props.$selected) {
     return '3px solid #399fed75'
+
   } else {
     return 'none'
   }

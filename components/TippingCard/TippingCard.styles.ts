@@ -90,6 +90,6 @@ const returnBorderColour = (props: any) => {
     return '3px solid #399fed75'
 
   } else {
-    return 'none'
+    return '3px solid transparent'
   }
 }

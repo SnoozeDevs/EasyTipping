@@ -28,7 +28,7 @@ import {
 import { TUserRecord } from "@/utils/types";
 
 export default function TipComponent() {
-  //? Variable declarations
+  //* Variable declarations
   const [round, setRound] = useState<any>(null);
   const [fixtures, setFixtures] = useState<any>([]);
   const [fixtureLength, setFixtureLength] = useState(0);
@@ -60,7 +60,7 @@ export default function TipComponent() {
     fetchGroupData();
   }, [auth().currentUser]);
 
-  //? --- State management to support changes in rounds / tipping groups ---
+  //* --- State management to support changes in rounds / tipping groups ---
   useEffect(() => {
     if (round || round === 0) {
       getFixturesForCurrentRound(
@@ -91,7 +91,7 @@ export default function TipComponent() {
     setTotalTipLength(Object.keys(totalTips).length);
   }, [totalTips]);
 
-  //? --- Function logic to support frontend UI ---
+  //* --- Tip fetch function logic to support frontend UI ---
 
   const fetchDatabaseTips = (userRecord: TUserRecord, selectedGroup: any) => {
     if (!userRecord || !userRecord.groups) {
@@ -122,7 +122,6 @@ export default function TipComponent() {
       : setTipResults({});
   };
 
-  //TODO - update listener for when record is deleted based on new db structure
   const parseTippingGroups = (groupData: any) => {
     const mappedArray: any = [];
 
@@ -151,10 +150,6 @@ export default function TipComponent() {
     return mappedArray;
   };
 
-  //todo loop through entire list of fixtures, and check for the
-  //todo matchStarted value on at least one object, if yes, break the loop and flip the value
-  //todo if not, keep the value at false: add this flag to the button render logic
-
   const fixtureArray = fixtures?.map((match: any, matchIndex: number) => {
     let matchId = "";
     match.id in totalTips ? (matchId = match.id) : (matchId = "");
@@ -174,7 +169,6 @@ export default function TipComponent() {
       }
     };
 
-    //TODO write google cloud function which updates match record every minute between fixtures
     return (
       <CardContainer key={`tip-${matchIndex}`}>
         <MatchText>{matchTiming()}</MatchText>

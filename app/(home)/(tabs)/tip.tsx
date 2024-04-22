@@ -252,27 +252,30 @@ export default function TipComponent() {
             showsVerticalScrollIndicator={false}>
             {fixtureArray}
           </ScrollView>
-          {totalTipLength > 0 && !fixturesLoading && (
-            <Button
-              title={`SUBMIT ${totalTipLength}/${fixtureLength}`}
-              onPress={async () => {
-                await uploadTips(
-                  selectedGroup,
-                  round,
-                  totalTips,
-                  setTipsLoading
-                );
-                tipUpdateListener(
-                  userObject!,
-                  userProvider.userSetter,
-                  selectedGroup,
-                  round.toString()
-                );
-              }}
-              iconName={totalTipLength > 1 ? "check-all" : "check"}
-              loading={tipsLoading}
-            />
-          )}
+          {/* //TODO name changing here has to change for tip count when matches are completed*/}
+          {totalTipLength > 0 &&
+            !fixturesLoading &&
+            !fixtures[fixtureLength - 1].matchStarted && (
+              <Button
+                title={`SUBMIT ${totalTipLength}/${fixtureLength}`}
+                onPress={async () => {
+                  await uploadTips(
+                    selectedGroup,
+                    round,
+                    totalTips,
+                    setTipsLoading
+                  );
+                  tipUpdateListener(
+                    userObject!,
+                    userProvider.userSetter,
+                    selectedGroup,
+                    round.toString()
+                  );
+                }}
+                iconName={totalTipLength > 1 ? "check-all" : "check"}
+                loading={tipsLoading}
+              />
+            )}
         </TipContainer>
       )}
     </Tip>

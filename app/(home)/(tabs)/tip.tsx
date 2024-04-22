@@ -241,7 +241,7 @@ export default function TipComponent() {
             contentContainerStyle={{
               padding: 12,
               display: "flex",
-              gap: 32,
+              gap: 12,
               width: "100%",
               height: "auto",
               justifyContent: "center",

@@ -3,6 +3,7 @@ import { ITippingCardProps } from "./TippingCard.types";
 import * as S from "./TippingCard.styles";
 import { Image, Platform, Text, View } from "react-native";
 import { ImageFetch, convertUnixToLocalTime } from "@/utils/utils";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
 
 const TippingCard = ({
   homeName,
@@ -30,6 +31,52 @@ const TippingCard = ({
     setSelected(currentSelection);
   }, [currentSelection]);
 
+  const parseTipResult = (
+    tippingState: string | undefined,
+    isTippingDisabled: boolean
+  ) => {
+    if (tippingState) {
+      return tippingState;
+    } else if (isTippingDisabled) {
+      return "complete";
+    } else {
+      return "scheduled";
+    }
+  };
+
+  const tippingResult = parseTipResult(tipResult, disabledTips);
+
+  const parseCardIcon = (tippingState: string, iconSize: number) => {
+    switch (tippingState) {
+      case "correct":
+        return (
+          <MaterialIcons
+            name="check-circle-outline"
+            size={iconSize}
+            color={"#2db918"}
+          />
+        );
+
+      case "incorrect":
+        return (
+          <Entypo name="circle-with-cross" size={iconSize} color={"#f52a14"} />
+        );
+
+      case "complete":
+        return (
+          <MaterialIcons name="lock-outline" size={iconSize} color={"#111"} />
+        );
+
+      case "scheduled":
+        return (
+          <MaterialIcons name="lock-open" size={iconSize} color={"#111"} />
+        );
+
+      default:
+        return "";
+    }
+  };
+
   return (
     <S.TippingCard
       style={{
@@ -46,7 +93,7 @@ const TippingCard = ({
         }),
       }}>
       <S.HomeTeam
-        $tipResult={tipResult}
+        $tipResult={tippingResult}
         $disabled={disabledTips}
         $selected={selected === homeName}
         onPress={() => {
@@ -58,13 +105,11 @@ const TippingCard = ({
       </S.HomeTeam>
       <S.InfoContainer>
         <S.InformationText>{matchTiming.matchTime}</S.InformationText>
-        <S.VersusContainer>
-          <S.VersusText>{disabledTips ? "L" : "VS"}</S.VersusText>
-        </S.VersusContainer>
+        <S.TipStatus>{parseCardIcon(tippingResult, 26)}</S.TipStatus>
         <S.InformationText>{stadium}</S.InformationText>
       </S.InfoContainer>
       <S.AwayTeam
-        $tipResult={tipResult}
+        $tipResult={tippingResult}
         $disabled={disabledTips}
         $selected={selected === awayName}
         onPress={() => {

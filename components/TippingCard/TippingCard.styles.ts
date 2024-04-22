@@ -10,6 +10,7 @@ border-radius: 16px;
 align-items: center;
 justify-content: center;
 width: 100%;
+max-height: 100px;
 `
 
 export const TeamContainer = styled.Pressable`
@@ -19,9 +20,10 @@ flex-direction: row;
 justify-content: center;
 align-items: center;
 gap: 6px;
-padding: 12px;
+padding: 8px;
 border-radius: 16px;
 height: 100%;
+/* max-height: 50px; */
 `
 
 export const HomeTeam = styled(TeamContainer) <{ $selected?: boolean; $disabled?: boolean; $tipResult?: string }>`
@@ -56,22 +58,8 @@ height: 50px;
 object-fit: contain;
 `
 
-export const VersusContainer = styled.View`
-height: 28px;
-width: 28px;
-display: flex;
-justify-content: center;
-align-items: center;
-border-radius: 14px;
-background-color: #39A0ED;
+export const TipStatus = styled.View`
 
-/* position: absolute;
-top: 33%; */
-`
-
-export const VersusText = styled.Text`
-color: #fff;
-font-weight: 800;
 `
 
 export const InformationText = styled.Text`
@@ -83,7 +71,7 @@ font-size: 11px;
 
 const returnBorderColour = (props: any) => {
   if (props.$tipResult === 'correct' && props.$selected) {
-    return '3px solid #2dd713'
+    return '3px solid #2db918'
   } else if (props.$tipResult === 'incorrect' && props.$selected) {
     return '3px solid #f52a14'
   } else if (props.$disabled && props.$selected) {

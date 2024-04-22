@@ -5,4 +5,4 @@ Realtime tipping scheduler, heavily focused on user experience.
 
 Front end currently built in React Native (Expo), with the backend powered by Google Cloud Functions and Firestore.
 
-Built by [Tom](https://github.com/thomasrichmond) 🇦🇺 
+Built and maintained by [Tom](https://github.com/thomasrichmond) 🇦🇺 

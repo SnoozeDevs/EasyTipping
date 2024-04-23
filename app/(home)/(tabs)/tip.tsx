@@ -172,6 +172,7 @@ export default function TipComponent() {
     return (
       <CardContainer key={`tip-${matchIndex}`}>
         <MatchText>{matchTiming()}</MatchText>
+        {/*// TODO Add in margin component for first match in round, and update backend table */}
         <TippingCard
           matchId={match.id}
           totalTips={setTotalTips}

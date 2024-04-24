@@ -183,6 +183,7 @@ export default function TipComponent() {
           currentSelection={totalTips[`${matchId}`]}
           disabledTips={match.matchStarted}
           tipResult={tipResults[`${matchId}`]}
+          isFirstMatch={fixtures.indexOf(match) === 0}
         />
       </CardContainer>
     );

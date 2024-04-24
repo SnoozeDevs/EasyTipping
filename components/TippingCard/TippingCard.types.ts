@@ -10,6 +10,7 @@ export interface ITippingCardProps {
   currentSelection: string;
   disabledTips?: boolean;
   tipResult?: string;
+  isFirstMatch?: boolean;
 }
 
 type MatchTiming = {

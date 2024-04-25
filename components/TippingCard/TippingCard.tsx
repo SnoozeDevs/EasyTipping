@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ITippingCardProps } from "./TippingCard.types";
 import * as S from "./TippingCard.styles";
 import { Image, Platform, Text, View } from "react-native";
 import { ImageFetch, convertUnixToLocalTime } from "@/utils/utils";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 
 const TippingCard = ({
   homeName,
@@ -19,6 +20,14 @@ const TippingCard = ({
 }: ITippingCardProps) => {
   const [selected, setSelected] = useState<string>("");
   const [showMarginSelector, setShowMarginSelector] = useState(false);
+
+  //! WIP - bottom sheet package for margin component.
+  // const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // // callbacks
+  // const handleSheetChanges = useCallback((index: number) => {
+  //   console.log("handleSheetChanges", index);
+  // }, []);
 
   useEffect(() => {
     if (selected) {
@@ -123,6 +132,15 @@ const TippingCard = ({
         <S.Image source={ImageFetch[awayName]} />
         <S.TeamText>{awayName}</S.TeamText>
       </S.AwayTeam>
+      {/* <BottomSheet ref={bottomSheetRef} onChange={handleSheetChanges}>
+        <BottomSheetView
+          style={{
+            flex: 1,
+            alignItems: "center",
+          }}>
+          <Text>Awesome 🎉</Text>
+        </BottomSheetView>
+      </BottomSheet> */}
     </S.TippingCard>
   );
 };

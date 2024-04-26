@@ -3,7 +3,7 @@ import { ITippingCardProps } from "./TippingCard.types";
 import * as S from "./TippingCard.styles";
 import { Image, Platform, Text, View } from "react-native";
 import { ImageFetch, convertUnixToLocalTime } from "@/utils/utils";
-import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 
 const TippingCard = ({
@@ -46,6 +46,7 @@ const TippingCard = ({
     tippingState: string | undefined,
     isTippingDisabled: boolean
   ) => {
+    //* Check if there is a state value --> not undefined
     if (tippingState) {
       return tippingState;
     } else if (isTippingDisabled) {
@@ -71,6 +72,11 @@ const TippingCard = ({
       case "incorrect":
         return (
           <Entypo name="circle-with-cross" size={iconSize} color={"#f52a14"} />
+        );
+
+      case "draw":
+        return (
+          <FontAwesome name="handshake-o" size={iconSize} color={"#2db918"} />
         );
 
       case "complete":

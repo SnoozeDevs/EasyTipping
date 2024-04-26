@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ITippingCardProps } from "./TippingCard.types";
 import * as S from "./TippingCard.styles";
 import { Image, Platform, Text, View } from "react-native";
@@ -7,27 +13,18 @@ import { Entypo, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 
 const TippingCard = ({
-  homeName,
-  awayName,
-  matchTiming,
-  stadium,
-  totalTips,
-  matchId,
-  currentSelection,
-  disabledTips = false,
-  tipResult,
-  isFirstMatch,
+  matchData: {
+    homeName,
+    awayName,
+    matchTiming,
+    stadium,
+    matchId,
+    isFirstMatch,
+    setShowMarginSelector,
+  },
+  tipData: { totalTips, currentSelection, disabledTips = false, tipResult },
 }: ITippingCardProps) => {
   const [selected, setSelected] = useState<string>("");
-  const [showMarginSelector, setShowMarginSelector] = useState(false);
-
-  //! WIP - bottom sheet package for margin component.
-  // const bottomSheetRef = useRef<BottomSheet>(null);
-
-  // // callbacks
-  // const handleSheetChanges = useCallback((index: number) => {
-  //   console.log("handleSheetChanges", index);
-  // }, []);
 
   useEffect(() => {
     if (selected) {
@@ -46,7 +43,7 @@ const TippingCard = ({
     tippingState: string | undefined,
     isTippingDisabled: boolean
   ) => {
-    //* Check if there is a state value --> not undefined
+    //* Check if there is a state value (not undefined)
     if (tippingState) {
       return tippingState;
     } else if (isTippingDisabled) {
@@ -138,15 +135,6 @@ const TippingCard = ({
         <S.Image source={ImageFetch[awayName]} />
         <S.TeamText>{awayName}</S.TeamText>
       </S.AwayTeam>
-      {/* <BottomSheet ref={bottomSheetRef} onChange={handleSheetChanges}>
-        <BottomSheetView
-          style={{
-            flex: 1,
-            alignItems: "center",
-          }}>
-          <Text>Awesome 🎉</Text>
-        </BottomSheetView>
-      </BottomSheet> */}
     </S.TippingCard>
   );
 };

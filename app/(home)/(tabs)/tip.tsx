@@ -9,13 +9,14 @@ import {
   getFixturesForCurrentRound,
   uploadTips,
 } from "@/utils/utils";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Button from "@/components/Button";
 import { router } from "expo-router";
 import { SegmentedButtons } from "react-native-paper";
 import { stdTheme } from "@/themes/stdTheme";
 import React from "react";
 import TippingCard from "@/components/TippingCard";
+import { MatchData, TipData } from "@/components/TippingCard/TippingCard.types";
 import { SafeAreaView, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Swiper from "@/components/Swiper";
@@ -26,6 +27,11 @@ import {
   tipUpdateListener,
 } from "@/utils/AppContext";
 import { TUserRecord } from "@/utils/types";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import Slider from "@react-native-community/slider";
 
 export default function TipComponent() {
   //* Variable declarations
@@ -42,6 +48,29 @@ export default function TipComponent() {
   const [tipsLoading, setTipsLoading] = useState(false);
   const userProvider: UserProviderType = useActiveUser();
   const userObject = userProvider.userValue;
+
+  //* -------------- WIP: Bottom sheet start ------------------------
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+  const [sheetIndex, setSheetIndex] = useState<any>(-1);
+  const [showMarginSelector, setShowMarginSelector] = useState<boolean>(false);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const handleSheetChanges = useCallback((index: any) => {
+    setSheetIndex(index);
+  }, []);
+
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+      />
+    ),
+    []
+  );
+
+  //* -------------- Bottom sheet end ------------------------
 
   const fetchGroupData = async () => {
     if (userObject?.selectedLeague) {
@@ -155,11 +184,15 @@ export default function TipComponent() {
     match.id in totalTips ? (matchId = match.id) : (matchId = "");
 
     const matchTiming = () => {
+      //* Inserts the match day and date above tipping card
       const unixConversion = convertUnixToLocalTime(match.unixtime);
 
+      //* First match of round (will always render date)
       if (matchIndex - 1 <= 0) {
         return <Text>{unixConversion.matchDate}</Text>;
-      } else if (
+      }
+      //* Compare current index with current index - 1, if they are different, render date
+      else if (
         unixConversion.matchDate !==
         convertUnixToLocalTime(fixtures[matchIndex - 1].unixtime).matchDate
       ) {
@@ -169,22 +202,28 @@ export default function TipComponent() {
       }
     };
 
+    const matchDataObject: MatchData = {
+      homeName: abbreviateTeam(match.hteam)!,
+      awayName: abbreviateTeam(match.ateam)!,
+      matchTiming: convertUnixToLocalTime(match.unixtime),
+      stadium: match.venue,
+      matchId: match.id,
+      isFirstMatch: fixtures.indexOf(match) === 0,
+      setShowMarginSelector: setShowMarginSelector,
+    };
+
+    const tipDataObject: TipData = {
+      totalTips: setTotalTips,
+      currentSelection: totalTips[`${matchId}`],
+      disabledTips: match.matchStarted,
+      tipResult: tipResults[`${matchId}`],
+    };
+
     return (
       <CardContainer key={`tip-${matchIndex}`}>
         <MatchText>{matchTiming()}</MatchText>
         {/*// TODO Add in margin component for first match in round, and update backend table */}
-        <TippingCard
-          matchId={match.id}
-          totalTips={setTotalTips}
-          stadium={match.venue}
-          homeName={abbreviateTeam(match.hteam)!}
-          awayName={abbreviateTeam(match.ateam)!}
-          matchTiming={convertUnixToLocalTime(match.unixtime)}
-          currentSelection={totalTips[`${matchId}`]}
-          disabledTips={match.matchStarted}
-          tipResult={tipResults[`${matchId}`]}
-          isFirstMatch={fixtures.indexOf(match) === 0}
-        />
+        <TippingCard matchData={matchDataObject} tipData={tipDataObject} />
       </CardContainer>
     );
   });
@@ -272,6 +311,30 @@ export default function TipComponent() {
                 loading={tipsLoading}
               />
             )}
+          {/* //TODO fix the logic of how this hides / shows  */}
+          {showMarginSelector && (
+            <BottomSheet
+              ref={bottomSheetRef}
+              onChange={handleSheetChanges}
+              snapPoints={snapPoints}
+              backdropComponent={renderBackdrop}
+              enablePanDownToClose>
+              <BottomSheetView
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                }}>
+                <Text>Awesome 🎉</Text>
+                {/* <Slider
+                style={{ width: 200, height: 40 }}
+                minimumValue={0}
+                maximumValue={1}
+                minimumTrackTintColor="#FFFFFF"
+                maximumTrackTintColor="#000000"
+              /> */}
+              </BottomSheetView>
+            </BottomSheet>
+          )}
         </TipContainer>
       )}
     </Tip>

@@ -22,8 +22,15 @@ const TippingCard = ({
     isFirstMatch,
     setShowMarginSelector,
   },
-  tipData: { totalTips, currentSelection, disabledTips = false, tipResult },
+  tipData: {
+    totalTips,
+    currentSelection,
+    disabledTips = false,
+    tipResult,
+    isMarginSelected,
+  },
 }: ITippingCardProps) => {
+  //TODO add logic to old add tip for first round once margin is selected
   const [selected, setSelected] = useState<string>("");
 
   useEffect(() => {
@@ -111,8 +118,8 @@ const TippingCard = ({
         $disabled={disabledTips}
         $selected={selected === homeName}
         onPress={() => {
-          setSelected(homeName);
           isFirstMatch && setShowMarginSelector(true);
+          setSelected(homeName);
         }}
         disabled={disabledTips}>
         <S.TeamText>{homeName}</S.TeamText>
@@ -128,8 +135,8 @@ const TippingCard = ({
         $disabled={disabledTips}
         $selected={selected === awayName}
         onPress={() => {
-          setSelected(awayName);
           isFirstMatch && setShowMarginSelector(true);
+          setSelected(awayName);
         }}
         disabled={disabledTips}>
         <S.Image source={ImageFetch[awayName]} />

@@ -20,6 +20,7 @@ export type TipData = {
   currentSelection: string;
   disabledTips?: boolean;
   tipResult?: string;
+  isMarginSelected?: boolean;
 }
 
 type MatchTiming = {

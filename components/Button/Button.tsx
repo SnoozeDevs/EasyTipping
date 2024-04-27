@@ -18,12 +18,15 @@ const Button = ({
   theme = "standard",
   mode = "contained",
   fullWidth,
+  style,
+  labelStyle,
 }: IButtonProps) => {
   //* For icon options, see: https://callstack.github.io/react-native-paper/docs/guides/icons/#1-an-icon-name
 
   return (
     <S.Button
-      style={fullWidth ? { width: "100%" } : {}}
+      style={fullWidth ? { ...style, width: "100%" } : style}
+      labelStyle={labelStyle}
       contentStyle={{
         flexDirection: `${iconPosition === "right" ? "row-reverse" : "row"}`,
       }}

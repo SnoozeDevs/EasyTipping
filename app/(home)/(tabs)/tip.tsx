@@ -50,13 +50,25 @@ export default function TipComponent() {
   const userObject = userProvider.userValue;
 
   //* -------------- WIP: Bottom sheet start ------------------------
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
+  const snapPoints = useMemo(() => ["25%"], []);
   const [sheetIndex, setSheetIndex] = useState<any>(-1);
   const [showMarginSelector, setShowMarginSelector] = useState<boolean>(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [isMarginSelected, setIsMarginSelected] = useState<boolean>(false);
+  const [selectedMargin, setSelectedMargin] = useState(0);
+  const [activeMargin, setActiveMargin] = useState(0);
+  const handleOpen = () => {
+    bottomSheetRef.current?.expand();
+  };
+  const handleClose = () => {
+    bottomSheetRef.current?.close();
+  };
 
   const handleSheetChanges = useCallback((index: any) => {
     setSheetIndex(index);
+    if (index === -1) {
+      setShowMarginSelector(false);
+    }
   }, []);
 
   const renderBackdrop = useCallback(
@@ -69,6 +81,10 @@ export default function TipComponent() {
     ),
     []
   );
+
+  console.log(showMarginSelector);
+
+  useEffect(() => {}, [showMarginSelector]);
 
   //* -------------- Bottom sheet end ------------------------
 
@@ -217,6 +233,7 @@ export default function TipComponent() {
       currentSelection: totalTips[`${matchId}`],
       disabledTips: match.matchStarted,
       tipResult: tipResults[`${matchId}`],
+      isMarginSelected: isMarginSelected,
     };
 
     return (
@@ -324,13 +341,32 @@ export default function TipComponent() {
                   flex: 1,
                   alignItems: "center",
                 }}>
-                <Text>Awesome 🎉</Text>
+                <Text>Select margin: {selectedMargin}</Text>
                 <Slider
-                  style={{ width: 200, height: 40 }}
+                  style={{ width: 300, height: 200 }}
                   minimumValue={0}
-                  maximumValue={1}
-                  minimumTrackTintColor="#FFFFFF"
-                  maximumTrackTintColor="#000000"
+                  maximumValue={100}
+                  value={0}
+                  // value={selectedMargin}
+                  // onSlidingComplete={(value) => setSelectedMargin(value)}
+                  step={1}
+                  // minimumTrackTintColor="#FFFFFF"
+                  // maximumTrackTintColor="#000000"
+                  // onValueChange={(value) => {
+                  //   const sliderTimeoutId = setTimeout(() => {
+                  //     setSelectedMargin(value);
+                  //   }, 100);
+                  //   clearTimeout(sliderTimeoutId);
+                  // }}
+                />
+                <MarginButton
+                  title="Confirm margin"
+                  iconName="check-decagram"
+                  mode="contained"
+                  labelStyle={{ fontSize: 18 }}
+                  onPress={() => {
+                    setIsMarginSelected(true);
+                  }}
                 />
               </BottomSheetView>
             </BottomSheet>
@@ -371,3 +407,5 @@ const ButtonContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+const MarginButton = styled(Button)``;

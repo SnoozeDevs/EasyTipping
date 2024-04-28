@@ -31,6 +31,7 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import { Picker } from "react-native-wheel-pick";
 
 export default function TipComponent() {
   //* Variable declarations
@@ -49,13 +50,19 @@ export default function TipComponent() {
   const userObject = userProvider.userValue;
 
   //* -------------- WIP: Bottom sheet start ------------------------
-  const snapPoints = useMemo(() => ["25%"], []);
+  const snapPoints = useMemo(() => ["50%"], []);
   const [sheetIndex, setSheetIndex] = useState<any>(-1);
   const [showMarginSelector, setShowMarginSelector] = useState<boolean>(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const [isMarginSelected, setIsMarginSelected] = useState<boolean>(false);
-  const [selectedMargin, setSelectedMargin] = useState(0);
-  const [activeMargin, setActiveMargin] = useState(0);
+  const [activeMargin, setActiveMargin] = useState(totalTips["margin"]);
+  const [selectedMargin, setSelectedMargin] = useState<number>(
+    totalTips["margin"]
+  );
+
+  console.log("selected mar", selectedMargin, totalTips["margin"]);
+  const marginArray = Array.from({ length: 101 }, (_, index) =>
+    index.toString()
+  );
   const handleOpen = () => {
     bottomSheetRef.current?.expand();
   };
@@ -63,6 +70,7 @@ export default function TipComponent() {
     bottomSheetRef.current?.close();
   };
 
+  console.log("margin", totalTips["margin"]);
   const handleSheetChanges = useCallback((index: any) => {
     setSheetIndex(index);
     if (index === -1) {
@@ -80,10 +88,6 @@ export default function TipComponent() {
     ),
     []
   );
-
-  console.log(showMarginSelector);
-
-  useEffect(() => {}, [showMarginSelector]);
 
   //* -------------- Bottom sheet end ------------------------
 
@@ -115,6 +119,7 @@ export default function TipComponent() {
         setFixtureLength
       );
     }
+    //TODO - track margin selection based on db value when round changes.
   }, [round]);
 
   //* Automatically select first group when page loads
@@ -232,13 +237,12 @@ export default function TipComponent() {
       currentSelection: totalTips[`${matchId}`],
       disabledTips: match.matchStarted,
       tipResult: tipResults[`${matchId}`],
-      isMarginSelected: isMarginSelected,
+      selectedMargin: selectedMargin ?? totalTips["margin"],
     };
 
     return (
       <CardContainer key={`tip-${matchIndex}`}>
         <MatchText>{matchTiming()}</MatchText>
-        {/*// TODO Add in margin component for first match in round, and update backend table */}
         <TippingCard matchData={matchDataObject} tipData={tipDataObject} />
       </CardContainer>
     );
@@ -308,7 +312,8 @@ export default function TipComponent() {
             !fixturesLoading &&
             !fixtures[fixtureLength - 1].matchStarted && (
               <Button
-                title={`SUBMIT ${totalTipLength}/${fixtureLength}`}
+                //  * -1 due to margin being inside of the object, which is not a fixture
+                title={`SUBMIT ${totalTipLength - 1}/${fixtureLength}`}
                 onPress={async () => {
                   await uploadTips(
                     selectedGroup,
@@ -334,13 +339,24 @@ export default function TipComponent() {
               onChange={handleSheetChanges}
               snapPoints={snapPoints}
               backdropComponent={renderBackdrop}
-              enablePanDownToClose>
+              enablePanDownToClose
+              enableDynamicSizing
+              containerStyle={{ display: "flex" }}>
               <BottomSheetView
                 style={{
                   flex: 1,
                   alignItems: "center",
+                  overflow: "scroll",
                 }}>
-                <Text>Select margin: {selectedMargin}</Text>
+                <Text>Select margin</Text>
+                <Picker
+                  style={{ backgroundColor: "white", width: 300 }}
+                  selectedValue={selectedMargin}
+                  pickerData={marginArray}
+                  onValueChange={(value: number) => {
+                    setActiveMargin(value);
+                  }}
+                />
 
                 <MarginButton
                   title="Confirm margin"
@@ -348,7 +364,8 @@ export default function TipComponent() {
                   mode="contained"
                   labelStyle={{ fontSize: 18 }}
                   onPress={() => {
-                    setIsMarginSelected(true);
+                    setSelectedMargin(activeMargin);
+                    handleClose();
                   }}
                 />
               </BottomSheetView>

@@ -31,7 +31,6 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import Slider from "@react-native-community/slider";
 
 export default function TipComponent() {
   //* Variable declarations
@@ -342,23 +341,7 @@ export default function TipComponent() {
                   alignItems: "center",
                 }}>
                 <Text>Select margin: {selectedMargin}</Text>
-                <Slider
-                  style={{ width: 300, height: 200 }}
-                  minimumValue={0}
-                  maximumValue={100}
-                  value={0}
-                  // value={selectedMargin}
-                  // onSlidingComplete={(value) => setSelectedMargin(value)}
-                  step={1}
-                  // minimumTrackTintColor="#FFFFFF"
-                  // maximumTrackTintColor="#000000"
-                  // onValueChange={(value) => {
-                  //   const sliderTimeoutId = setTimeout(() => {
-                  //     setSelectedMargin(value);
-                  //   }, 100);
-                  //   clearTimeout(sliderTimeoutId);
-                  // }}
-                />
+
                 <MarginButton
                   title="Confirm margin"
                   iconName="check-decagram"

@@ -1,4 +1,6 @@
 import React, {
+  Dispatch,
+  SetStateAction,
   useCallback,
   useEffect,
   useMemo,
@@ -9,8 +11,12 @@ import { ITippingCardProps } from "./TippingCard.types";
 import * as S from "./TippingCard.styles";
 import { Image, Platform, Text, View } from "react-native";
 import { ImageFetch, convertUnixToLocalTime } from "@/utils/utils";
-import { Entypo, FontAwesome, MaterialIcons } from "@expo/vector-icons";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  Entypo,
+  FontAwesome,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 const TippingCard = ({
   matchData: {
@@ -27,20 +33,20 @@ const TippingCard = ({
     currentSelection,
     disabledTips = false,
     tipResult,
-    isMarginSelected,
+    selectedMargin,
   },
 }: ITippingCardProps) => {
-  //TODO add logic to old add tip for first round once margin is selected
   const [selected, setSelected] = useState<string>("");
 
   useEffect(() => {
     if (selected) {
       totalTips((prevTotalTips: any) => ({
         ...prevTotalTips,
+        margin: selectedMargin,
         [matchId]: selected,
       }));
     }
-  }, [selected]);
+  }, [selected, selectedMargin]);
 
   useEffect(() => {
     setSelected(currentSelection);
@@ -118,8 +124,8 @@ const TippingCard = ({
         $disabled={disabledTips}
         $selected={selected === homeName}
         onPress={() => {
-          isFirstMatch && setShowMarginSelector(true);
           setSelected(homeName);
+          isFirstMatch && setShowMarginSelector(true);
         }}
         disabled={disabledTips}>
         <S.TeamText>{homeName}</S.TeamText>
@@ -128,6 +134,12 @@ const TippingCard = ({
       <S.InfoContainer>
         <S.InformationText>{matchTiming.matchTime}</S.InformationText>
         <S.TipStatus>{parseCardIcon(tippingResult, 26)}</S.TipStatus>
+        {isFirstMatch && selectedMargin! > -1 && (
+          <S.MarginText>
+            {selectedMargin}pt{" "}
+            <MaterialCommunityIcons name="margin" size={12} />{" "}
+          </S.MarginText>
+        )}
         <S.InformationText>{stadium}</S.InformationText>
       </S.InfoContainer>
       <S.AwayTeam
@@ -135,8 +147,8 @@ const TippingCard = ({
         $disabled={disabledTips}
         $selected={selected === awayName}
         onPress={() => {
-          isFirstMatch && setShowMarginSelector(true);
           setSelected(awayName);
+          isFirstMatch && setShowMarginSelector(true);
         }}
         disabled={disabledTips}>
         <S.Image source={ImageFetch[awayName]} />

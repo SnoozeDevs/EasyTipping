@@ -69,6 +69,15 @@ font-size: 11px;
 `
 
 
+export const MarginText = styled.Text`
+font-size: 12px;
+font-weight: 600;
+color: #111;
+display: flex;
+align-items: center;
+justify-content: center;
+`
+
 const returnBorderColour = (props: any) => {
   if ((props.$tipResult === 'correct' || props.$tipResult === 'draw') && props.$selected) {
     return '3px solid #2db918'

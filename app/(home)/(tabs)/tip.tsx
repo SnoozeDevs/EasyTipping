@@ -54,12 +54,10 @@ export default function TipComponent() {
   const [sheetIndex, setSheetIndex] = useState<any>(-1);
   const [showMarginSelector, setShowMarginSelector] = useState<boolean>(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  //* This will have to be the tip value from the DB -> no carrying over into the tipping card
   const [activeMargin, setActiveMargin] = useState(totalTips["margin"]);
-  const [selectedMargin, setSelectedMargin] = useState<number>(
-    totalTips["margin"]
-  );
+  const [selectedMargin, setSelectedMargin] = useState<number>(activeMargin);
 
-  console.log("selected mar", selectedMargin, totalTips["margin"]);
   const marginArray = Array.from({ length: 101 }, (_, index) =>
     index.toString()
   );
@@ -70,7 +68,6 @@ export default function TipComponent() {
     bottomSheetRef.current?.close();
   };
 
-  console.log("margin", totalTips["margin"]);
   const handleSheetChanges = useCallback((index: any) => {
     setSheetIndex(index);
     if (index === -1) {
@@ -119,7 +116,6 @@ export default function TipComponent() {
         setFixtureLength
       );
     }
-    //TODO - track margin selection based on db value when round changes.
   }, [round]);
 
   //* Automatically select first group when page loads
@@ -134,10 +130,13 @@ export default function TipComponent() {
     if (selectedGroup && userObject) {
       fetchDatabaseTips(userObject, selectedGroup);
     }
-  }, [selectedGroup, round]);
+    //! Test if the user object in the dependency array is efficient for performance
+  }, [selectedGroup, round, userObject]);
 
   useEffect(() => {
     setTotalTipLength(Object.keys(totalTips).length);
+    //! This only works if the user switches rounds between setting their tip
+    setSelectedMargin(totalTips["margin"]);
   }, [totalTips]);
 
   //* --- Tip fetch function logic to support frontend UI ---
@@ -158,11 +157,13 @@ export default function TipComponent() {
 
     if (userHasTips) {
       setTotalTips(userRecord.groups[selectedGroup].tips![round]);
+      setSelectedMargin(totalTips["margin"]);
       setTotalTipLength(
         Object.keys(userRecord.groups[selectedGroup].tips![round]).length
       );
     } else {
       setTotalTips({});
+      setSelectedMargin(-1);
       setTotalTipLength(0);
     }
 
@@ -237,7 +238,7 @@ export default function TipComponent() {
       currentSelection: totalTips[`${matchId}`],
       disabledTips: match.matchStarted,
       tipResult: tipResults[`${matchId}`],
-      selectedMargin: selectedMargin ?? totalTips["margin"],
+      selectedMargin: selectedMargin,
     };
 
     return (
@@ -312,14 +313,14 @@ export default function TipComponent() {
             !fixturesLoading &&
             !fixtures[fixtureLength - 1].matchStarted && (
               <Button
-                //  * -1 due to margin being inside of the object, which is not a fixture
-                title={`SUBMIT ${totalTipLength - 1}/${fixtureLength}`}
+                title={`SUBMIT ${totalTipLength}/${fixtureLength}`}
                 onPress={async () => {
                   await uploadTips(
                     selectedGroup,
                     round,
                     totalTips,
-                    setTipsLoading
+                    setTipsLoading,
+                    selectedMargin
                   );
                   tipUpdateListener(
                     userObject!,

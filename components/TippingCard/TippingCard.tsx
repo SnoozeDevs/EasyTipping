@@ -42,11 +42,10 @@ const TippingCard = ({
     if (selected) {
       totalTips((prevTotalTips: any) => ({
         ...prevTotalTips,
-        margin: selectedMargin,
         [matchId]: selected,
       }));
     }
-  }, [selected, selectedMargin]);
+  }, [selected]);
 
   useEffect(() => {
     setSelected(currentSelection);
@@ -136,7 +135,7 @@ const TippingCard = ({
         <S.TipStatus>{parseCardIcon(tippingResult, 26)}</S.TipStatus>
         {isFirstMatch && selectedMargin! > -1 && (
           <S.MarginText>
-            {selectedMargin}pt{" "}
+            {`${selectedMargin}${selectedMargin === 1 ? "pt" : "pts"} `}
             <MaterialCommunityIcons name="margin" size={12} />{" "}
           </S.MarginText>
         )}

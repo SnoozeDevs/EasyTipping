@@ -342,11 +342,15 @@ export const ImageFetch: any = {
   BRI: require('../assets/images/BL.png')
 }
 
-export const uploadTips = async (selectedGroup: string, round: string, tips: any, tipsLoading: Dispatch<SetStateAction<boolean>>) => {
+export const uploadTips = async (selectedGroup: string, round: string, tips: any, tipsLoading: Dispatch<SetStateAction<boolean>>, margin: number) => {
   //TODO update user record to reflect the tips for that round
   tipsLoading(true)
+  const tipObject = margin > -1 ? {
+    ...tips,
+    margin: margin
+  } : tips
   const groupTipRef = firestore().collection('users').doc(auth().currentUser?.uid).collection('groups').doc(`${selectedGroup}`).collection('tips').doc(`${round}`)
-  groupTipRef.set(tips, { merge: true }).then(() => {
+  groupTipRef.set(tipObject, { merge: true }).then(() => {
     console.log('Tips added to user group')
     tipsLoading(false)
   }).catch(() => {

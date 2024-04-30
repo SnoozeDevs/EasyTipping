@@ -181,6 +181,8 @@ export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAc
 }
 
 export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateAction<boolean>>) => {
+  //* When joining a group, the sharer link HAS to be the in the format '{groupId}?{league}' eg: a2fs32cbb8?afl
+  //* Need to run cron job of assigning them the default tips for all games until the current game.
   isLoading(true)
   const groupId = groupLink.split('?')[0]
   const sportsLeague = groupLink.split('?')[1]

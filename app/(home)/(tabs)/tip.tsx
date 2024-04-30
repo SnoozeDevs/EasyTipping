@@ -120,7 +120,8 @@ export default function TipComponent() {
 
   //* Automatically select first group when page loads
   useEffect(() => {
-    const userGroupExists = userObject && userObject.groups;
+    const userGroupExists =
+      userObject && Object.keys(userObject.groups).length > 0;
     userGroupExists && !selectedGroup
       ? setSelectedGroup(Object.values(userObject.groups)[0].groupId)
       : "";
@@ -255,7 +256,7 @@ export default function TipComponent() {
   }
 
   //* Render if user does not have any groups
-  if (userObject.groups?.length === 0) {
+  if (Object.keys(userObject.groups).length === 0) {
     return (
       <ButtonContainer>
         <Button

@@ -214,7 +214,8 @@ export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateA
     const groupData = {
       groupId: groupId,
       groupName: groupResponseData.groupName,
-      isAdmin: auth().currentUser?.uid === groupResponseData.admin
+      isAdmin: auth().currentUser?.uid === groupResponseData.admin,
+      league: sportsLeague,
     }
 
     await userRecordRef.update({

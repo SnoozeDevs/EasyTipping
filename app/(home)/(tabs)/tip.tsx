@@ -34,6 +34,9 @@ import BottomSheet, {
 import { Picker } from "react-native-wheel-pick";
 
 export default function TipComponent() {
+  //! Todo - delete groups from test1 user, and then re-run task runner with this value added
+  //! test using both for in and forEach loops and assess.
+
   //* Variable declarations
   const [round, setRound] = useState<any>(null);
   const [fixtures, setFixtures] = useState<any>([]);

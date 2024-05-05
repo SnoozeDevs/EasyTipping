@@ -401,3 +401,20 @@ export const destructureGroupData = async () => {
 
   return groupObject
 };
+
+
+export const getUserGroupRanking = async (groupId: string, userId: string) => {
+  const leaderboardCollection = await firestore().collection('groups').doc(groupId).collection('leaderboard').get()
+  const scoreArray: any[] = []
+
+  leaderboardCollection.forEach((user) => {
+    scoreArray.push({
+      id: user.id,
+      score: user.data().totalPoints
+    })
+  })
+
+  const sortedArray = scoreArray.sort((a, b) => { return b.totalPoints - a.totalPoints })
+  return sortedArray.findIndex(user => user.id === userId)
+
+}

@@ -3,34 +3,101 @@ import { StyleSheet } from "react-native";
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import { useLocalSearchParams } from "expo-router";
+import styled from "styled-components/native";
+import React, { useEffect, useState } from "react";
+import { UserProviderType, useActiveUser } from "@/utils/AppContext";
+import GroupCard from "@/components/GroupCard";
+import { GroupType } from "@/utils/types";
+import { getUserGroupRanking } from "@/utils/utils";
 
 export default function Dashboard() {
+  const userProvider: UserProviderType = useActiveUser();
+  const userObject = userProvider.userValue;
+  const [groupData, setGroupData] = useState();
+
+  //* Display all groups in group card layout
+  //*    - display the group name
+  //*    - the users place in that group
+  //*    - the next upcoming tip (need to confirm if this is possible for an active timer)
+  //*    -  the league in the top right corner
+
+  //* The link has to be clickable, and will take the user to a more detailed group tipping screen.
+  //*    - This section will show the user the leaderboard and everyones scores
+  //*    - Details about other users tips, potentially their form
+  //*    - Will also have a leaderboard section of the top 3 users who will be displayed at the header of the page
+
+  //* If the users does not have any group
+  //*    - need to think of content to show them
+  //*    - potentially some public groups that can be joined - but this is definitely a feature add
+  //*       - this would mean in the user flow
+  //*    - definitely need a CTA that prompts the user to join or create a group
+
+  //* Need fallback to wait for user objects to be loaded
+
+  useEffect(() => {
+    if (userObject) {
+      fetchGroupDetails();
+    }
+  }, [userObject]);
+
+  const fetchGroupDetails = async () => {
+    await Promise.all(
+      Object.keys(userObject?.groups! ?? {}).map(
+        async (group: any, index: number) => {
+          const rank = await getUserGroupRanking(group, userObject?.userID!);
+          const userGroup: GroupType = userObject?.groups[group]!;
+
+          //todo  combine user group object with rank
+          //* and use this state value to return the group card jsx
+
+          console.log(userGroup.groupId, rank);
+        }
+      )
+    );
+
+    return groupCards;
+  };
+
+  console.log(groupData);
+
+  const groupCards = Object.keys(userObject?.groups! ?? {}).map(
+    (group: any, index: number) => {
+      const userGroup: GroupType = userObject?.groups[group]!;
+
+      return (
+        <GroupCard
+          key={`group-${index}`}
+          groupLeague={userGroup.league}
+          groupName={userGroup.groupName}
+          userRank={1}
+          upcomingFixture={"MEL V SYD"}
+        />
+      );
+    }
+  );
+
+  if (!userObject?.groups) {
+    return <Text>Loading groups...</Text>;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Dashboard</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    <DashboardContainer>
+      <UserHeading>Hello {userObject?.displayName},</UserHeading>
+      {groupCards}
+    </DashboardContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
+const DashboardContainer = styled.View`
+  display: flex;
+  height: auto;
+  padding: 4%;
+  gap: 24px;
+  /* justify-content: center;
+  align-items: center; */
+`;
+
+const UserHeading = styled.Text`
+  font-size: 24px;
+  font-family: "Montserrat";
+`;

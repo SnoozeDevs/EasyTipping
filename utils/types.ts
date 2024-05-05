@@ -6,7 +6,7 @@ export type TUserRecord = {
   selectedLeague?: string;
 }
 
-type GroupType = {
+export type GroupType = {
   groupId: string;
   groupName: string;
   isAdmin: boolean;
@@ -14,4 +14,5 @@ type GroupType = {
   currentRank?: string
   tips?: Array<string>;
   results?: Array<string>;
+  league: string
 }

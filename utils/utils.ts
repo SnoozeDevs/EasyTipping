@@ -369,7 +369,6 @@ export const uploadTips = async (selectedGroup: string, round: string, tips: any
 export const destructureGroupData = async () => {
   const userDocRef = firestore().collection("users").doc(auth().currentUser?.uid!);
   const userGroupsCollectionRef = userDocRef.collection("groups")
-  const groupArray: any = []
   const groupSnapshots = await userGroupsCollectionRef.get();
   let groupObject = {}
 
@@ -378,6 +377,7 @@ export const destructureGroupData = async () => {
     const resultsCollectionRef = userGroupsCollectionRef.doc(groupDoc.id).collection('results');
     const tipSnapshots = await tipCollectionRef.get();
     const resultSnapshots = await resultsCollectionRef.get()
+    const userRank = await getUserGroupRanking(groupDoc.id, auth().currentUser?.uid!)
     const tipObject: any = {}
     const resultsObject: any = {}
 
@@ -395,6 +395,7 @@ export const destructureGroupData = async () => {
         ...groupDoc.data(),
         tips: tipObject,
         results: resultsObject,
+        currentRank: userRank
       }
     }
   }

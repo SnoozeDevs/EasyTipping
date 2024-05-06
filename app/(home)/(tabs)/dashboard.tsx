@@ -13,7 +13,6 @@ import { getUserGroupRanking } from "@/utils/utils";
 export default function Dashboard() {
   const userProvider: UserProviderType = useActiveUser();
   const userObject = userProvider.userValue;
-  const [groupData, setGroupData] = useState();
 
   //* Display all groups in group card layout
   //*    - display the group name
@@ -34,43 +33,23 @@ export default function Dashboard() {
 
   //* Need fallback to wait for user objects to be loaded
 
-  useEffect(() => {
-    if (userObject) {
-      fetchGroupDetails();
-    }
-  }, [userObject]);
-
-  const fetchGroupDetails = async () => {
-    await Promise.all(
-      Object.keys(userObject?.groups! ?? {}).map(
-        async (group: any, index: number) => {
-          const rank = await getUserGroupRanking(group, userObject?.userID!);
-          const userGroup: GroupType = userObject?.groups[group]!;
-
-          //todo  combine user group object with rank
-          //* and use this state value to return the group card jsx
-
-          console.log(userGroup.groupId, rank);
-        }
-      )
-    );
-
-    return groupCards;
-  };
-
-  console.log(groupData);
-
   const groupCards = Object.keys(userObject?.groups! ?? {}).map(
     (group: any, index: number) => {
       const userGroup: GroupType = userObject?.groups[group]!;
+      const rank = Number(userGroup.currentRank) + 1 ?? -1;
+      const groupKeys = Object.keys(userGroup?.results!);
+      const lastIndex = groupKeys.length - 1;
+      const lastKey: string = groupKeys[lastIndex];
+      const lastResult = userGroup?.results![Number(lastKey)];
+      const roundForm = Object.values(lastResult);
 
       return (
         <GroupCard
           key={`group-${index}`}
           groupLeague={userGroup.league}
           groupName={userGroup.groupName}
-          userRank={1}
-          upcomingFixture={"MEL V SYD"}
+          userRank={rank}
+          roundForm={roundForm}
         />
       );
     }

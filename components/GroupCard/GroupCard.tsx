@@ -4,13 +4,23 @@ import * as S from "./GroupCard.styles";
 import { Platform, Text } from "react-native";
 import { getUserGroupRanking } from "@/utils/utils";
 import auth from "@react-native-firebase/auth";
+import { FontAwesome5, Entypo, FontAwesome } from "@expo/vector-icons";
 
 const GroupCard = ({
   groupLeague,
   userRank,
   groupName,
-  upcomingFixture,
+  roundForm,
 }: IGroupCardProps) => {
+  const generateFormIcons = roundForm?.map((match: string) => {
+    switch (match) {
+      case "correct":
+        return <FontAwesome name="check-square" size={18} color={"#2db918"} />;
+      case "incorrect":
+        return <Entypo name="squared-cross" size={19} color={"#f52a14"} />;
+    }
+  });
+
   return (
     <S.GroupCard
       style={{
@@ -37,7 +47,7 @@ const GroupCard = ({
       </S.GroupContentContainer>
       <S.GroupContentContainer>
         <S.GroupRank>Rank: {userRank}</S.GroupRank>
-        <Text>{upcomingFixture}</Text>
+        <S.IconContainer>{generateFormIcons}</S.IconContainer>
       </S.GroupContentContainer>
     </S.GroupCard>
   );

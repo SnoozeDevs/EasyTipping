@@ -39,3 +39,9 @@ export const LeagueContainer = styled.View`
   border-radius: 50px;
   background-color: #399fed75;
 `
+
+export const IconContainer = styled.View`
+display: flex;
+flex-direction: row;
+gap: 4px;
+`

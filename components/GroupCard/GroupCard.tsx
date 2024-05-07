@@ -12,12 +12,26 @@ const GroupCard = ({
   groupName,
   roundForm,
 }: IGroupCardProps) => {
-  const generateFormIcons = roundForm?.map((match: string) => {
+  const generateFormIcons = roundForm?.map((match: string, index: number) => {
     switch (match) {
       case "correct":
-        return <FontAwesome name="check-square" size={18} color={"#2db918"} />;
+        return (
+          <FontAwesome
+            key={`correct-${index}`}
+            name="check-square"
+            size={18}
+            color={"#2db918"}
+          />
+        );
       case "incorrect":
-        return <Entypo name="squared-cross" size={19} color={"#f52a14"} />;
+        return (
+          <Entypo
+            key={`incorrect-${index}`}
+            name="squared-cross"
+            size={19}
+            color={"#f52a14"}
+          />
+        );
     }
   });
 

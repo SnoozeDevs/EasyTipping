@@ -16,19 +16,33 @@ flex-direction: row;
 align-items: center;
 `
 
+export const RoundRankContainer = styled(GroupContentContainer)`
+align-items: flex-end;`
+
 export const GroupName = styled.Text`
 font-size: 18px;
 font-weight: 600;
+color: #3478F6;
+
 `
 export const LeagueName = styled.Text`
-font-size: 14px;
+font-size: 16px;
 text-transform: uppercase;
-font-weight: 500;
+font-weight: 600;
+color: #fff;
 `
 
-export const GroupRank = styled.Text`
+export const GroupRank = styled.View`
+display: flex;
+flex-direction: row;
+align-items: center;
+gap: 6px;
+`
+
+export const RankText = styled.Text`
 font-size: 18px;
 font-weight: 600;
+
 `
 
 export const LeagueContainer = styled.View`
@@ -37,11 +51,32 @@ export const LeagueContainer = styled.View`
   align-items: center;
   padding: 6px 20px;
   border-radius: 50px;
-  background-color: #399fed75;
+  /* background-color: #399fed75; */
+  background-color: #3478F6;
+  flex-direction: row;
+  gap: 6px;
 `
 
 export const IconContainer = styled.View`
 display: flex;
 flex-direction: row;
 gap: 4px;
+justify-content: flex-end;
+`
+export const GroupNameContainer = styled.View`
+display: flex;
+flex-direction: row;
+gap: 6px;
+align-items: center;`
+
+export const RoundContainer = styled.View`
+display: flex;
+flex-direction: column;
+gap: 6px;
+align-items: flex-end;`
+
+export const RoundText = styled.Text`
+font-size: 12px;
+font-weight: 600;
+text-transform: uppercase;
 `

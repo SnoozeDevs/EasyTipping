@@ -4,7 +4,7 @@ import { Theme } from "@react-navigation/native";
 import { Animated, StyleProp, TextStyle, ViewStyle } from "react-native";
 
 export interface IButtonProps {
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | any;
   title: string;
   mode?: 'text' | 'outlined' | 'contained' | 'elevated' | 'contained-tonal';
   iconPosition?: 'left' | 'right';

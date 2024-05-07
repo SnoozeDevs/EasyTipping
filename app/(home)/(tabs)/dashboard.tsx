@@ -50,6 +50,7 @@ export default function Dashboard() {
           groupName={userGroup.groupName}
           userRank={rank}
           roundForm={roundForm}
+          lastRound={lastKey}
         />
       );
     }
@@ -61,7 +62,9 @@ export default function Dashboard() {
 
   return (
     <DashboardContainer>
-      <UserHeading>Hello {userObject?.displayName},</UserHeading>
+      <UserHeading>
+        Hello <DisplayName>{userObject?.displayName}</DisplayName>,
+      </UserHeading>
       {groupCards}
     </DashboardContainer>
   );
@@ -72,8 +75,10 @@ const DashboardContainer = styled.View`
   height: auto;
   padding: 4%;
   gap: 24px;
-  /* justify-content: center;
-  align-items: center; */
+`;
+
+const DisplayName = styled.Text`
+  color: #3478f6;
 `;
 
 const UserHeading = styled.Text`

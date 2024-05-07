@@ -1,6 +1,7 @@
 export const stdTheme = {
   colors: {
-    primary: "#39A0ED",
+    // primary: '#39A0ED'
+    primary: "#3478F6",
     onPrimary: "rgb(255, 255, 255)",
     primaryContainer: "rgb(240, 219, 255)",
     onPrimaryContainer: "rgb(44, 0, 81)",

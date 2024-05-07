@@ -28,13 +28,13 @@ height: 100%;
 
 export const HomeTeam = styled(TeamContainer) <{ $selected?: boolean; $disabled?: boolean; $tipResult?: string }>`
 border-radius: 16px 0 0 16px;
-background-color: ${props => props.$disabled && props.$selected ? '#399fed75' : props.$selected ? '#39A0ED' : 'transparent'};
+background-color: ${props => props.$disabled && props.$selected ? '#399fed75' : props.$selected ? '#3478F6' : 'transparent'};
 border:  ${props => returnBorderColour(props)};
 `
 
 export const AwayTeam = styled(TeamContainer) <{ $selected?: boolean; $disabled?: boolean; $tipResult?: string }>`
 border-radius: 0 16px 16px 0;
-background-color: ${props => props.$disabled && props.$selected ? '#399fed75' : props.$selected ? '#39A0ED' : 'transparent'};
+background-color: ${props => props.$disabled && props.$selected ? '#399fed75' : props.$selected ? '#3478F6' : 'transparent'};
 border: ${props => returnBorderColour(props)};
 `
 

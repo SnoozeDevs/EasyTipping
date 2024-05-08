@@ -80,3 +80,9 @@ font-size: 12px;
 font-weight: 600;
 text-transform: uppercase;
 `
+
+export const TotalText = styled.Text`
+font-size: 16px;
+color: #111;
+align-self: flex-end;
+`

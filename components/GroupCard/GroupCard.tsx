@@ -1,8 +1,8 @@
 import { IGroupCardProps } from "./GroupCard.types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as S from "./GroupCard.styles";
 import { Platform, Text } from "react-native";
-import { getUserGroupRanking } from "@/utils/utils";
+import { getTotalUsersInGroup, getUserGroupRanking } from "@/utils/utils";
 import auth from "@react-native-firebase/auth";
 import {
   FontAwesome5,
@@ -18,8 +18,14 @@ const GroupCard = ({
   groupName,
   roundForm,
   lastRound,
+  groupId,
 }: IGroupCardProps) => {
   const isTopThree = userRank === 1 || userRank === 2 || userRank === 3;
+  const [totalUsers, setTotalUsers] = useState<number>(0);
+
+  useEffect(() => {
+    getTotalUsersInGroup(groupId, setTotalUsers);
+  }, []);
 
   const generateFormIcons = roundForm?.map((match: string, index: number) => {
     switch (match) {
@@ -69,6 +75,10 @@ const GroupCard = ({
     }
   };
 
+  if (!totalUsers) {
+    return <Text>Loading groups...</Text>;
+  }
+
   return (
     <S.GroupCard
       style={{
@@ -101,6 +111,7 @@ const GroupCard = ({
         <S.GroupRank>
           <S.RankText>Rank: {userRank}</S.RankText>
           {isTopThree && <FontAwesome5 name="medal" size={18} color="#111" />}
+          <S.TotalText>of {totalUsers}</S.TotalText>
         </S.GroupRank>
         <S.RoundContainer>
           <S.RoundText>Round {lastRound} form</S.RoundText>

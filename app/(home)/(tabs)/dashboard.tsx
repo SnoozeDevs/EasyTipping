@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import { UserProviderType, useActiveUser } from "@/utils/AppContext";
 import GroupCard from "@/components/GroupCard";
 import { GroupType } from "@/utils/types";
-import { getUserGroupRanking } from "@/utils/utils";
+import { getUserGroupRanking, isObjectEmpty } from "@/utils/utils";
 
 export default function Dashboard() {
   const userProvider: UserProviderType = useActiveUser();
@@ -32,28 +32,37 @@ export default function Dashboard() {
   //*    - definitely need a CTA that prompts the user to join or create a group
 
   //* Need fallback to wait for user objects to be loaded
-
   const groupCards = Object.keys(userObject?.groups! ?? {}).map(
     (group: any, index: number) => {
-      const userGroup: GroupType = userObject?.groups[group]!;
-      const rank = Number(userGroup.currentRank) + 1 ?? -1;
-      const groupKeys = Object.keys(userGroup?.results!);
-      const lastIndex = groupKeys.length - 1;
-      const lastKey: string = groupKeys[lastIndex];
-      const lastResult = userGroup?.results![Number(lastKey)];
-      const roundForm = Object.values(lastResult);
+      if (!isObjectEmpty(userObject?.groups)) {
+        const userGroup: GroupType = userObject?.groups[group]!;
+        const rank = Number(userGroup.currentRank) + 1 ?? -1;
+        let groupKeys;
+        let lastIndex;
+        let lastKey;
+        let lastResult;
+        let roundForm;
 
-      return (
-        <GroupCard
-          key={`group-${index}`}
-          groupLeague={userGroup.league}
-          groupName={userGroup.groupName}
-          userRank={rank}
-          roundForm={roundForm}
-          lastRound={lastKey}
-          groupId={userGroup.groupId}
-        />
-      );
+        if (!isObjectEmpty(userGroup.results)) {
+          groupKeys = Object.keys(userGroup?.results!);
+          lastIndex = groupKeys.length - 1;
+          lastKey = groupKeys[lastIndex];
+          lastResult = userGroup?.results![Number(lastKey)];
+          roundForm = Object.values(lastResult);
+        }
+
+        return (
+          <GroupCard
+            key={`group-${index}`}
+            groupLeague={userGroup.league}
+            groupName={userGroup.groupName}
+            userRank={rank}
+            roundForm={roundForm}
+            lastRound={lastKey}
+            groupId={userGroup.groupId}
+          />
+        );
+      }
     }
   );
 

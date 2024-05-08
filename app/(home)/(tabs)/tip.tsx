@@ -7,6 +7,7 @@ import {
   destructureGroupData,
   getCurrentRound,
   getFixturesForCurrentRound,
+  isObjectEmpty,
   uploadTips,
 } from "@/utils/utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -123,8 +124,7 @@ export default function TipComponent() {
 
   //* Automatically select first group when page loads
   useEffect(() => {
-    const userGroupExists =
-      userObject && Object.keys(userObject.groups).length > 0;
+    const userGroupExists = userObject && !isObjectEmpty(userObject.groups);
     userGroupExists && !selectedGroup
       ? setSelectedGroup(Object.values(userObject.groups)[0].groupId)
       : "";
@@ -259,7 +259,7 @@ export default function TipComponent() {
   }
 
   //* Render if user does not have any groups
-  if (Object.keys(userObject.groups).length === 0) {
+  if (isObjectEmpty(userObject.groups)) {
     return (
       <ButtonContainer>
         <Button

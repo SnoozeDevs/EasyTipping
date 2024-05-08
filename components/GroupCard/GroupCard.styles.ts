@@ -7,6 +7,8 @@ export const GroupCard = styled.TouchableOpacity`
   flex-direction: column;
   border-radius: 8px;
   gap: 20px;
+  height: 125px;
+  justify-content: space-between;
 `
 
 export const GroupContentContainer = styled.View`

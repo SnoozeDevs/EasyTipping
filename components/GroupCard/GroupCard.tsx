@@ -113,10 +113,12 @@ const GroupCard = ({
           {isTopThree && <FontAwesome5 name="medal" size={18} color="#111" />}
           <S.TotalText>of {totalUsers}</S.TotalText>
         </S.GroupRank>
-        <S.RoundContainer>
-          <S.RoundText>Round {lastRound} form</S.RoundText>
-          <S.IconContainer>{generateFormIcons}</S.IconContainer>
-        </S.RoundContainer>
+        {lastRound && (
+          <S.RoundContainer>
+            <S.RoundText>Round {lastRound} form</S.RoundText>
+            <S.IconContainer>{generateFormIcons}</S.IconContainer>
+          </S.RoundContainer>
+        )}
       </S.RoundRankContainer>
     </S.GroupCard>
   );

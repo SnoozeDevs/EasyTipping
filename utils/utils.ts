@@ -125,10 +125,10 @@ export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAc
   isLoading(true)
   const groupId = uuid.v4().toString()
   const userRef = firestore().collection('users').doc(auth().currentUser?.uid)
+  const groupRef = firestore().collection('groups').doc(groupId)
 
   //* Creates initial group record
-  await firestore()
-    .collection('groups').doc(groupId)
+  await groupRef
     .set({
       groupName: groupData.groupName,
       admin: auth().currentUser?.uid,
@@ -145,7 +145,7 @@ export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAc
     })
 
   //* Adds the user who created it an makes them an admin
-  await firestore().collection('groups').doc(groupId).collection('users').doc(auth().currentUser?.uid).set({
+  await groupRef.collection('users').doc(auth().currentUser?.uid).set({
     name: auth().currentUser?.displayName,
     isAdmin: true,
   }).then((res) => {
@@ -154,6 +154,13 @@ export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAc
     console.error(err);
     return
   })
+
+  //* Adds the user to leaderboard with scores of 0.
+  //todo build in average score assigned by default
+  await groupRef.collection('leaderboard').doc(auth().currentUser?.uid).set({
+    totalPoints: 0,
+    margin: 0
+  }, { merge: true })
 
   const groupObject = {
     groupName: groupData.groupName,
@@ -186,9 +193,8 @@ export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateA
   isLoading(true)
   const groupId = groupLink.split('?')[0]
   const sportsLeague = groupLink.split('?')[1]
-
   const groupRef = firestore().collection('groups').doc(groupId)
-  const usersRef = groupRef.collection('users').doc(auth().currentUser?.uid)
+  const userGroupRef = groupRef.collection('users').doc(auth().currentUser?.uid)
   const userRecordRef = firestore().collection('users').doc(auth().currentUser?.uid)
 
   const addNewUser = async () => {
@@ -202,8 +208,15 @@ export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateA
       return
     })
 
+    const groupData = {
+      groupId: groupId,
+      groupName: groupResponseData.groupName,
+      isAdmin: auth().currentUser?.uid === groupResponseData.admin,
+      league: sportsLeague,
+    }
+
     //* Add user to group
-    await usersRef.set({
+    await userGroupRef.set({
       name: auth().currentUser?.displayName,
       isAdmin: false,
     }).catch((err) => {
@@ -211,12 +224,13 @@ export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateA
       return
     })
 
-    const groupData = {
-      groupId: groupId,
-      groupName: groupResponseData.groupName,
-      isAdmin: auth().currentUser?.uid === groupResponseData.admin,
-      league: sportsLeague,
-    }
+    //*Add user to leaderboard and give them a score of 0
+    //todo build in average score assigned by default
+    await groupRef.collection('leaderboard').doc(auth().currentUser?.uid).set({
+      totalPoints: 0,
+      margin: 0
+    }, { merge: true })
+
 
     await userRecordRef.update({
       selectedLeague: sportsLeague
@@ -230,7 +244,7 @@ export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateA
     })
   }
 
-  await usersRef.get().then(async (res) => {
+  await userGroupRef.get().then(async (res) => {
     if (res.exists) {
       console.error('User is already part of group')
     } else {
@@ -423,4 +437,8 @@ export const getUserGroupRanking = async (groupId: string, userId: string) => {
 export const getTotalUsersInGroup = async (groupId: string, setTotalUsers: Dispatch<SetStateAction<number>>) => {
   const userCountRef = await firestore().collection('groups').doc(groupId).collection('users').count().get()
   setTotalUsers(userCountRef.data().count);
+}
+
+export const isObjectEmpty = (obj: object | any) => {
+  return Object.keys(obj).length === 0;
 }

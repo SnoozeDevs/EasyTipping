@@ -51,6 +51,7 @@ export default function Dashboard() {
           userRank={rank}
           roundForm={roundForm}
           lastRound={lastKey}
+          groupId={userGroup.groupId}
         />
       );
     }

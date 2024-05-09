@@ -67,6 +67,14 @@ function RootLayoutNav() {
             animationTypeForReplace: "push",
           }}>
           <Stack.Screen
+            name="groups/[id]"
+            options={{
+              headerBackTitleVisible: false,
+              headerShown: true,
+              headerTitle: "Group [id]",
+            }}
+          />
+          <Stack.Screen
             name="(pageRoutes)/login"
             options={{ headerShown: false }}
           />

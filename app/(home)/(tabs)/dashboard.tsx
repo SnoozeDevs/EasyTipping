@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import styled from "styled-components/native";
 import React, { useEffect, useState } from "react";
 import { UserProviderType, useActiveUser } from "@/utils/AppContext";
@@ -50,6 +50,7 @@ export default function Dashboard() {
           lastResult = userGroup?.results![Number(lastKey)];
           roundForm = Object.values(lastResult);
         }
+        //TODO !!! Cross check cron job to see why new group 'test group' did not get automatic tip.
 
         return (
           <GroupCard
@@ -60,6 +61,12 @@ export default function Dashboard() {
             roundForm={roundForm}
             lastRound={lastKey}
             groupId={userGroup.groupId}
+            onPress={() => {
+              router.push({
+                pathname: "/groups/[id]",
+                params: { id: userGroup.groupId, name: userGroup.groupName },
+              });
+            }}
           />
         );
       }

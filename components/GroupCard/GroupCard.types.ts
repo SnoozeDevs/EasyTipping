@@ -5,4 +5,5 @@ export interface IGroupCardProps {
   roundForm?: Array<string> //todo convert this once we know what the object looks like
   lastRound?: string;
   groupId: string;
+  onPress?: () => void;
 }

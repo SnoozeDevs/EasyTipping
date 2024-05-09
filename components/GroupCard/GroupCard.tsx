@@ -19,6 +19,7 @@ const GroupCard = ({
   roundForm,
   lastRound,
   groupId,
+  onPress,
 }: IGroupCardProps) => {
   const isTopThree = userRank === 1 || userRank === 2 || userRank === 3;
   const [totalUsers, setTotalUsers] = useState<number>(0);
@@ -94,9 +95,7 @@ const GroupCard = ({
           },
         }),
       }}
-      onPress={async () => {
-        console.log("pressed!");
-      }}>
+      onPress={onPress}>
       <S.GroupContentContainer>
         <S.GroupNameContainer>
           <S.GroupName>{groupName}</S.GroupName>

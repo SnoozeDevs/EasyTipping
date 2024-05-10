@@ -55,8 +55,6 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const params = useLocalSearchParams();
-  console.log(params);
 
   return (
     <UserProvider>
@@ -70,15 +68,11 @@ function RootLayoutNav() {
           }}>
           <Stack.Screen
             name="groups/[id]"
-            // { route }
+            /* @ts-ignore */
             options={({ route }) => ({
               title: `${route.params.name}`,
               headerBackTitleVisible: false,
             })}
-            // options={{
-            //   title: props => props.route.params.name,
-
-            // }}
           />
           <Stack.Screen
             name="(pageRoutes)/login"

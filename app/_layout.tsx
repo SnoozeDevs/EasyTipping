@@ -8,7 +8,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
@@ -55,6 +55,8 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const params = useLocalSearchParams();
+  console.log(params);
 
   return (
     <UserProvider>
@@ -68,11 +70,15 @@ function RootLayoutNav() {
           }}>
           <Stack.Screen
             name="groups/[id]"
-            options={{
+            // { route }
+            options={({ route }) => ({
+              title: `${route.params.name}`,
               headerBackTitleVisible: false,
-              headerShown: true,
-              headerTitle: "Group [id]",
-            }}
+            })}
+            // options={{
+            //   title: props => props.route.params.name,
+
+            // }}
           />
           <Stack.Screen
             name="(pageRoutes)/login"

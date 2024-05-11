@@ -2,6 +2,7 @@ import { ISignUpProps } from "./SignUp.types";
 import React, { useCallback, useState } from "react";
 import { drkTheme } from "@/themes/drkTheme";
 import { stdTheme } from "@/themes/stdTheme";
+import * as S from "./SignUp.styles";
 import {
   NO_EMAIL_ENTERED,
   EMAIL_INVALID,
@@ -13,7 +14,6 @@ import {
 import { isEmailValid, createUserRecord } from "@/utils/utils";
 import { useFocusEffect, router, Link } from "expo-router";
 import { useColorScheme, Pressable } from "react-native";
-import { InputContainer, StyledLink, Error } from "../Login/Login.styles";
 import auth from "@react-native-firebase/auth";
 import { TextInput as PaperTextInput } from "react-native-paper";
 import Button from "../Button";
@@ -120,8 +120,8 @@ const SignUp = ({}: ISignUpProps) => {
   };
 
   return (
-    <SignUp>
-      <InputContainer>
+    <S.SignUp>
+      <S.InputContainer>
         <PaperTextInput
           theme={colors === "light" ? stdTheme : drkTheme}
           autoCapitalize="none"
@@ -135,10 +135,10 @@ const SignUp = ({}: ISignUpProps) => {
           value={email ?? ""}
           placeholder="Enter email address"
         />
-        {emailHasError && <Error>{emailErrorMessage}</Error>}
-      </InputContainer>
+        {emailHasError && <S.Error>{emailErrorMessage}</S.Error>}
+      </S.InputContainer>
 
-      <InputContainer>
+      <S.InputContainer>
         <PaperTextInput
           theme={colors === "light" ? stdTheme : drkTheme}
           autoCapitalize="none"
@@ -164,9 +164,9 @@ const SignUp = ({}: ISignUpProps) => {
           value={password ?? ""}
           placeholder="Enter password"
         />
-        {passwordHasError && <Error>{passwordErrorMessage}</Error>}
-      </InputContainer>
-      <InputContainer>
+        {passwordHasError && <S.Error>{passwordErrorMessage}</S.Error>}
+      </S.InputContainer>
+      <S.InputContainer>
         <PaperTextInput
           theme={colors === "light" ? stdTheme : drkTheme}
           autoCapitalize="none"
@@ -180,8 +180,8 @@ const SignUp = ({}: ISignUpProps) => {
           value={displayName ?? ""}
           placeholder="Enter display name"
         />
-        {displayNameHasError && <Error>{displaNameErrorMessage}</Error>}
-      </InputContainer>
+        {displayNameHasError && <S.Error>{displaNameErrorMessage}</S.Error>}
+      </S.InputContainer>
       <Button
         fullWidth
         title="Sign up"
@@ -192,10 +192,10 @@ const SignUp = ({}: ISignUpProps) => {
       />
       <Link href="/login" asChild>
         <Pressable>
-          <StyledLink>Already have an account? Log in</StyledLink>
+          <S.StyledLink>Already have an account? Log in</S.StyledLink>
         </Pressable>
       </Link>
-    </SignUp>
+    </S.SignUp>
   );
 };
 

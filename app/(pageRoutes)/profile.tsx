@@ -1,15 +1,10 @@
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { View, Text } from "react-native";
+import React from "react";
 
-export default function Settings() {
+export default function Profile() {
   return (
-    <View
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: 1000,
-      }}>
+    <View>
       <Text>This is the profile page</Text>
     </View>
   );

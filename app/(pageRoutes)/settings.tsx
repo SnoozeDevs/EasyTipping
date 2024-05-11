@@ -4,13 +4,7 @@ import { View, Text } from "react-native";
 
 export default function Settings() {
   return (
-    <View
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: 1000,
-      }}>
+    <View>
       <Text>This is the settings page</Text>
     </View>
   );

@@ -15,7 +15,7 @@ import {
   useActiveUser,
 } from "@/utils/AppContext";
 
-export default function CreateJoinGroup() {
+export default function NewGroup() {
   const colors = useColorScheme();
   const [groupCode, setGroupCode] = useState<string>("");
   const [joinGroupLoading, setJoinGroupLoading] = useState(false);
@@ -28,8 +28,8 @@ export default function CreateJoinGroup() {
   }, [groupCode]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Groups</Text>
+    <View>
+      <Text>Groups</Text>
       <Button
         title="Create new group"
         onPress={() => {
@@ -70,20 +70,3 @@ export default function CreateJoinGroup() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

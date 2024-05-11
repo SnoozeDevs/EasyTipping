@@ -88,7 +88,7 @@ function RootLayoutNav() {
             options={{ presentation: "modal" }}
           />
           <Stack.Screen
-            name="(pageRoutes)/groups"
+            name="(pageRoutes)/find-group"
             options={{
               presentation: "card",
               headerBackTitle: "Back",

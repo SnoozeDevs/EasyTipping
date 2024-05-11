@@ -12,7 +12,7 @@ import {
   useActiveUser,
 } from "@/utils/AppContext";
 
-export default function Dashboard() {
+export default function LadderPage() {
   const [teamData, setTeamData] = useState<Array<string>>([]);
   const [isTeamDataLoaded, setIsTeamDataLoaded] = useState<boolean>(false);
   const [updateTestValue, setUpdateTestValue] = useState("");

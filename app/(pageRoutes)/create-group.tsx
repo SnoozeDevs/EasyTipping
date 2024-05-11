@@ -43,8 +43,8 @@ export default function CreateJoinGroup() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create new group</Text>
+    <View>
+      <Text>Create new group</Text>
       <Text>Group name</Text>
       <PaperTextInput
         style={{ width: "80%" }}
@@ -117,20 +117,3 @@ export default function CreateJoinGroup() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

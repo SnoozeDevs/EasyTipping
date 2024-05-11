@@ -44,7 +44,7 @@ export default function TabLayout() {
           ),
 
           headerRight: () => (
-            <Link href="/groups" asChild>
+            <Link href="/find-group" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome

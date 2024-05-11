@@ -1,8 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet, useColorScheme } from "react-native";
 import { TextInput as PaperTextInput } from "react-native-paper";
-import EditScreenInfo from "@/components/EditScreenInfo";
-import { Text, View } from "@/components/Themed";
+import { Text, View } from "react-native";
 import Button from "@/components/Button";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";

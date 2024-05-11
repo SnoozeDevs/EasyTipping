@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
-import { Text, View } from "@/components/Themed";
+import { Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import styled from "styled-components/native";
 import React, { useEffect, useState } from "react";

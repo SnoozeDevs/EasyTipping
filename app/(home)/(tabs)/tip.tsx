@@ -1,4 +1,3 @@
-import { Text } from "@/components/Themed";
 import styled from "styled-components/native";
 import auth from "@react-native-firebase/auth";
 import {
@@ -18,7 +17,7 @@ import { stdTheme } from "@/themes/stdTheme";
 import React from "react";
 import TippingCard from "@/components/TippingCard";
 import { MatchData, TipData } from "@/components/TippingCard/TippingCard.types";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, View, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Swiper from "@/components/Swiper";
 import {

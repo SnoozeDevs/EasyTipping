@@ -76,10 +76,6 @@ const GroupCard = ({
     }
   };
 
-  if (!totalUsers) {
-    return <Text>Loading groups...</Text>;
-  }
-
   return (
     <S.GroupCard
       style={{
@@ -108,9 +104,17 @@ const GroupCard = ({
       </S.GroupContentContainer>
       <S.RoundRankContainer>
         <S.GroupRank>
-          <S.RankText>Rank: {userRank}</S.RankText>
-          {isTopThree && <FontAwesome5 name="medal" size={18} color="#111" />}
-          <S.TotalText>of {totalUsers}</S.TotalText>
+          {totalUsers ? (
+            <>
+              <S.RankText>Rank: {userRank}</S.RankText>
+              {isTopThree && (
+                <FontAwesome5 name="medal" size={18} color="#111" />
+              )}
+              <S.TotalText>of {totalUsers}</S.TotalText>
+            </>
+          ) : (
+            <Text>Loading rank...</Text>
+          )}
         </S.GroupRank>
         {lastRound && (
           <S.RoundContainer>

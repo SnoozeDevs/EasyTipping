@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { TUserRecord } from "./types";
+import { TGroupType, TUserRecord } from "./types";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { destructureGroupData } from "./Groups/utils";
@@ -17,19 +17,25 @@ const AppContext = createContext<any>(null);
 
 export type UserProviderType = {
   userValue: TUserRecord | null;
-  userSetter: (userObject: any) => void;
+  userSetter: (userObject: TUserRecord | any) => void;
+};
+
+export type GroupProviderType = {
+  groupValue: TGroupType | null;
+  groupSetter: (groupObject: TGroupType | any) => void;
 };
 
 type Props = {
   children?: ReactNode;
 };
 
-export function useActiveUser() {
+export function useGlobalContext() {
   return useContext(AppContext);
 }
 
-export function UserProvider({ children }: Props) {
+export function GlobalStateProvider({ children }: Props) {
   const [user, setUser] = useState<TUserRecord | null>(null);
+  const [groups, setGroups] = useState<TGroupType | null>(null);
 
   useEffect(() => {
     getUserDetails(auth().currentUser?.uid!, user!, setUser);
@@ -39,15 +45,31 @@ export function UserProvider({ children }: Props) {
     setUser(userObject);
   };
 
+  const updateGroups = (groupObject: TGroupType) => {
+    setGroups(groupObject);
+  };
+
   const userData: UserProviderType = {
     userValue: user,
     userSetter: updateUser,
   };
 
-  return <AppContext.Provider value={userData}>{children}</AppContext.Provider>;
+  const groupData: GroupProviderType = {
+    groupValue: groups,
+    groupSetter: updateGroups,
+  };
+
+  const contextObject = {
+    ...userData,
+    ...groupData,
+  };
+
+  return (
+    <AppContext.Provider value={contextObject}>{children}</AppContext.Provider>
+  );
 }
 
-//* Realtime Listeners
+//* ----------- Realtime Listeners --------------
 export const baseUserListener = (
   user: TUserRecord,
   setUser: Dispatch<SetStateAction<TUserRecord>> | any

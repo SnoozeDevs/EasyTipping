@@ -9,22 +9,20 @@ import React from "react";
 import {
   UserProviderType,
   baseUserListener,
-  useActiveUser,
+  useGlobalContext,
 } from "@/utils/AppContext";
 
 const CustomDrawer = ({}: ICustomDrawerProps) => {
-  const userProvider: UserProviderType = useActiveUser();
-  const userObject = userProvider.userValue;
-  const userSetter = userProvider.userSetter;
+  const { userValue, userSetter }: UserProviderType = useGlobalContext();
 
   useEffect(() => {
-    baseUserListener(userObject!, userSetter);
+    baseUserListener(userValue!, userSetter);
   }, [auth().currentUser]);
   return (
     <S.CustomDrawer>
       <S.DrawerContainer>
         <View>
-          <Text>User val set in ladder: {userObject?.displayName}</Text>
+          <Text>User val set in ladder: {userValue?.displayName}</Text>
         </View>
         <S.ButtonContainer>
           <Button

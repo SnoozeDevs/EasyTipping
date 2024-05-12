@@ -3,7 +3,7 @@ import * as S from "./Login.styles";
 import React, { useCallback, useEffect, useState } from "react";
 import { drkTheme } from "@/themes/drkTheme";
 import { stdTheme } from "@/themes/stdTheme";
-import { UserProviderType, useActiveUser } from "@/utils/AppContext";
+import { UserProviderType, useGlobalContext } from "@/utils/AppContext";
 import {
   NO_EMAIL_ENTERED,
   EMAIL_INVALID,
@@ -37,12 +37,12 @@ const Login = ({}: ILoginProps) => {
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const theme = useColorScheme() === "light" ? stdTheme : drkTheme;
   const isFocused = useIsFocused();
-  const userProvider: UserProviderType = useActiveUser();
+  const { userSetter }: UserProviderType = useGlobalContext();
 
   useEffect(() => {
     if (isFocused && auth().currentUser) {
       signOutUser();
-      userProvider.userSetter({});
+      userSetter({});
     }
   }, [isFocused]);
 

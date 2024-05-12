@@ -4,7 +4,6 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
 
 import { useFocusEffect } from "@react-navigation/native";
-import { getLadder, updateUserRecord } from "@/utils/utils";
 import { TextInput } from "react-native-paper";
 import {
   UserProviderType,
@@ -26,13 +25,12 @@ export default function LadderPage() {
   useFocusEffect(
     useCallback(() => {
       if (!isTeamDataLoaded) {
-        getLadder(setTeamData, setIsTeamDataLoaded);
       }
 
       return () => {
         //* Actions that happen when page is taken out of focus (cleanup or cancel processes)
       };
-    }, [getLadder])
+    }, [])
   );
 
   return (

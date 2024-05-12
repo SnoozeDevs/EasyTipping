@@ -15,15 +15,6 @@ import {
   tipUpdateListener,
 } from "@/utils/AppContext";
 import { TUserRecord } from "@/utils/types";
-import {
-  destructureGroupData,
-  getCurrentRound,
-  getFixturesForCurrentRound,
-  isObjectEmpty,
-  convertUnixToLocalTime,
-  abbreviateTeam,
-  uploadTips,
-} from "@/utils/utils";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
@@ -37,6 +28,17 @@ import auth from "@react-native-firebase/auth";
 import { Text } from "react-native";
 import Button from "../Button/Button";
 import Swiper from "@/components/Swiper";
+import {
+  isObjectEmpty,
+  convertUnixToLocalTime,
+  abbreviateTeam,
+} from "@/utils/Generic/utils";
+import { destructureGroupData } from "@/utils/Groups/utils";
+import {
+  getCurrentRound,
+  getFixturesForCurrentRound,
+  uploadTips,
+} from "@/utils/Tips/utils";
 
 const TippingMenu = ({}: ITippingMenuProps) => {
   //! Todo - delete groups from test1 user, and then re-run task runner with this value added

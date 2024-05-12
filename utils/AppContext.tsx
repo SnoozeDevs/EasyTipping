@@ -8,9 +8,10 @@ import React, {
   useState,
 } from "react";
 import { TUserRecord } from "./types";
-import { destructureGroupData, getUserDetails } from "./utils";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+import { destructureGroupData } from "./Groups/utils";
+import { getUserDetails } from "./Users/utils";
 
 const AppContext = createContext<any>(null);
 

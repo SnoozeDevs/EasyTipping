@@ -8,12 +8,12 @@ import { drkTheme } from "@/themes/drkTheme";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import React from "react";
-import { joinGroup } from "@/utils/utils";
 import {
   UserProviderType,
   groupUpdateListener,
   useActiveUser,
 } from "@/utils/AppContext";
+import { joinGroup } from "@/utils/Groups/utils";
 
 export default function NewGroup() {
   const colors = useColorScheme();

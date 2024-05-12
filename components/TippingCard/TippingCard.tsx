@@ -10,13 +10,13 @@ import React, {
 import { ITippingCardProps } from "./TippingCard.types";
 import * as S from "./TippingCard.styles";
 import { Image, Platform, Text, View } from "react-native";
-import { ImageFetch, convertUnixToLocalTime } from "@/utils/utils";
 import {
   Entypo,
   FontAwesome,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { ImageFetch } from "@/utils/Generic/utils";
 
 const TippingCard = ({
   matchData: {

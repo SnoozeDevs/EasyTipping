@@ -3,10 +3,10 @@ import * as S from "./Dashboard.styles";
 import React from "react";
 import { UserProviderType, useActiveUser } from "@/utils/AppContext";
 import { GroupType } from "@/utils/types";
-import { isObjectEmpty } from "@/utils/utils";
 import { router } from "expo-router";
 import GroupCard from "../GroupCard";
 import { Text } from "react-native";
+import { isObjectEmpty } from "@/utils/Generic/utils";
 
 const Dashboard = ({}: IDashboardProps) => {
   const userProvider: UserProviderType = useActiveUser();

@@ -2,8 +2,6 @@ import { IGroupCardProps } from "./GroupCard.types";
 import React, { useEffect, useState } from "react";
 import * as S from "./GroupCard.styles";
 import { Platform, Text } from "react-native";
-import { getTotalUsersInGroup, getUserGroupRanking } from "@/utils/utils";
-import auth from "@react-native-firebase/auth";
 import {
   FontAwesome5,
   Entypo,
@@ -11,6 +9,7 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { getTotalUsersInGroup } from "@/utils/Groups/utils";
 
 const GroupCard = ({
   groupLeague,

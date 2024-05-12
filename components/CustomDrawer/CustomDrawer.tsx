@@ -1,4 +1,3 @@
-import { getUserDetails, signOutUser } from "@/utils/utils";
 import { ICustomDrawerProps } from "./CustomDrawer.types";
 import auth from "@react-native-firebase/auth";
 import { View, Text } from "react-native";

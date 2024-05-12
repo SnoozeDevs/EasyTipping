@@ -6,15 +6,15 @@ import { Text, View } from "react-native";
 import Button from "@/components/Button";
 import { stdTheme } from "@/themes/stdTheme";
 import { drkTheme } from "@/themes/drkTheme";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Switch } from "react-native-paper";
-import { createGroup } from "@/utils/utils";
 import React from "react";
 import {
   UserProviderType,
   groupUpdateListener,
   useActiveUser,
 } from "@/utils/AppContext";
+import { createGroup } from "@/utils/Groups/utils";
 
 export default function CreateJoinGroup() {
   const colors = useColorScheme();

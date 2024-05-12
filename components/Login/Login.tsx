@@ -11,7 +11,6 @@ import {
   EMAIL_ALREADY_IN_USE,
   INCORRECT_PASSWORD,
 } from "@/utils/constants";
-import { signOutUser, isEmailValid } from "@/utils/utils";
 import { useIsFocused } from "@react-navigation/native";
 import {
   useLocalSearchParams,
@@ -23,6 +22,8 @@ import { useColorScheme, Pressable } from "react-native";
 import auth from "@react-native-firebase/auth";
 import Button from "../Button";
 import { TextInput as PaperTextInput } from "react-native-paper";
+import { signOutUser } from "@/utils/AuthUtils/utils";
+import { isEmailValid } from "@/utils/Generic/utils";
 
 const Login = ({}: ILoginProps) => {
   const searchParams = useLocalSearchParams();

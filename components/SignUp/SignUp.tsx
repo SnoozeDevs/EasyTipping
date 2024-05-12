@@ -11,12 +11,13 @@ import {
   EMAIL_ALREADY_IN_USE,
   INCORRECT_PASSWORD,
 } from "@/utils/constants";
-import { isEmailValid, createUserRecord } from "@/utils/utils";
 import { useFocusEffect, router, Link } from "expo-router";
 import { useColorScheme, Pressable } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { TextInput as PaperTextInput } from "react-native-paper";
 import Button from "../Button";
+import { isEmailValid } from "@/utils/Generic/utils";
+import { createUserRecord } from "@/utils/Users/utils";
 
 const SignUp = ({}: ISignUpProps) => {
   const [email, setEmail] = useState("");

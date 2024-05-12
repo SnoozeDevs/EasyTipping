@@ -2,15 +2,16 @@ export type TUserRecord = {
   displayName: string,
   userID: string,
   email: string,
-  groups: Array<GroupType>;
+  groups: {
+    [key: string]: TGroupType;
+  };
   selectedLeague?: string;
 }
 
-export type GroupType = {
+export type TGroupType = {
   groupId: string;
   groupName: string;
   isAdmin: boolean;
-  //TODO build the current rank in.
   currentRank?: string
   tips?: Array<string>;
   results?: Array<string>;

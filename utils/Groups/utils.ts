@@ -41,6 +41,7 @@ export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAc
   //* Adds the user to leaderboard with scores of 0.
   //todo build in average score assigned by default
   await groupRef.collection('leaderboard').doc(auth().currentUser?.uid).set({
+    name: auth().currentUser?.displayName,
     totalPoints: 0,
     margin: 0
   }, { merge: true })
@@ -110,6 +111,7 @@ export const joinGroup = async (groupLink: string, isLoading: Dispatch<SetStateA
     //*Add user to leaderboard and give them a score of 0
     //todo build in average score assigned by default
     await groupRef.collection('leaderboard').doc(auth().currentUser?.uid).set({
+      name: auth().currentUser?.displayName,
       totalPoints: 0,
       margin: 0
     }, { merge: true })
@@ -208,3 +210,24 @@ export const getTotalUsersInGroup = async (groupId: string, setTotalUsers: Dispa
   const userCountRef = await firestore().collection('groups').doc(groupId).collection('users').count().get()
   setTotalUsers(userCountRef.data().count);
 }
+
+
+export const getGroupData = async (groupId: string, setGroupData?: Dispatch<SetStateAction<any>>) => {
+
+  const groupRef = firestore().collection('groups').doc(groupId)
+  const leaderboardCollection = await groupRef.collection('leaderboard').get()
+  const scoreArray: any[] = []
+  leaderboardCollection.forEach((user) => {
+    scoreArray.push({
+      id: user.id,
+      score: user.data().totalPoints,
+      name: user.data().name
+    })
+  })
+
+  const sortedArray = scoreArray.sort((a, b) => { return b.totalPoints - a.totalPoints })
+
+  setGroupData && setGroupData(sortedArray)
+  return sortedArray
+}
+

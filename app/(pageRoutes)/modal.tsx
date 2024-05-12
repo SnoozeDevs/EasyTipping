@@ -1,10 +1,10 @@
 import { Text, View } from "react-native";
 import React from "react";
-import { UserProviderType, useActiveUser } from "@/utils/AppContext";
+import { UserProviderType, useGlobalContext } from "@/utils/AppContext";
 import Button from "@/components/Button/Button";
 
 export default function ModalScreen() {
-  const user: UserProviderType = useActiveUser();
+  const { userValue, userSetter }: UserProviderType = useGlobalContext();
 
   return (
     <View>
@@ -12,8 +12,8 @@ export default function ModalScreen() {
       <Button
         title="AFL"
         onPress={() => {
-          user.userSetter({
-            ...user.userValue,
+          userSetter({
+            ...userValue!,
             selectedLeague: "afl",
           });
         }}
@@ -21,8 +21,8 @@ export default function ModalScreen() {
       <Button
         title="Somn else"
         onPress={() => {
-          user.userSetter({
-            ...user.userValue,
+          userSetter({
+            ...userValue!,
             selectedLeague: "something else",
           });
         }}

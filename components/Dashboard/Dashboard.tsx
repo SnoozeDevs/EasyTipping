@@ -1,16 +1,21 @@
 import { IDashboardProps } from "./Dashboard.types";
 import * as S from "./Dashboard.styles";
 import React from "react";
-import { UserProviderType, useActiveUser } from "@/utils/AppContext";
-import { GroupType } from "@/utils/types";
+import {
+  GroupProviderType,
+  UserProviderType,
+  useGlobalContext,
+} from "@/utils/AppContext";
+import { TGroupType } from "@/utils/types";
 import { router } from "expo-router";
 import GroupCard from "../GroupCard";
 import { Text } from "react-native";
 import { isObjectEmpty } from "@/utils/Generic/utils";
+import { getGroupData } from "@/utils/Groups/utils";
 
 const Dashboard = ({}: IDashboardProps) => {
-  const userProvider: UserProviderType = useActiveUser();
-  const userObject = userProvider.userValue;
+  const { userValue, groupSetter }: UserProviderType & GroupProviderType =
+    useGlobalContext();
 
   //* Display all groups in group card layout
   //*    - display the group name
@@ -32,10 +37,10 @@ const Dashboard = ({}: IDashboardProps) => {
   //TODO - build in long press on group button that can be used to share group link (copy or potentially share link).
 
   //* Need fallback to wait for user objects to be loaded
-  const groupCards = Object.keys(userObject?.groups! ?? {}).map(
+  const groupCards = Object.keys(userValue?.groups! ?? {}).map(
     (group: any, index: number) => {
-      if (!isObjectEmpty(userObject?.groups)) {
-        const userGroup: GroupType = userObject?.groups[group]!;
+      if (!isObjectEmpty(userValue?.groups)) {
+        const userGroup: TGroupType = userValue?.groups[group]!;
         const rank = Number(userGroup.currentRank) + 1 ?? -1;
         let groupKeys;
         let lastIndex;
@@ -64,7 +69,11 @@ const Dashboard = ({}: IDashboardProps) => {
             onPress={() => {
               router.push({
                 pathname: "/groups/[id]",
-                params: { id: userGroup.groupId, name: userGroup.groupName },
+                params: {
+                  id: userGroup.groupId,
+                  name: userGroup.groupName,
+                  rank: rank,
+                },
               });
             }}
           />
@@ -73,14 +82,14 @@ const Dashboard = ({}: IDashboardProps) => {
     }
   );
 
-  if (!userObject?.groups) {
+  if (!userValue?.groups) {
     return <Text>Loading groups...</Text>;
   }
 
   return (
     <S.Dashboard>
       <S.UserHeading>
-        Hello <S.DisplayName>{userObject?.displayName}</S.DisplayName>,
+        Hello <S.DisplayName>{userValue?.displayName}</S.DisplayName>,
       </S.UserHeading>
       {groupCards}
     </S.Dashboard>

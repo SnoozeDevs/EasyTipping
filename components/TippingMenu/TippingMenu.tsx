@@ -10,7 +10,7 @@ import React, {
 import { stdTheme } from "@/themes/stdTheme";
 import {
   UserProviderType,
-  useActiveUser,
+  useGlobalContext,
   baseUserListener,
   tipUpdateListener,
 } from "@/utils/AppContext";
@@ -43,6 +43,7 @@ import {
 const TippingMenu = ({}: ITippingMenuProps) => {
   //! Todo - delete groups from test1 user, and then re-run task runner with this value added
   //! test using both for in and forEach loops and assess.
+  //! Ensure that margin assignment is happening correctly.
 
   //* Variable declarations
   const [round, setRound] = useState<any>(null);
@@ -56,8 +57,7 @@ const TippingMenu = ({}: ITippingMenuProps) => {
   const [totalTipLength, setTotalTipLength] = useState(0);
   const [tipResults, setTipResults] = useState<any>({});
   const [tipsLoading, setTipsLoading] = useState(false);
-  const userProvider: UserProviderType = useActiveUser();
-  const userObject = userProvider.userValue;
+  const { userValue, userSetter }: UserProviderType = useGlobalContext();
 
   //* -------------- WIP: Bottom sheet start ------------------------
   const snapPoints = useMemo(() => ["50%"], []);
@@ -99,10 +99,10 @@ const TippingMenu = ({}: ITippingMenuProps) => {
   //* -------------- Bottom sheet end ------------------------
 
   const fetchGroupData = async () => {
-    if (userObject?.selectedLeague) {
+    if (userValue?.selectedLeague) {
       const groupObject = await destructureGroupData();
-      userProvider.userSetter({
-        ...userObject,
+      userSetter({
+        ...userValue,
         groups: groupObject,
       });
     }
@@ -110,7 +110,7 @@ const TippingMenu = ({}: ITippingMenuProps) => {
 
   //* Initial data load calls
   useEffect(() => {
-    baseUserListener(userObject!, userProvider.userSetter);
+    baseUserListener(userValue!, userSetter);
     getCurrentRound("2024", setRound);
     fetchGroupData();
   }, [auth().currentUser]);
@@ -130,18 +130,18 @@ const TippingMenu = ({}: ITippingMenuProps) => {
 
   //* Automatically select first group when page loads
   useEffect(() => {
-    const userGroupExists = userObject && !isObjectEmpty(userObject.groups);
+    const userGroupExists = userValue && !isObjectEmpty(userValue.groups);
     userGroupExists && !selectedGroup
-      ? setSelectedGroup(Object.values(userObject.groups)[0].groupId)
+      ? setSelectedGroup(Object.values(userValue.groups)[0].groupId)
       : "";
-  }, [userObject?.groups]);
+  }, [userValue?.groups]);
 
   useEffect(() => {
-    if (selectedGroup && userObject) {
-      fetchDatabaseTips(userObject, selectedGroup);
+    if (selectedGroup && userValue) {
+      fetchDatabaseTips(userValue, selectedGroup);
     }
     //! Test if the user object in the dependency array is efficient for performance
-  }, [selectedGroup, round, userObject]);
+  }, [selectedGroup, round, userValue]);
 
   useEffect(() => {
     setTotalTipLength(Object.keys(totalTips).length);
@@ -187,7 +187,7 @@ const TippingMenu = ({}: ITippingMenuProps) => {
 
     for (const key in groupData) {
       const objectKey: any = key;
-      const element = userObject?.groups[objectKey]!;
+      const element = userValue?.groups[objectKey]!;
 
       const mappedObject = {
         value: element.groupId,
@@ -260,12 +260,12 @@ const TippingMenu = ({}: ITippingMenuProps) => {
   });
 
   //* Render if user hasn't loaded
-  if (!userObject) {
+  if (!userValue) {
     return <Text>Loading User...</Text>;
   }
 
   //* Render if user does not have any groups
-  if (isObjectEmpty(userObject.groups)) {
+  if (isObjectEmpty(userValue.groups)) {
     return (
       <S.ButtonContainer>
         <Button
@@ -282,7 +282,7 @@ const TippingMenu = ({}: ITippingMenuProps) => {
   //* Main tip container render.
   return (
     <S.TippingMenu>
-      {!userObject.groups ? (
+      {!userValue.groups ? (
         <Text>Loading fixtures and groups...</Text>
       ) : (
         <S.TipContainer>
@@ -292,7 +292,7 @@ const TippingMenu = ({}: ITippingMenuProps) => {
               value={selectedGroup!}
               theme={stdTheme}
               onValueChange={setSelectedGroup}
-              buttons={parseTippingGroups(userObject.groups)}
+              buttons={parseTippingGroups(userValue.groups)}
             />
           </SafeAreaView>
           <View style={{ display: "flex" }}>
@@ -333,8 +333,8 @@ const TippingMenu = ({}: ITippingMenuProps) => {
                     selectedMargin
                   );
                   tipUpdateListener(
-                    userObject!,
-                    userProvider.userSetter,
+                    userValue!,
+                    userSetter,
                     selectedGroup,
                     round.toString()
                   );

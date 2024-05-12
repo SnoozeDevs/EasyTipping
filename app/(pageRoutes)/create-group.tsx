@@ -12,7 +12,7 @@ import React from "react";
 import {
   UserProviderType,
   groupUpdateListener,
-  useActiveUser,
+  useGlobalContext,
 } from "@/utils/AppContext";
 import { createGroup } from "@/utils/Groups/utils";
 
@@ -24,7 +24,7 @@ export default function CreateJoinGroup() {
   const [hasPerfectRound, setHasPerfectRound] = useState(true);
   const [hasFinals, setHasFinals] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const userProvider: UserProviderType = useActiveUser();
+  const { userValue, userSetter }: UserProviderType = useGlobalContext();
 
   const parseGroupData = (
     groupName: string,
@@ -104,8 +104,8 @@ export default function CreateJoinGroup() {
           );
 
           await groupUpdateListener(
-            userProvider.userValue!,
-            userProvider.userSetter,
+            userValue!,
+            userSetter,
             // TODO change this from static to dropdown option in the UI
             "afl"
           );

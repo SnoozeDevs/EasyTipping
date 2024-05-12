@@ -11,7 +11,7 @@ import React from "react";
 import {
   UserProviderType,
   groupUpdateListener,
-  useActiveUser,
+  useGlobalContext,
 } from "@/utils/AppContext";
 import { joinGroup } from "@/utils/Groups/utils";
 
@@ -21,7 +21,7 @@ export default function NewGroup() {
   const [joinGroupLoading, setJoinGroupLoading] = useState(false);
   const [groupCodeHasError, setGroupCodeHasError] = useState<boolean>();
   const [selectedLeague, setSelectedLeague] = useState("");
-  const userProvider: UserProviderType = useActiveUser();
+  const { userValue, userSetter }: UserProviderType = useGlobalContext();
 
   useEffect(() => {
     setSelectedLeague(groupCode.split("?")[1]);
@@ -57,11 +57,7 @@ export default function NewGroup() {
         loading={joinGroupLoading}
         onPress={() => {
           joinGroup(groupCode, setJoinGroupLoading);
-          groupUpdateListener(
-            userProvider.userValue!,
-            userProvider.userSetter,
-            selectedLeague
-          );
+          groupUpdateListener(userValue!, userSetter, selectedLeague);
         }}
       />
 

@@ -14,7 +14,7 @@ import { useEffect } from "react";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import React from "react";
-import { UserProvider } from "@/utils/AppContext";
+import { GlobalStateProvider } from "@/utils/AppContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -57,7 +57,7 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <UserProvider>
+    <GlobalStateProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack
           initialRouteName="(pageRoutes)/login"
@@ -129,6 +129,6 @@ function RootLayoutNav() {
           />
         </Stack>
       </ThemeProvider>
-    </UserProvider>
+    </GlobalStateProvider>
   );
 }

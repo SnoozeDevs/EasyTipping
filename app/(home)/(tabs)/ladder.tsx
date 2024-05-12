@@ -8,17 +8,17 @@ import { TextInput } from "react-native-paper";
 import {
   UserProviderType,
   baseUserListener,
-  useActiveUser,
+  useGlobalContext,
 } from "@/utils/AppContext";
 
 export default function LadderPage() {
   const [teamData, setTeamData] = useState<Array<string>>([]);
   const [isTeamDataLoaded, setIsTeamDataLoaded] = useState<boolean>(false);
   const [updateTestValue, setUpdateTestValue] = useState("");
-  const userProvider: UserProviderType = useActiveUser();
-  const userObject = userProvider.userValue;
+  const { userValue, userSetter }: UserProviderType = useGlobalContext();
+
   useEffect(() => {
-    baseUserListener(userObject!, userProvider.userSetter);
+    baseUserListener(userValue!, userSetter);
   }, [auth().currentUser]);
 
   //* Only calls ladder data from DB if it is not loaded

@@ -4,6 +4,7 @@ import React from "react";
 import { Text } from "react-native";
 
 const GroupDetail = ({ groupData, groupId, groupName }: IGroupDetailProps) => {
+  console.log("Data in group detail", groupData);
   return (
     <S.GroupDetail>
       <Text>

@@ -1,5 +1,9 @@
 export const isObjectEmpty = (obj: object | any) => {
-  return Object.keys(obj).length === 0;
+  if (obj) {
+    return Object.keys(obj).length === 0;
+  } else {
+    return null
+  }
 }
 
 export const ImageFetch: any = {
@@ -100,3 +104,20 @@ export const convertUnixToLocalTime = (unixTimeCode: number) => {
   }
 }
 
+export const renderNumberTail = (number: number) => {
+
+  const singleDigitModulo = number % 10;
+  const doubleDigitModulo = number % 100
+
+  if (singleDigitModulo === 1 && doubleDigitModulo !== 11) {
+    return `${number}st`
+  } else if (singleDigitModulo === 2 && doubleDigitModulo !== 12) {
+    return `${number}nd`
+  }
+  else if (singleDigitModulo === 3 && doubleDigitModulo !== 13) {
+    return `${number}rd`
+  } else {
+    return `${number}th`
+  }
+
+}

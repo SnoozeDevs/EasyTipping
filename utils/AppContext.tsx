@@ -21,8 +21,8 @@ export type UserProviderType = {
 };
 
 export type GroupProviderType = {
-  groupValue: TGroupType | null;
-  groupSetter: (groupObject: TGroupType | any) => void;
+  groupValue: object;
+  groupSetter: (groupObject: any) => void;
 };
 
 type Props = {
@@ -35,7 +35,7 @@ export function useGlobalContext() {
 
 export function GlobalStateProvider({ children }: Props) {
   const [user, setUser] = useState<TUserRecord | null>(null);
-  const [groups, setGroups] = useState<TGroupType | null>(null);
+  const [groups, setGroups] = useState({});
 
   useEffect(() => {
     getUserDetails(auth().currentUser?.uid!, user!, setUser);

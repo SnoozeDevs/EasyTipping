@@ -14,8 +14,7 @@ import { isObjectEmpty } from "@/utils/Generic/utils";
 import { getGroupData } from "@/utils/Groups/utils";
 
 const Dashboard = ({}: IDashboardProps) => {
-  const { userValue, groupSetter }: UserProviderType & GroupProviderType =
-    useGlobalContext();
+  const { userValue }: UserProviderType = useGlobalContext();
 
   //* Display all groups in group card layout
   //*    - display the group name

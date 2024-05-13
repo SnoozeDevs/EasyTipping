@@ -212,7 +212,7 @@ export const getTotalUsersInGroup = async (groupId: string, setTotalUsers: Dispa
 }
 
 
-export const getGroupData = async (groupId: string, setGroupData?: Dispatch<SetStateAction<any>>) => {
+export const getGroupData = async (groupId: string, setGroupData: Dispatch<SetStateAction<any>>) => {
 
   const groupRef = firestore().collection('groups').doc(groupId)
   const leaderboardCollection = await groupRef.collection('leaderboard').get()
@@ -227,7 +227,11 @@ export const getGroupData = async (groupId: string, setGroupData?: Dispatch<SetS
 
   const sortedArray = scoreArray.sort((a, b) => { return b.totalPoints - a.totalPoints })
 
-  setGroupData && setGroupData(sortedArray)
-  return sortedArray
+  setGroupData((prevGroupData: object) => ({
+    ...prevGroupData,
+    [groupId]: {
+      ...sortedArray
+    }
+  }))
 }
 

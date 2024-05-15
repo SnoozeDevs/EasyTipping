@@ -3,6 +3,7 @@ import * as S from "./GroupDetail.styles";
 import React from "react";
 import { Platform, Text } from "react-native";
 import { renderNumberTail } from "@/utils/Generic/utils";
+import Button from "../Button/Button";
 
 const GroupDetail = ({
   groupData,
@@ -44,6 +45,17 @@ const GroupDetail = ({
         }}>
         {renderPodium}
       </S.LeaderboardContainer>
+      <S.TableContainer>
+        <Text>Table insert...</Text>
+        <Button
+          title="View full table"
+          iconName="table"
+          iconPosition="right"
+          onPress={() => {
+            console.log("Open full table");
+          }}
+        />
+      </S.TableContainer>
     </S.GroupDetail>
   );
 };

@@ -25,7 +25,7 @@ const GroupCard = ({
 
   useEffect(() => {
     getTotalUsersInGroup(groupId, setTotalUsers);
-  }, []);
+  }, [groupId]);
 
   const generateFormIcons = roundForm?.map((match: string, index: number) => {
     switch (match) {

@@ -11,8 +11,6 @@ const GroupDetail = ({
   groupName,
   userRank,
 }: IGroupDetailProps) => {
-  groupData && console.log("Data in group detail", groupData);
-
   const renderPodium = Object.keys(groupData ?? {})
     .slice(0, 3)
     .map((group: string) => {

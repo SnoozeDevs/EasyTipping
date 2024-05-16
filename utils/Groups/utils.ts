@@ -191,7 +191,7 @@ export const destructureGroupData = async () => {
 
 
 export const getUserGroupRanking = async (groupId: string, userId: string) => {
-  const leaderboardCollection = await firestore().collection('groups').doc(groupId).collection('leaderboard').get()
+  const leaderboardCollection = await firestore().collection('groups').doc(groupId).collection("leaderboard").orderBy("totalPoints", "desc").get()
   const scoreArray: any[] = []
 
   leaderboardCollection.forEach((user) => {
@@ -201,13 +201,13 @@ export const getUserGroupRanking = async (groupId: string, userId: string) => {
     })
   })
 
-  const sortedArray = scoreArray.sort((a, b) => { return b.totalPoints - a.totalPoints })
-  return sortedArray.findIndex(user => user.id === userId)
+  return scoreArray.findIndex(user => user.id === userId)
 
 }
 
 export const getTotalUsersInGroup = async (groupId: string, setTotalUsers: Dispatch<SetStateAction<number>>) => {
   const userCountRef = await firestore().collection('groups').doc(groupId).collection('users').count().get()
+  console.log(groupId, userCountRef.data().count)
   setTotalUsers(userCountRef.data().count);
 }
 
@@ -215,7 +215,7 @@ export const getTotalUsersInGroup = async (groupId: string, setTotalUsers: Dispa
 export const getGroupData = async (groupId: string, setGroupData: Dispatch<SetStateAction<any>>) => {
 
   const groupRef = firestore().collection('groups').doc(groupId)
-  const leaderboardCollection = await groupRef.collection('leaderboard').get()
+  const leaderboardCollection = await groupRef.collection('leaderboard').orderBy("totalPoints", "desc").get()
   const scoreArray: any[] = []
   leaderboardCollection.forEach((user) => {
     scoreArray.push({
@@ -225,12 +225,10 @@ export const getGroupData = async (groupId: string, setGroupData: Dispatch<SetSt
     })
   })
 
-  const sortedArray = scoreArray.sort((a, b) => { return b.totalPoints - a.totalPoints })
-
   setGroupData((prevGroupData: object) => ({
     ...prevGroupData,
     [groupId]: {
-      ...sortedArray
+      ...scoreArray
     }
   }))
 }

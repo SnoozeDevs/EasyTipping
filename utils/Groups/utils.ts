@@ -207,7 +207,6 @@ export const getUserGroupRanking = async (groupId: string, userId: string) => {
 
 export const getTotalUsersInGroup = async (groupId: string, setTotalUsers: Dispatch<SetStateAction<number>>) => {
   const userCountRef = await firestore().collection('groups').doc(groupId).collection('users').count().get()
-  console.log(groupId, userCountRef.data().count)
   setTotalUsers(userCountRef.data().count);
 }
 

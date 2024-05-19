@@ -56,6 +56,9 @@ const GroupTable = ({ groupData }: IGroupTableProps) => {
               <S.RowContainer>
                 <Text>{groupData[userKey].margin}</Text>
               </S.RowContainer>
+              <S.RowContainer>
+                <Text>{groupData[userKey].formStreak}</Text>
+              </S.RowContainer>
             </S.TableRow>
           );
         })}

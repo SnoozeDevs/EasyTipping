@@ -43,18 +43,18 @@ const Dashboard = ({}: IDashboardProps) => {
         const rank = Number(userGroup.currentRank) + 1 ?? -1;
         let groupKeys;
         let lastIndex;
-        let lastKey;
-        let lastResult;
+        let lastKey: string;
+        let lastResult: string;
         let roundForm;
 
-        if (!isObjectEmpty(userGroup.results)) {
-          groupKeys = Object.keys(userGroup?.results!);
-          lastIndex = groupKeys.length - 1;
-          lastKey = groupKeys[lastIndex];
-          lastResult = userGroup?.results![Number(lastKey)];
-          roundForm = Object.values(lastResult);
+        if (isObjectEmpty(userGroup.results)) {
+          return <Text>Group data not found...</Text>;
         }
-        //TODO !!! Cross check cron job to see why new group 'test group' did not get automatic tip.
+        groupKeys = Object.keys(userGroup?.results!);
+        lastIndex = groupKeys.length - 1;
+        lastKey = groupKeys[lastIndex];
+        lastResult = userGroup?.results![Number(lastKey)];
+        roundForm = Object.values(lastResult);
 
         return (
           <GroupCard
@@ -72,6 +72,7 @@ const Dashboard = ({}: IDashboardProps) => {
                   id: userGroup.groupId,
                   name: userGroup.groupName,
                   rank: rank,
+                  round: lastKey,
                 },
               });
             }}

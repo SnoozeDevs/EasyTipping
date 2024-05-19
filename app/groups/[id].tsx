@@ -12,13 +12,13 @@ import { getGroupData } from "@/utils/Groups/utils";
 import { isObjectEmpty } from "@/utils/Generic/utils";
 
 export default function GroupPage() {
-  const { id, name, rank } = useLocalSearchParams();
+  const { id, name, rank, round } = useLocalSearchParams();
   const groupId = id.toString() as keyof object;
   const userRank = rank.toString();
   const { groupSetter, groupValue }: GroupProviderType = useGlobalContext();
 
   useEffect(() => {
-    getGroupData(groupId, groupSetter);
+    getGroupData(groupId, groupSetter, round.toString());
   }, [id]);
 
   //* Need to get the users rank & collect all of the data that sits in the groups object

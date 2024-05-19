@@ -32,9 +32,3 @@ flex-direction: column;
 gap: 6px;
 `
 
-export const TableContainer = styled.View`
-
-display: flex;
-flex-direction: column;
-
-`

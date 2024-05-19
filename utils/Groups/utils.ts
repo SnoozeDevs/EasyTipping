@@ -2,7 +2,7 @@ import firestore, { FirebaseFirestoreTypes, firebase } from "@react-native-fireb
 import auth from "@react-native-firebase/auth";
 import uuid from 'react-native-uuid';
 import { router } from "expo-router";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export const createGroup = async (groupData: any, isLoading: Dispatch<SetStateAction<boolean>>, sportsLeague: string) => {
   isLoading(true)
@@ -211,18 +211,48 @@ export const getTotalUsersInGroup = async (groupId: string, setTotalUsers: Dispa
 }
 
 
-export const getGroupData = async (groupId: string, setGroupData: Dispatch<SetStateAction<any>>) => {
+export const getGroupData = async (groupId: string, setGroupData: Dispatch<SetStateAction<any>>, round: string) => {
 
   const groupRef = firestore().collection('groups').doc(groupId)
   const leaderboardCollection = await groupRef.collection('leaderboard').orderBy("totalPoints", "desc").get()
   const scoreArray: any[] = []
-  leaderboardCollection.forEach((user) => {
+
+  const getUsersForm = async (userId: string, groupId: string, round: string) => {
+    let tipStreak;
+
+    await firestore().collection('users').doc(userId).collection('groups').doc(groupId).collection('results').doc(round).get().then((round: any) => {
+      const formArray: Array<string> = Object.values(round.data())
+      const formCount: { [key: string]: number } = {};
+      formArray?.forEach((result: string) => {
+        formCount[result] = (formCount[result] || 0) + 1;
+      });
+
+      const formRatio = formCount.correct / formCount.incorrect;
+      if (formRatio > 1) {
+        tipStreak = "hot";
+      } else if (formRatio === 1) {
+        tipStreak = "equal";
+      } else {
+        tipStreak = "cold";
+      }
+    }).catch((error: any) => {
+      tipStreak = error
+    })
+
+    return tipStreak
+  }
+
+  for await (const user of leaderboardCollection.docs) {
+    const userForm = await getUsersForm(user.id, groupId, round);
+
     scoreArray.push({
       id: user.id,
       score: user.data().totalPoints,
-      name: user.data().name
+      name: user.data().name,
+      margin: user.data().margin,
+      formStreak: userForm,
     })
-  })
+  }
 
   setGroupData((prevGroupData: object) => ({
     ...prevGroupData,

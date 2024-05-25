@@ -261,4 +261,3 @@ export const getGroupData = async (groupId: string, setGroupData: Dispatch<SetSt
     }
   }))
 }
-

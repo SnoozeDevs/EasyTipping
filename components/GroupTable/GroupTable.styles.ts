@@ -22,4 +22,13 @@ width: 100%;
 export const RowContainer = styled.View`
 width: 20%;
 display: flex;
+justify-content: center;
+align-items: left;
+`
+
+export const RowText = styled.Text`
+`
+
+export const StreakContainer = styled.View`
+margin-left: 14px;
 `

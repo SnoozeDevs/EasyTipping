@@ -3,9 +3,24 @@ import * as S from "./GroupTable.styles";
 import React from "react";
 import { Text } from "react-native";
 import { Platform } from "react-native";
+import { FontAwesome5, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 
 const GroupTable = ({ groupData }: IGroupTableProps) => {
-  console.log("table", groupData);
+  const renderStreakIcon = (streak: string, iconSize: number) => {
+    if (streak === "cold") {
+      return (
+        <FontAwesome5 name="temperature-low" size={iconSize} color="blue" />
+      );
+    } else if (streak === "hot") {
+      return (
+        <FontAwesome5 name="temperature-high" size={iconSize} color="red" />
+      );
+    } else {
+      return (
+        <FontAwesome6 name="temperature-half" size={iconSize} color="#111" />
+      );
+    }
+  };
 
   return (
     <S.GroupTable>
@@ -45,19 +60,21 @@ const GroupTable = ({ groupData }: IGroupTableProps) => {
           return (
             <S.TableRow key={`user-${index}`}>
               <S.RowContainer>
-                <Text>{rank}</Text>
+                <S.RowText>{rank}</S.RowText>
               </S.RowContainer>
               <S.RowContainer>
-                <Text>{groupData[userKey].name}</Text>
+                <S.RowText>{groupData[userKey].name}</S.RowText>
               </S.RowContainer>
               <S.RowContainer>
-                <Text>{groupData[userKey].score}</Text>
+                <S.RowText>{groupData[userKey].score}</S.RowText>
               </S.RowContainer>
               <S.RowContainer>
-                <Text>{groupData[userKey].margin}</Text>
+                <S.RowText>{groupData[userKey].margin}</S.RowText>
               </S.RowContainer>
               <S.RowContainer>
-                <Text>{groupData[userKey].formStreak}</Text>
+                <S.StreakContainer>
+                  {renderStreakIcon(groupData[userKey].formStreak, 20)}
+                </S.StreakContainer>
               </S.RowContainer>
             </S.TableRow>
           );

@@ -227,7 +227,9 @@ export const getGroupData = async (groupId: string, setGroupData: Dispatch<SetSt
         formCount[result] = (formCount[result] || 0) + 1;
       });
 
-      const formRatio = formCount.correct / formCount.incorrect;
+
+      const formRatio = (formCount.correct + formCount.draw) / formCount.incorrect;
+      console.log('form ratio', formRatio)
       if (formRatio > 1) {
         tipStreak = "hot";
       } else if (formRatio === 1) {
